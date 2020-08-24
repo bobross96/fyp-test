@@ -2,7 +2,7 @@
 
 # Using django for backend and angular for frontend
 
-Testing out these two frameworks
+Testing out these two frameworks, using https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Tutorial_local_library_website as a guide for backend
 
 What is done so far:
 
