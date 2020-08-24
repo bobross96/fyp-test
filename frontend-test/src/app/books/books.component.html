@@ -1,0 +1,12 @@
+<div *ngIf="books">
+    <div *ngFor="let book of books">
+        <ul>
+            <p>{{book.title}}</p>
+            <li>{{book.author.first_name}} {{book.author.last_name}}</li>
+            <li>{{book.summary}}</li>
+        </ul>
+        <hr>
+
+    </div>
+
+</div>
