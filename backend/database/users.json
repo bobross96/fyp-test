@@ -1,0 +1,27 @@
+{
+
+    "users": [
+        {
+            "username" : "tb",
+            "email" : "tb@tb.com",
+            "password" : "ihavetb",
+            "is_active" : true
+        },
+        {
+            "username" : "ananas",
+            "email" : "ananas@tb.com",
+            "password" : "iananas",
+            "is_active" : true
+        },
+        {
+            "username" : "SU",
+            "email" : "SU@tb.com",
+            "password" : "imissadrian",
+            "is_active" : false
+        }
+    ]
+
+
+
+
+}
