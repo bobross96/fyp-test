@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from '../api.service';
 import {Book} from '../book'
+import {User} from '../User'
 
 @Component({
   selector: 'app-books',
@@ -10,7 +11,12 @@ import {Book} from '../book'
 export class BooksComponent implements OnInit {
 
   books : Book[]
-  
+  users : User[]
+ 
+
+
+  constructor(private api : ApiService) { }
+
   getBooks():void{
     this.api.getBooks().subscribe((res:any) => {
       this.books = res.results;
@@ -21,14 +27,17 @@ export class BooksComponent implements OnInit {
     })
   }
 
-
-  constructor(private api : ApiService) { }
-
-
+  getUsers():void{
+    this.api.getUsers().subscribe((res:any) => {
+      console.log(res);
+      this.users = res.data
+    })
+  }
 
   
   ngOnInit(): void {
-    this.getBooks()
+    this.getUsers()
+
 
   }
 

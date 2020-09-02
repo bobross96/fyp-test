@@ -24,4 +24,8 @@ export class ApiService {
   getBook(id):Observable<any>{
     return this.http.get("/api/catalog/books/2")
   }
+
+  getUsers():Observable<any>{
+    return this.http.get("/api/users")
+  }
 }

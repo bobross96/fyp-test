@@ -1,9 +1,9 @@
-<div *ngIf="books">
-    <div *ngFor="let book of books">
+<div *ngIf="users">
+    <div *ngFor="let user of users">
         <ul>
-            <p>{{book.title}}</p>
-            <li>{{book.author.first_name}} {{book.author.last_name}}</li>
-            <li>{{book.summary}}</li>
+            <p>{{user.username}}</p>
+            <li>{{user.first_name}} {{user.last_name}}</li>
+            <li>{{user.email}}</li>
         </ul>
         <hr>
 
