@@ -19,21 +19,9 @@ import {
   CalendarView,
 } from 'angular-calendar';
 import 'flatpickr/dist/flatpickr.css'; // you may need to adjust the css import depending on your build tool
+import { ApiService } from '../api.service';
+import {COLOURS} from '../constants/calendar';
 
-const colors: any = {
-  red: {
-    primary: '#ad2121',
-    secondary: '#FAE3E3',
-  },
-  blue: {
-    primary: '#1e90ff',
-    secondary: '#D1E8FF',
-  },
-  yellow: {
-    primary: '#e3bc08',
-    secondary: '#FDF1BA',
-  },
-};
 
 @Component({
   selector: 'app-schedule',
@@ -76,49 +64,37 @@ export class ScheduleComponent implements OnInit {
 
   refresh: Subject<any> = new Subject();
 
-  events: CalendarEvent[] = [
-    {
-      start: subDays(startOfDay(new Date()), 1),
-      end: addDays(new Date(), 1),
-      title: 'A 3 day event',
-      color: colors.red,
-      actions: this.actions,
-      allDay: true,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true,
-      },
-      draggable: true,
-    },
-    {
-      start: startOfDay(new Date()),
-      title: 'An event with no end date',
-      color: colors.yellow,
-      actions: this.actions,
-    },
-    {
-      start: subDays(endOfMonth(new Date()), 3),
-      end: addDays(endOfMonth(new Date()), 3),
-      title: 'A long event that spans 2 months',
-      color: colors.blue,
-      allDay: true,
-    },
-    {
-      start: addHours(startOfDay(new Date()), 2),
-      end: addHours(new Date(), 2),
-      title: 'A draggable and resizable event',
-      color: colors.yellow,
-      actions: this.actions,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true,
-      },
-      draggable: true,
-    },
-  ];
+  //preload with tasks from db
+
+  events: CalendarEvent[] = [];
+
+  
 
   activeDayIsOpen: boolean = true;
-  constructor(private modal: NgbModal) {}
+  tasks: any;
+  constructor(private modal: NgbModal, private api : ApiService) {}
+
+  getTasks(){
+    return this.api.getTasks().subscribe((res:any) => {
+      this.tasks = res.data
+      //console.log(this.tasks);
+      this.tasks.forEach(task => {
+        this.events.push({
+          start : new Date(task.submission_date),
+          title : task.title,
+          color : COLOURS.red,
+          actions : this.actions,
+          allDay : true,
+
+        })
+
+        console.log(this.events);
+        
+        
+      });
+      
+    })
+  }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
@@ -164,7 +140,7 @@ export class ScheduleComponent implements OnInit {
         title: 'New event',
         start: startOfDay(new Date()),
         end: endOfDay(new Date()),
-        color: colors.red,
+        color: COLOURS.red,
         draggable: false,
         resizable: {
           beforeStart: true,
@@ -188,5 +164,7 @@ export class ScheduleComponent implements OnInit {
   }
   
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getTasks()
+  }
 }

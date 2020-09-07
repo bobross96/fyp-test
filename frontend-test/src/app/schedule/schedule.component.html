@@ -106,7 +106,8 @@
       <tr>
         <th>Title</th>
         <th>Primary color</th>
-        <th>Secondary color</th>
+        <th>Status</th>
+        <th>Task Type</th>
         <th>Due Date</th>
         <th>Submission Date</th>
         <th>Remove</th>
@@ -131,11 +132,28 @@
           />
         </td>
         <td>
-          <input
-            type="color"
-            [(ngModel)]="event.color.secondary"
+          <select
+            type="text"
+            [(ngModel)]="event.status"
             (change)="refresh.next()"
-          />
+          >
+        <option value="Completed">Completed</option>
+        <option value="Late">Late</option>
+        <option value="Late Submission">Late Submission</option>
+        <option value="Pending">Pending</option>
+        </select>
+        </td>
+        <td>
+          <select
+            type="text"
+            [(ngModel)]="event.task_type"
+            (change)="refresh.next()"
+          >
+        <option value="Weekly">Weekly Report</option>
+        <option value="Meeting">Meeting Notes</option>
+        <option value="Interim">Interim Report</option>
+        <option value="Final">Final Report</option>
+        </select>
         </td>
         <td>
           <input
