@@ -16,6 +16,13 @@ export class ApiService {
     private http : HttpClient,
   ) { }
 
+  getTasks():Observable<any>{
+    return this.http.get("/api/tasks")
+  }
+
+  postTask(task:any):Observable<any>{
+    return this.http.post("/api/tasks",task)
+  }
 
   getBooks():Observable<any>{
     return this.http.get("/api/catalog/books")

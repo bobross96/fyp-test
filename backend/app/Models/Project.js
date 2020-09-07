@@ -6,7 +6,7 @@ const Model = use('Model')
 
 class Project extends Model {
 
-    student(){
+    students(){
         return this.hasMany('App/Models/Student')
     }
 

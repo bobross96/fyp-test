@@ -23,7 +23,7 @@ class UserSeeder {
     for await (const user of users){
       const student = await Factory.model('App/Models/Student').make()
       await user.student().save(student)
-      await project.student().save(student)
+      await project.students().save(student)
     }
   
   }

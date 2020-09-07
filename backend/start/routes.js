@@ -19,12 +19,11 @@ const Route = use('Route')
 Route.get('/', () => {
   return { greeting: 'Hello world in JSON' }
 })
-
-Route.get('api/tasks','TaskController.index')
-
+Route.get('api/projects','ProjectController.index')
+Route.resource('api/tasks','TaskController')
+Route.resource('api/users','UserController')
 Route.get('api','TestController.index')
 Route.post('api/tasks','TaskController.create')
 Route.post('api/usersMany','UserController.storeMany')
-
 
 

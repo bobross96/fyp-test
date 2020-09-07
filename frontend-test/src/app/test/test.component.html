@@ -1,0 +1,56 @@
+
+
+<h3>Test Form for task</h3>
+<form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" class="form-control" id="title" required
+        [(ngModel)]="model.title" name="model.title" #title="ngModel">
+    </div>
+    <div class="form-group">
+        <label for="content">Content</label>
+        <input type="text" class="form-control" id="content" required
+        [(ngModel)]="model.content" name="model.content" #title="ngModel">
+    </div>
+    <div class="form-group">
+        <label for="task_type">Task Type</label>
+        <select class="form-control" id="task_type"
+                required
+                [(ngModel)]="model.task_type" name="task_type"
+                #power="ngModel">
+          <option *ngFor="let type of task_types" [value]="type">{{type}}</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="status">Status</label>
+        <select class="form-control" id="status"
+                required
+                [(ngModel)]="model.status" name="status"
+                #power="ngModel">
+          <option *ngFor="let status of statuses" [value]="status">{{status}}</option>
+        </select>
+    </div>
+        <!-- <label for="title">Title</label>
+        <input type="text" class="form-control" id="title" required
+        [(ngModel)]="model.title" name="model.title" #title="ngModel">
+        <label for="title">Title</label>
+        <input type="text" class="form-control" id="title" required
+        [(ngModel)]="model.title" name="model.title" #title="ngModel"> -->
+    
+    <button type="submit" class="btn btn-success">Submit</button>
+</form>
+
+<div *ngIf="tasks">
+    <ol>
+        <div *ngFor="let task of tasks">
+            <li>
+            <h3>{{task.title}}</h3>
+            <p>{{task.content}}</p>
+            <span>{{task.status}},{{task.task_type}}</span>
+            <p>For: {{task.user_id}}</p>
+            </li>
+
+
+        </div>
+    </ol>
+</div>

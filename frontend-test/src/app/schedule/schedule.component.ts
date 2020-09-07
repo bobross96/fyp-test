@@ -18,6 +18,7 @@ import {
   CalendarEventTimesChangedEvent,
   CalendarView,
 } from 'angular-calendar';
+import 'flatpickr/dist/flatpickr.css'; // you may need to adjust the css import depending on your build tool
 
 const colors: any = {
   red: {
@@ -164,11 +165,12 @@ export class ScheduleComponent implements OnInit {
         start: startOfDay(new Date()),
         end: endOfDay(new Date()),
         color: colors.red,
-        draggable: true,
+        draggable: false,
         resizable: {
           beforeStart: true,
           afterEnd: true,
         },
+        actions : this.actions
       },
     ];
   }

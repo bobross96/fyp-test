@@ -21,6 +21,13 @@ class UserController {
    * @param {View} ctx.view
    */
   async index ({ request, response, view }) {
+    const users = await User.all()
+
+    response.json({
+      message : 'here are users',
+      data:users
+    })
+
   }
 
   // making easy way to create multiple for db testing purposes
@@ -62,9 +69,8 @@ class UserController {
    * @param {Response} ctx.response
    */
   async store ({ request, response }) {
-    const userBody = request.post();
-    const user = new User()
-    const {username, }
+    
+    
 
   }
 
