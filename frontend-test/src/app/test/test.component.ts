@@ -16,12 +16,17 @@ export class TestComponent implements OnInit {
   model = new Task()
   task_types = ['Weekly Report','Interim Report','Final Report', 'I give up']
   statuses = ['Weekly','Late','Punctual','Anyhow']
+  
 
   constructor(private api : ApiService) { }
 
   onSubmit(){
     this.submitted = true
     console.log(this.model)
+    this.api.postTask(this.model).subscribe((res) => {
+      console.log(res);
+      
+    })
     
 
   }

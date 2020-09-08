@@ -2,7 +2,8 @@
     <div class="col-md-4">
       <div class="btn-group">
         <div
-          class="btn btn-primary"
+          class="btn btn-light"
+          style="margin-right: 0.5px"
           mwlCalendarPreviousView
           [view]="view"
           [(viewDate)]="viewDate"
@@ -18,7 +19,8 @@
           Today
         </div>
         <div
-          class="btn btn-primary"
+          class="btn btn-light"
+          style="margin-left: 0.5px"
           mwlCalendarNextView
           [view]="view"
           [(viewDate)]="viewDate"
@@ -34,21 +36,21 @@
     <div class="col-md-4">
       <div class="btn-group">
         <div
-          class="btn btn-primary"
+          class="btn btn-light"
           (click)="setView(CalendarView.Month)"
           [class.active]="view === CalendarView.Month"
         >
           Month
         </div>
         <div
-          class="btn btn-primary"
+          class="btn btn-light"
           (click)="setView(CalendarView.Week)"
           [class.active]="view === CalendarView.Week"
         >
           Week
         </div>
         <div
-          class="btn btn-primary"
+          class="btn btn-light"
           (click)="setView(CalendarView.Day)"
           [class.active]="view === CalendarView.Day"
         >
@@ -216,5 +218,11 @@
     <button type="button" class="btn btn-outline-secondary" (click)="close()">
       OK
     </button>
+  </div>
+</ng-template>
+
+<ng-template #testContent let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">asdasd</h5>
   </div>
 </ng-template>

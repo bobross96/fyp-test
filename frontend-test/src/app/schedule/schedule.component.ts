@@ -32,6 +32,7 @@ import {COLOURS} from '../constants/calendar';
 export class ScheduleComponent implements OnInit {
 
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
+  @ViewChild('testContent',{static : true}) testContent : TemplateRef<any>;
 
   view: CalendarView = CalendarView.Month;
 
@@ -130,7 +131,8 @@ export class ScheduleComponent implements OnInit {
 
   handleEvent(action: string, event: CalendarEvent): void {
     this.modalData = { event, action };
-    this.modal.open(this.modalContent, { size: 'lg' });
+    //this.modal.open(this.modalContent, { size: 'md' });
+    this.modal.open(this.testContent, {size : 'lg'})
   }
 
   addEvent(): void {
