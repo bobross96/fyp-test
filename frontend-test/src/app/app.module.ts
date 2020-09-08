@@ -6,16 +6,24 @@ import { AppComponent } from './app.component';
 import { BooksComponent } from './books/books.component';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import { TestComponent } from './test/test.component';
 import { FormsModule } from '@angular/forms';
-import 'flatpickr/dist/flatpickr.css'; // you may need to adjust the css import depending on your build tool
+import {FullCalendarModule} from '@fullcalendar/angular'
+import interactionPlugin from '@fullcalendar/interaction'; // a plugin
+import dayGridPlugin from '@fullcalendar/daygrid';
+import listPlugin from '@fullcalendar/list';
+import timeGridPlugin from '@fullcalendar/timegrid';
 
-import {FlatpickrModule} from 'angularx-flatpickr'
+FullCalendarModule.registerPlugins([
+  dayGridPlugin,
+  timeGridPlugin,
+  listPlugin,
+  interactionPlugin
+])
 
 @NgModule({
   declarations: [
@@ -32,9 +40,8 @@ import {FlatpickrModule} from 'angularx-flatpickr'
     BrowserAnimationsModule,
     MatSidenavModule,
     MatListModule,
-    FlatpickrModule.forRoot(),
-    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
-    NgbModalModule
+    NgbModalModule,
+    FullCalendarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

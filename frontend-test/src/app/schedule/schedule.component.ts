@@ -1,172 +1,118 @@
 import { Component, OnInit } from '@angular/core';
-import { ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
-import {
-  startOfDay,
-  endOfDay,
-  subDays,
-  addDays,
-  endOfMonth,
-  isSameDay,
-  isSameMonth,
-  addHours,
-} from 'date-fns';
-import { Subject } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {
-  CalendarEvent,
-  CalendarEventAction,
-  CalendarEventTimesChangedEvent,
-  CalendarView,
-} from 'angular-calendar';
-import 'flatpickr/dist/flatpickr.css'; // you may need to adjust the css import depending on your build tool
+import { CalendarOptions, DateSelectArg, EventClickArg, EventApi  } from '@fullcalendar/angular'; // useful for typechecking
+import { INITIAL_EVENTS, createEventId } from './event-utils';
 import { ApiService } from '../api.service';
-import {COLOURS} from '../constants/calendar';
-
 
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['./schedule.component.scss'],
+  styleUrls: ['./schedule.component.scss']
 })
 export class ScheduleComponent implements OnInit {
 
-  @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
-  @ViewChild('testContent',{static : true}) testContent : TemplateRef<any>;
-
-  view: CalendarView = CalendarView.Month;
-
-  CalendarView = CalendarView;
-
-  viewDate: Date = new Date();
-
-  modalData: {
-    action: string;
-    event: CalendarEvent;
+  calendarVisible = true;
+  calendarOptions: CalendarOptions = {
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+    },
+    initialView : 'dayGridMonth',
+    weekends: true,
+    editable: true,
+    selectable: true,
+    selectMirror: true,
+    dayMaxEvents: true,
+    select: this.handleDateSelect.bind(this),
+    eventClick: this.handleEventClick.bind(this),
+    eventsSet: this.handleEvents.bind(this),
+    
+    
   };
 
-  actions: CalendarEventAction[] = [
-    {
-      label: '<i class="fas fa-fw fa-pencil-alt"></i>',
-      a11yLabel: 'Edit',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.handleEvent('Edited', event);
-      },
-    },
-    {
-      label: '<i class="fas fa-fw fa-trash-alt"></i>',
-      a11yLabel: 'Delete',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.events = this.events.filter((iEvent) => iEvent !== event);
-        this.handleEvent('Deleted', event);
-      },
-    },
-  ];
+  currentEvents: EventApi[] = [];
 
-  refresh: Subject<any> = new Subject();
-
-  //preload with tasks from db
-
-  events: CalendarEvent[] = [];
-
-  
-
-  activeDayIsOpen: boolean = true;
-  tasks: any;
-  constructor(private modal: NgbModal, private api : ApiService) {}
-
-  getTasks(){
-    return this.api.getTasks().subscribe((res:any) => {
-      this.tasks = res.data
-      //console.log(this.tasks);
-      this.tasks.forEach(task => {
-        this.events.push({
-          start : new Date(task.submission_date),
-          title : task.title,
-          color : COLOURS.red,
-          actions : this.actions,
-          allDay : true,
-
-        })
-
-        console.log(this.events);
-        
-        
-      });
-      
-    })
+  tasks : any = []
+  handleCalendarToggle() {
+    this.calendarVisible = !this.calendarVisible;
   }
 
-  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
-    if (isSameMonth(date, this.viewDate)) {
-      if (
-        (isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) ||
-        events.length === 0
-      ) {
-        this.activeDayIsOpen = false;
-      } else {
-        this.activeDayIsOpen = true;
+  handleWeekendsToggle() {
+    const { calendarOptions } = this;
+    calendarOptions.weekends = !calendarOptions.weekends;
+  }
+
+  handleDateSelect(selectInfo: DateSelectArg) {
+    const title = prompt('Please enter a new title for your event');
+    const calendarApi = selectInfo.view.calendar;
+
+    calendarApi.unselect(); // clear date selection
+
+    if (title) {
+      const task = {
+        title : title,
+        submission_date : selectInfo.startStr,
+        task_due_date : selectInfo.endStr,
+        task_type : "Weekly",
+        status : "Anyhow",
+        hours_spent : 6,
+        user_id : 3
       }
-      this.viewDate = date;
+
+      calendarApi.addEvent({
+        id: createEventId(),
+        title,
+        start: selectInfo.startStr,
+        end: selectInfo.endStr,
+        allDay: selectInfo.allDay
+      });
+
+      this.api.postTask(task).subscribe((res) => {
+        console.log(res);
+        
+      })
+       
+
     }
   }
 
-  eventTimesChanged({
-    event,
-    newStart,
-    newEnd,
-  }: CalendarEventTimesChangedEvent): void {
-    this.events = this.events.map((iEvent) => {
-      if (iEvent === event) {
-        return {
-          ...event,
-          start: newStart,
-          end: newEnd,
-        };
-      }
-      return iEvent;
-    });
-    this.handleEvent('Dropped or resized', event);
+  handleEventClick(clickInfo: EventClickArg) {
+    
+    
+    
+    
+    if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
+      clickInfo.event.remove();
+    }
   }
 
-  handleEvent(action: string, event: CalendarEvent): void {
-    this.modalData = { event, action };
-    //this.modal.open(this.modalContent, { size: 'md' });
-    this.modal.open(this.testContent, {size : 'lg'})
+  handleEvents(events: EventApi[]) {
+    this.currentEvents = events;
   }
 
-  addEvent(): void {
-    this.events = [
-      ...this.events,
-      {
-        title: 'New event',
-        start: startOfDay(new Date()),
-        end: endOfDay(new Date()),
-        color: COLOURS.red,
-        draggable: false,
-        resizable: {
-          beforeStart: true,
-          afterEnd: true,
-        },
-        actions : this.actions
-      },
-    ];
-  }
 
-  deleteEvent(eventToDelete: CalendarEvent) {
-    this.events = this.events.filter((event) => event !== eventToDelete);
+  getTasks(){
+    this.api.getTasks().subscribe((res) => {
+    
+      res.data.forEach(task => {
+          const dateString = new Date(task.submission_date).toISOString().replace(/T.*$/, '')
+          console.log(dateString);
+          
+          this.tasks.push({
+            id: createEventId(),
+            title : task.title,
+            start : new Date(task.submission_date).toISOString().replace(/T.*$/, '')
+          })
+      });
+      console.log(this.tasks);
+      this.calendarOptions.events = this.tasks
+      
+    })
   }
-
-  setView(view: CalendarView) {
-    this.view = view;
-  }
-
-  closeOpenMonthViewDay() {
-    this.activeDayIsOpen = false;
-  }
-  
+  constructor(private api : ApiService) { }
 
   ngOnInit(): void {
     this.getTasks()
   }
+
 }
