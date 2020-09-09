@@ -24,6 +24,10 @@ export class ApiService {
     return this.http.post("/api/tasks",task)
   }
 
+  deleteTask(taskID:number):Observable<any>{
+    return this.http.delete("/api/tasks/" + taskID)
+  }
+
   getBooks():Observable<any>{
     return this.http.get("/api/catalog/books")
   }

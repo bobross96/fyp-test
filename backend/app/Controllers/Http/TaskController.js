@@ -104,6 +104,13 @@ class TaskController {
    * @param {Response} ctx.response
    */
   async destroy ({ params, request, response }) {
+      console.log(params);
+      const { id } = params
+      const task = await Task.find(id)
+      await task.delete()
+      response.json({
+        message : "task deleted"
+      })
   }
 }
 
