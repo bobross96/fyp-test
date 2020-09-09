@@ -13,3 +13,4 @@ What is done so far:
 2) Angular
 - Connected to backend with proxy to server side localhost 
 - Added full calendar library for schedule, connected add events to db 
+- Added mat dialog to trigger on handle date events for user to post task to db
