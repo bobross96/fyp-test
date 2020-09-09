@@ -1,0 +1,13 @@
+<h1 mat-dialog-title>Dialog with elements</h1>
+<div mat-dialog-content>
+    <p>What's your project?</p>
+    <mat-form-field>
+      <mat-label>Favorite poop</mat-label>
+      <input matInput [(ngModel)]="data.title">
+    </mat-form-field>
+  </div>
+<div mat-dialog-actions>
+    <p>which button do u think works</p>
+  <button mat-button [mat-dialog-close]="data.title">Close</button>
+  <button mat-button (click)="onNoClick()">Close v2</button>
+</div>

@@ -4,7 +4,7 @@ import { HttpClientModule} from '@angular/common/http'
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BooksComponent } from './books/books.component';
-import { ScheduleComponent } from './schedule/schedule.component';
+import { ScheduleComponent, DialogOverviewExampleDialog } from './schedule/schedule.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
@@ -17,6 +17,16 @@ import interactionPlugin from '@fullcalendar/interaction'; // a plugin
 import dayGridPlugin from '@fullcalendar/daygrid';
 import listPlugin from '@fullcalendar/list';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatMenuModule} from '@angular/material/menu'
+import {MatIconModule} from '@angular/material/icon'
+import {MatButtonModule} from '@angular/material/button'
+import {MatButtonToggleModule} from '@angular/material/button-toggle'
+import {MatDialogModule} from '@angular/material/dialog';
+
+
+
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -30,18 +40,27 @@ FullCalendarModule.registerPlugins([
     AppComponent,
     BooksComponent,
     ScheduleComponent,
-    TestComponent
+    TestComponent,
+    DialogOverviewExampleDialog
+    
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    MatInputModule,
     FormsModule,
     BrowserAnimationsModule,
+    MatFormFieldModule,
     MatSidenavModule,
     MatListModule,
     NgbModalModule,
-    FullCalendarModule
+    FullCalendarModule,
+    MatMenuModule,
+    MatIconModule,
+    MatButtonModule,
+    MatButtonToggleModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]

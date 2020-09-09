@@ -1,15 +1,24 @@
-import { Component, OnInit } from '@angular/core';
-import { CalendarOptions, DateSelectArg, EventClickArg, EventApi  } from '@fullcalendar/angular'; // useful for typechecking
+import { Component, OnInit, Inject } from '@angular/core';
+import { CalendarOptions, DateSelectArg, EventClickArg, EventApi, DayHeader, DayCellContent  } from '@fullcalendar/angular'; // useful for typechecking
 import { INITIAL_EVENTS, createEventId } from './event-utils';
 import { ApiService } from '../api.service';
+import {ComponentPortal, DomPortal, Portal, TemplatePortal} from '@angular/cdk/portal';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 
+export interface DialogData {
+  title : string;
+  content : string;
+}
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.component.html',
   styleUrls: ['./schedule.component.scss']
 })
 export class ScheduleComponent implements OnInit {
+  title : string
+  content : string
 
+  
   calendarVisible = true;
   calendarOptions: CalendarOptions = {
     headerToolbar: {
@@ -25,18 +34,44 @@ export class ScheduleComponent implements OnInit {
     dayMaxEvents: true,
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
+    //everytime some event changes this runs 
     eventsSet: this.handleEvents.bind(this),
     eventAdd: this.handleEventAdd.bind(this),
-    eventRemove : this.handleEventRemove.bind(this)
+    eventRemove : this.handleEventRemove.bind(this),
     
+    // trying to add button to days with events
+    /* dayCellContent : function(arg)
+    {
+
+      let italic = document.createElement('div')
+      let testString = '<button type="button" class="btn btn-primary" (click)="poop()">Menu</button>'
+      
+      
+      
+      console.log(arg);
+      
+      //italic.innerHTML = 'asdasd'
+      if (arg){
+        italic.innerHTML = testString
+      }
+
+      else {
+        italic.innerHTML = ''
+      }
+      return {domNodes : [italic]}} */
+      
   };
 
   currentEvents: EventApi[] = [];
-
+  
   //bool to check for form showing
   showForm = false
   tasks : any = []
-
+  
+  poop(){
+    console.log('poop!');
+    
+  }
 
   handleCalendarToggle() {
     this.calendarVisible = !this.calendarVisible;
@@ -53,7 +88,7 @@ export class ScheduleComponent implements OnInit {
   }
 
   handleEventRemove(removeInfo){
-    console.log(removeInfo.event._def.extendedProps.db_id);
+    console.log(removeInfo.event);
     let db_id = removeInfo.event._def.extendedProps.db_id
     if (db_id){
       this.removeFromDB(db_id)
@@ -62,14 +97,25 @@ export class ScheduleComponent implements OnInit {
   }
   handleDateSelect(selectInfo: DateSelectArg) {
     
-    var newNode = document.createElement('p');
-    newNode.textContent = "asdasdasdsa"
-    const title = prompt('Please enter a new title for your event');
+    
+    //const title = prompt('Please enter a new title for your event');
+   // const content = prompt('Content')
     const calendarApi = selectInfo.view.calendar;
     this.showForm = true
     calendarApi.unselect(); // clear date selection
+    const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+      width: '250px',
+      data : { title : this.title, content : this.content}
+    });
 
-    if (title) {
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      console.log(result);
+      
+      this.title = result;
+    });
+
+    /* if (title) {
       const task = {
         title : title,
         submission_date : selectInfo.startStr,
@@ -77,24 +123,27 @@ export class ScheduleComponent implements OnInit {
         task_type : "Weekly",
         status : "Anyhow",
         hours_spent : 6,
-        user_id : 3
-      }
-
-      calendarApi.addEvent({
-        id: createEventId(),
-        title,
-        start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay
-      });
-
-      this.api.postTask(task).subscribe((res) => {
-        console.log(res);
+        user_id : 3,
         
-      })
+      } */
+      //add to view, this is the event that will be checked 
+     
+
+      
+
+      /* this.api.postTask(task).subscribe((res) => {
+        calendarApi.addEvent({
+          id: createEventId(),
+          title,
+          start: selectInfo.startStr,
+          end: selectInfo.endStr,
+          allDay: selectInfo.allDay,
+          db_id : res.db_id
+        });
+      }) */
        
 
-    }
+    
   }
 
   handleEventClick(clickInfo: EventClickArg) {
@@ -124,6 +173,7 @@ export class ScheduleComponent implements OnInit {
             title : task.title,
             start : dateString,
             db_id : task.id
+            
           })
       });
       console.log(this.tasks);
@@ -139,10 +189,36 @@ export class ScheduleComponent implements OnInit {
     })
 
   }
-  constructor(private api : ApiService) { }
-
+  constructor(private api : ApiService, public dialog: MatDialog) { 
+    
+  let testString = '<button mat-button [matMenuTriggerFor]="menu">Menu</button>'
+  testString += '<mat-menu #menu="matMenu">'
+  testString += '  <button mat-menu-item>Item 1</button>'
+  testString += ' <button mat-menu-item>Item 2</button>'
+  testString += '</mat-menu>'
+  }
+   
+  
   ngOnInit(): void {
     this.getTasks()
   }
 
+}
+
+
+@Component({
+  selector: 'dialog-overview-example-dialog',
+  templateUrl: './dialog.html',
+})
+export class DialogOverviewExampleDialog {
+  
+  constructor(
+    public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {console.log("constructor");}
+
+  onNoClick(): void {;
+    
+    this.dialogRef.close();
+  }
 }
