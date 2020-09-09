@@ -1,32 +1,44 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { CalendarOptions, DateSelectArg, EventClickArg, EventApi, DayHeader, DayCellContent  } from '@fullcalendar/angular'; // useful for typechecking
+import {
+  CalendarOptions,
+  DateSelectArg,
+  EventClickArg,
+  EventApi,
+  DayHeader,
+  DayCellContent,
+} from '@fullcalendar/angular'; // useful for typechecking
 import { INITIAL_EVENTS, createEventId } from './event-utils';
 import { ApiService } from '../api.service';
-import {ComponentPortal, DomPortal, Portal, TemplatePortal} from '@angular/cdk/portal';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import {
+  ComponentPortal,
+  DomPortal,
+  Portal,
+  TemplatePortal,
+} from '@angular/cdk/portal';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialog,
+} from '@angular/material/dialog';
 
 export interface DialogData {
-  title : string;
-  content : string;
+  title: string;
+  content: string;
 }
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.component.html',
-  styleUrls: ['./schedule.component.scss']
+  styleUrls: ['./schedule.component.scss'],
 })
 export class ScheduleComponent implements OnInit {
-  title : string
-  content : string
-
-  
   calendarVisible = true;
   calendarOptions: CalendarOptions = {
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
     },
-    initialView : 'dayGridMonth',
+    initialView: 'dayGridMonth',
     weekends: true,
     editable: true,
     selectable: true,
@@ -34,11 +46,11 @@ export class ScheduleComponent implements OnInit {
     dayMaxEvents: true,
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
-    //everytime some event changes this runs 
+    //everytime some event changes this runs
     eventsSet: this.handleEvents.bind(this),
     eventAdd: this.handleEventAdd.bind(this),
-    eventRemove : this.handleEventRemove.bind(this),
-    
+    eventRemove: this.handleEventRemove.bind(this),
+
     // trying to add button to days with events
     /* dayCellContent : function(arg)
     {
@@ -59,18 +71,16 @@ export class ScheduleComponent implements OnInit {
         italic.innerHTML = ''
       }
       return {domNodes : [italic]}} */
-      
   };
 
   currentEvents: EventApi[] = [];
-  
+
   //bool to check for form showing
-  showForm = false
-  tasks : any = []
-  
-  poop(){
+  showForm = false;
+  tasks: any = [];
+
+  poop() {
     console.log('poop!');
-    
   }
 
   handleCalendarToggle() {
@@ -82,76 +92,84 @@ export class ScheduleComponent implements OnInit {
     calendarOptions.weekends = !calendarOptions.weekends;
   }
 
-  handleEventAdd(addInfo){
+  handleEventAdd(addInfo) {
     console.log(addInfo.event._def.title);
-    
   }
 
-  handleEventRemove(removeInfo){
+  handleEventRemove(removeInfo) {
     console.log(removeInfo.event);
-    let db_id = removeInfo.event._def.extendedProps.db_id
-    if (db_id){
-      this.removeFromDB(db_id)
+    let db_id = removeInfo.event._def.extendedProps.db_id;
+    if (db_id) {
+      this.removeFromDB(db_id);
     }
-    
   }
+
+  title: string;
+  content: string;
+  status: string;
+  task_type: string;
+  date: Date;
+  hours_spent: number;
   handleDateSelect(selectInfo: DateSelectArg) {
-    
-    
     //const title = prompt('Please enter a new title for your event');
-   // const content = prompt('Content')
+    // const content = prompt('Content')
     const calendarApi = selectInfo.view.calendar;
-    this.showForm = true
+    this.showForm = true;
     calendarApi.unselect(); // clear date selection
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
-      width: '250px',
-      data : { title : this.title, content : this.content}
+      width: '500px',
+      data: {
+        title: this.title,
+        content: this.content,
+        status: this.status,
+        date: this.date,
+        hours_spent: this.hours_spent,
+      },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       console.log('The dialog was closed');
+      //insert post request here
       console.log(result);
-      
       this.title = result;
+      if (this.title) {
+        const task = {
+          title: result.title,
+          content : result.content,
+          submission_date: selectInfo.startStr,
+          task_due_date: selectInfo.endStr,
+          task_type: result.task_type,
+          status: result.status,
+          hours_spent: result.hours_spent,
+          user_id: 3,
+        };
+
+        this.api.postTask(task).subscribe((res) => {
+          calendarApi.addEvent({
+            id: createEventId(),
+            title : result.title,
+            start: selectInfo.startStr,
+            end: selectInfo.endStr,
+            allDay: selectInfo.allDay,
+            db_id : res.db_id
+          });
+      })
+      }  
     });
 
-    /* if (title) {
-      const task = {
-        title : title,
-        submission_date : selectInfo.startStr,
-        task_due_date : selectInfo.endStr,
-        task_type : "Weekly",
-        status : "Anyhow",
-        hours_spent : 6,
-        user_id : 3,
-        
-      } */
-      //add to view, this is the event that will be checked 
-     
+    /* */
+    //add to view, this is the event that will be checked
 
-      
-
-      /* this.api.postTask(task).subscribe((res) => {
-        calendarApi.addEvent({
-          id: createEventId(),
-          title,
-          start: selectInfo.startStr,
-          end: selectInfo.endStr,
-          allDay: selectInfo.allDay,
-          db_id : res.db_id
-        });
+    /* 
       }) */
-       
-
-    
   }
 
   handleEventClick(clickInfo: EventClickArg) {
-    
-    
-    
-    
-    if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
+    if (
+      confirm(
+        `Are you sure you want to delete the event '${clickInfo.event.title}'`
+      )
+    ) {
       clickInfo.event.remove();
     }
   }
@@ -160,65 +178,58 @@ export class ScheduleComponent implements OnInit {
     this.currentEvents = events;
   }
 
-
-  getTasks(){
+  getTasks() {
     this.api.getTasks().subscribe((res) => {
-    
-      res.data.forEach(task => {
-          const dateString = new Date(task.task_due_date).toISOString().replace(/T.*$/, '')
-          console.log(dateString);
-          
-          this.tasks.push({
-            id: createEventId(),
-            title : task.title,
-            start : dateString,
-            db_id : task.id
-            
-          })
+      res.data.forEach((task) => {
+        const dateString = new Date(task.task_due_date)
+          .toISOString()
+          .replace(/T.*$/, '');
+        console.log(dateString);
+
+        this.tasks.push({
+          id: createEventId(),
+          title: task.title,
+          start: dateString,
+          db_id: task.id,
+        });
       });
       console.log(this.tasks);
-      this.calendarOptions.events = this.tasks
-      
-    })
+      this.calendarOptions.events = this.tasks;
+    });
   }
 
-
-  removeFromDB(id){
-    this.api.deleteTask(id).subscribe((res)=> {
+  removeFromDB(id) {
+    this.api.deleteTask(id).subscribe((res) => {
       console.log(res);
-    })
+    });
+  }
+  constructor(private api: ApiService, public dialog: MatDialog) {
+    let testString =
+      '<button mat-button [matMenuTriggerFor]="menu">Menu</button>';
+    testString += '<mat-menu #menu="matMenu">';
+    testString += '  <button mat-menu-item>Item 1</button>';
+    testString += ' <button mat-menu-item>Item 2</button>';
+    testString += '</mat-menu>';
+  }
 
-  }
-  constructor(private api : ApiService, public dialog: MatDialog) { 
-    
-  let testString = '<button mat-button [matMenuTriggerFor]="menu">Menu</button>'
-  testString += '<mat-menu #menu="matMenu">'
-  testString += '  <button mat-menu-item>Item 1</button>'
-  testString += ' <button mat-menu-item>Item 2</button>'
-  testString += '</mat-menu>'
-  }
-   
-  
   ngOnInit(): void {
-    this.getTasks()
+    this.getTasks();
   }
-
 }
-
 
 @Component({
   selector: 'dialog-overview-example-dialog',
   templateUrl: './dialog.html',
 })
 export class DialogOverviewExampleDialog {
-  
   constructor(
     public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {console.log("constructor");}
+  ) {
+    console.log('constructor');
+  }
 
-  onNoClick(): void {;
-    
+  onNoClick(): void {
     this.dialogRef.close();
   }
 }

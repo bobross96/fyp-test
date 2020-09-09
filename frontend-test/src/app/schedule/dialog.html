@@ -1,13 +1,50 @@
-<h1 mat-dialog-title>Dialog with elements</h1>
-<div mat-dialog-content>
+<h1 mat-dialog-title>Add Task</h1>
+<div mat-dialog-content style>
     <p>What's your project?</p>
     <mat-form-field>
-      <mat-label>Favorite poop</mat-label>
+      <mat-label>Task Title</mat-label>
       <input matInput [(ngModel)]="data.title">
-    </mat-form-field>
+    </mat-form-field><br>
+   
+    <mat-form-field>
+        <mat-label>Content</mat-label>
+        <textarea matInput [(ngModel)]="data.content"></textarea>
+      </mat-form-field><br>
+    <mat-form-field appearance="fill">
+        <mat-label>Task Type</mat-label>
+        <mat-select [(ngModel)]="data.task_type">
+          <mat-option value="weekly">Weekly</mat-option>
+          <mat-option value="final">Final</mat-option>
+          <mat-option value="Completed">Completed</mat-option>
+        </mat-select>
+      </mat-form-field><br>
+      <mat-form-field appearance="fill">
+        <mat-label>Status</mat-label>
+        <mat-select [(ngModel)]="data.status">
+          <mat-option value="Pending">Pending</mat-option>
+          <mat-option value="Completed">Completed</mat-option>
+          <mat-option value="Late">Late</mat-option>
+          <mat-option value="Late Submission">Late Submission</mat-option>
+        </mat-select>
+      </mat-form-field><br>
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Submission Date</mat-label>
+        <input matInput [matDatepicker]="picker" [(ngModel)]="data.date">
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field><br>
+      <mat-form-field>
+        <mat-form-field>
+            <mat-label>Hours Spent</mat-label>
+            <input matInput [(ngModel)]="data.hours_spent">
+          </mat-form-field><br>
+      </mat-form-field>
+      
+      <button mat-button (click)="picker.open()" style="margin: none;"><mat-icon>more_vert</mat-icon></button>
+      
+
   </div>
 <div mat-dialog-actions>
-    <p>which button do u think works</p>
-  <button mat-button [mat-dialog-close]="data.title">Close</button>
-  <button mat-button (click)="onNoClick()">Close v2</button>
+    
+  <button mat-button [mat-dialog-close]="data">Close</button>
+  <button mat-button (click)="onNoClick()">Cancel</button>
 </div>
