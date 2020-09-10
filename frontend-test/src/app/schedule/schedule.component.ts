@@ -50,6 +50,8 @@ export class ScheduleComponent implements OnInit {
     eventsSet: this.handleEvents.bind(this),
     eventAdd: this.handleEventAdd.bind(this),
     eventRemove: this.handleEventRemove.bind(this),
+    eventDisplay: 'block',
+    
 
     // trying to add button to days with events
     /* dayCellContent : function(arg)
@@ -116,6 +118,7 @@ export class ScheduleComponent implements OnInit {
     const calendarApi = selectInfo.view.calendar;
     this.showForm = true;
     calendarApi.unselect(); // clear date selection
+
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
       width : '400px',
       data: {
@@ -131,30 +134,41 @@ export class ScheduleComponent implements OnInit {
       console.log('The dialog was closed');
       //insert post request here
       console.log(result);
+      //console.log(this.title);
       
-      if (this.title && this.content && this.date && this.task_type && this.status && this.hours_spent) {
+      if (result.title && result.content && result.date && result.task_type && result.status && result.hours_spent) {
         const task = {
           title: result.title,
           content : result.content,
-          submission_date: selectInfo.startStr,
-          task_due_date: selectInfo.endStr,
+          submission_date: result.date,
+          task_due_date: result.date,
           task_type: result.task_type,
           status: result.status,
           hours_spent: result.hours_spent,
           user_id: 3,
         };
-
+        console.log(task);
+        
         this.api.postTask(task).subscribe((res) => {
+          console.log(res);
+          let date = new Date(result.date)
+          console.log(date);
+          console.log(selectInfo.startStr);
+          
+          
           calendarApi.addEvent({
             id: createEventId(),
             title : result.title,
-            start: selectInfo.startStr,
-            end: selectInfo.endStr,
+            start: date,
             allDay: selectInfo.allDay,
             db_id : res.db_id
           });
       })
-      }  
+      }
+      
+      else {
+        alert('Task not saved, form was incomplete')
+      }
     });
 
     /* */
@@ -181,9 +195,18 @@ export class ScheduleComponent implements OnInit {
   getTasks() {
     this.api.getTasks().subscribe((res) => {
       res.data.forEach((task) => {
-        const dateString = new Date(task.task_due_date)
-          .toISOString()
-          .replace(/T.*$/, '');
+        console.log(task.task_due_date);
+        let color = '#3788d8'
+        const dateString = task.task_due_date.toString()
+        switch (task.task_type) {
+          case 'final':
+            color = 'red'
+            break;
+          case 'completed':
+            color = 'green'
+          default:
+            break;
+        }
         console.log(dateString);
 
         this.tasks.push({
@@ -191,6 +214,7 @@ export class ScheduleComponent implements OnInit {
           title: task.title,
           start: dateString,
           db_id: task.id,
+          color : color
         });
       });
       console.log(this.tasks);
@@ -202,6 +226,14 @@ export class ScheduleComponent implements OnInit {
     this.api.deleteTask(id).subscribe((res) => {
       console.log(res);
     });
+  }
+
+  dateToString(date){
+    console.log(date);
+    
+    return new Date(date)
+          .toISOString()
+          .replace(/T.*$/, '')
   }
   constructor(private api: ApiService, public dialog: MatDialog) {
   }

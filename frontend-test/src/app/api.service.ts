@@ -21,6 +21,7 @@ export class ApiService {
   }
 
   postTask(task:any):Observable<any>{
+    console.log('in post task');
     return this.http.post("/api/tasks",task)
   }
 

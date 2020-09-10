@@ -44,7 +44,7 @@ class TaskController {
      const {title, content, task_type, status, task_due_date, submission_date,hours_spent,user_id} = request.all()
      const newTask = new Task()
      newTask.title = title
-     console.log(title);
+     console.log(request.all());
      newTask.content = content
      newTask.task_type = task_type
      newTask.status = status
