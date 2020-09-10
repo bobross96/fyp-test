@@ -117,7 +117,7 @@ export class ScheduleComponent implements OnInit {
     this.showForm = true;
     calendarApi.unselect(); // clear date selection
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
-      width: '500px',
+      width : '400px',
       data: {
         title: this.title,
         content: this.content,
@@ -131,8 +131,8 @@ export class ScheduleComponent implements OnInit {
       console.log('The dialog was closed');
       //insert post request here
       console.log(result);
-      this.title = result;
-      if (this.title) {
+      
+      if (this.title && this.content && this.date && this.task_type && this.status && this.hours_spent) {
         const task = {
           title: result.title,
           content : result.content,
@@ -204,12 +204,6 @@ export class ScheduleComponent implements OnInit {
     });
   }
   constructor(private api: ApiService, public dialog: MatDialog) {
-    let testString =
-      '<button mat-button [matMenuTriggerFor]="menu">Menu</button>';
-    testString += '<mat-menu #menu="matMenu">';
-    testString += '  <button mat-menu-item>Item 1</button>';
-    testString += ' <button mat-menu-item>Item 2</button>';
-    testString += '</mat-menu>';
   }
 
   ngOnInit(): void {
