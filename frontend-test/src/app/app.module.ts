@@ -4,7 +4,7 @@ import { HttpClientModule} from '@angular/common/http'
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BooksComponent } from './books/books.component';
-import { ScheduleComponent, DialogOverviewExampleDialog } from './schedule/schedule.component';
+import { ScheduleComponent, DialogOverviewExampleDialog, EditEventDialog } from './schedule/schedule.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
@@ -23,10 +23,11 @@ import {MatMenuModule} from '@angular/material/menu'
 import {MatIconModule} from '@angular/material/icon'
 import {MatButtonModule} from '@angular/material/button'
 import {MatButtonToggleModule} from '@angular/material/button-toggle'
-import {MatDialogModule} from '@angular/material/dialog';
+import {MatDialogModule, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {MatSelectModule} from '@angular/material/select';
 import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatNativeDateModule} from '@angular/material/core'
+import {MatNativeDateModule} from '@angular/material/core';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 
 
@@ -43,7 +44,8 @@ FullCalendarModule.registerPlugins([
     BooksComponent,
     ScheduleComponent,
     TestComponent,
-    DialogOverviewExampleDialog
+    DialogOverviewExampleDialog,
+    EditEventDialog
     
   ],
   imports: [
@@ -65,7 +67,8 @@ FullCalendarModule.registerPlugins([
     MatDialogModule,
     MatSelectModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatTooltipModule
 
   ],
   providers: [MatDatepickerModule],
