@@ -4,7 +4,7 @@ import { HttpClientModule} from '@angular/common/http'
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BooksComponent } from './books/books.component';
-import { ScheduleComponent, DialogOverviewExampleDialog, EditEventDialog, WeekNumber } from './schedule/schedule.component';
+import { ScheduleComponent, DialogOverviewExampleDialog, EditEventDialog, WeekNumber } from './schedule/schedule.component'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
@@ -28,6 +28,9 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { LoginComponent } from './login/login.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 
 
@@ -46,7 +49,10 @@ FullCalendarModule.registerPlugins([
     TestComponent,
     DialogOverviewExampleDialog,
     EditEventDialog,
-    WeekNumber
+    WeekNumber,
+    LoginComponent,
+    PageNotFoundComponent,
+    DashboardComponent
     
   ],
   imports: [
