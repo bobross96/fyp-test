@@ -14,3 +14,4 @@ What is done so far:
 - Connected to backend with proxy to server side localhost 
 - Added full calendar library for schedule, connected add events to db 
 - Added mat dialog to trigger on handle date events for user to post task to db
+- Added function that takes in Semester Start date to calculate NTU Calendar Week Number 
