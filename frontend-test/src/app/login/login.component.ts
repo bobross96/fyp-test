@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {LoginService} from '../login.service'
 import { Router } from '@angular/router';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -9,7 +10,7 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private loginApi : LoginService, private _router : Router) { }
+  constructor(private loginApi : LoginService, private _router : Router, private authApi : AuthService) { }
 
   ngOnInit(): void {
   }
@@ -21,12 +22,17 @@ export class LoginComponent implements OnInit {
   onSubmit(){
     console.log('poop');
     console.log(this.model);
-    this.loginApi.login(this.model).subscribe((res) => {
-      console.log(res);
+    this.authApi.login(this.model).subscribe((res) => {
+
+      if (res.loginSuccess){
+     
+        console.log(localStorage.getItem('token_id'));
       
-    
-      this._router.navigateByUrl('/dashboard')
-      
+        this._router.navigateByUrl('/dashboard')
+      }
+      else {
+        alert('username/password incorrect!')
+      }
     })
     
   }
