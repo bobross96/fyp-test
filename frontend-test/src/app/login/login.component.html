@@ -1,3 +1,13 @@
+
+<header>
+    <mat-toolbar fxLayout="row" fxLayoutAlign="space-between baseline" id="flexToolbar">
+      
+      <span id="projectTitle">Project Management</span>
+    
+      <button mat-button color="warn" id="logout" routerLink="/register" routerLinkActive="active">Register</button>
+     
+    </mat-toolbar>
+</header>
 <body>
     <h2>Login Form</h2>
     <form (ngSubmit)="onSubmit()" #loginForm="ngForm">

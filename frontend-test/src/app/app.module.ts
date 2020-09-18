@@ -1,47 +1,54 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule,HTTP_INTERCEPTORS} from '@angular/common/http';
-import {httpInterceptorProviders} from './http-interceptors/index';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { httpInterceptorProviders } from './http-interceptors/index';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BooksComponent } from './books/books.component';
-import { ScheduleComponent, DialogOverviewExampleDialog, EditEventDialog, WeekNumber } from './schedule/schedule.component'
+import {
+  ScheduleComponent,
+  DialogOverviewExampleDialog,
+  EditEventDialog,
+  WeekNumber,
+} from './schedule/schedule.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatListModule} from '@angular/material/list';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
 import { TestComponent } from './test/test.component';
-import { FormsModule } from '@angular/forms';
-import {FullCalendarModule} from '@fullcalendar/angular'
+import { FormsModule,ReactiveFormsModule } from '@angular/forms';
+import { FullCalendarModule } from '@fullcalendar/angular';
 import interactionPlugin from '@fullcalendar/interaction'; // a plugin
 import dayGridPlugin from '@fullcalendar/daygrid';
 import listPlugin from '@fullcalendar/list';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import {FlexLayoutModule} from '@angular/flex-layout'
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatMenuModule} from '@angular/material/menu'
-import {MatIconModule} from '@angular/material/icon'
-import {MatButtonModule} from '@angular/material/button'
-import {MatButtonToggleModule} from '@angular/material/button-toggle'
-import {MatDialogModule, MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {MatSelectModule} from '@angular/material/select';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatNativeDateModule} from '@angular/material/core';
-import {MatToolbarModule} from '@angular/material/toolbar';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import {
+  MatDialogModule,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { LoginComponent } from './login/login.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-
-
+import { RegisterComponent } from './register/register.component';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
   timeGridPlugin,
   listPlugin,
-  interactionPlugin
-])
+  interactionPlugin,
+]);
 
 @NgModule({
   declarations: [
@@ -54,8 +61,8 @@ FullCalendarModule.registerPlugins([
     WeekNumber,
     LoginComponent,
     PageNotFoundComponent,
-    DashboardComponent
-    
+    DashboardComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
@@ -63,6 +70,7 @@ FullCalendarModule.registerPlugins([
     HttpClientModule,
     MatInputModule,
     FormsModule,
+    ReactiveFormsModule,
     BrowserAnimationsModule,
     FlexLayoutModule,
     MatFormFieldModule,
@@ -79,9 +87,8 @@ FullCalendarModule.registerPlugins([
     MatDatepickerModule,
     MatNativeDateModule,
     MatToolbarModule,
-
   ],
-  providers: [httpInterceptorProviders,MatDatepickerModule],
-  bootstrap: [AppComponent]
+  providers: [httpInterceptorProviders, MatDatepickerModule],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -40,6 +40,26 @@ class UserController {
   
     
   }
+
+  async register({auth,request,response}){
+    console.log('inside register');
+    const {email,password,first_name,last_name,username} = request.post()
+    const user = new User()
+    user.username = username
+    user.email = email
+    user.first_name = first_name
+    user.last_name = last_name
+    user.password = password
+    await user.save()
+    let token = await auth.generate(user,true)
+
+    return response.json({
+      message : 'registering',
+      token : token,
+      registerSuccess : true,
+      user : user
+    })
+  }
   /**
    * Show a list of all users.
    * GET users

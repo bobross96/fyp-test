@@ -1,5 +1,7 @@
 'use strict'
 
+const { RouteResource } = require('@adonisjs/framework/src/Route/Manager')
+
 /*
 |--------------------------------------------------------------------------
 | Routes
@@ -28,3 +30,4 @@ Route.post('api/usersMany','UserController.storeMany')
 
 
 Route.post('api/login','UserController.login')
+Route.post('api/register','UserController.register')

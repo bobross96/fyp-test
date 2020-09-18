@@ -23,6 +23,17 @@ export class AuthService {
     )
   }
 
+  register(user:any):Observable<any>{
+    return this.http.post("/api/register",user).pipe(
+      tap(val => {
+        if (val.registerSuccess){
+          this.setSession(val)
+          this.isLoggedIn = true
+        }
+      })
+    )
+  }
+
   private setSession(authResult){
     console.log(authResult);
     localStorage.setItem('token_id', authResult.token.token)
