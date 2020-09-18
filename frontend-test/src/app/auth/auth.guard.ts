@@ -25,7 +25,7 @@ export class AuthGuard implements CanActivate,CanActivateChild {
   }
 
   checkLogin(url : string){
-    if (this.authService.isLoggedIn || localStorage.getItem('token_id')){
+    if (localStorage.getItem('token_id')){
       return true
     }
 

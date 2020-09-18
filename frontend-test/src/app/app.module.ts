@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule} from '@angular/common/http'
+import { HttpClientModule,HTTP_INTERCEPTORS} from '@angular/common/http';
+import {httpInterceptorProviders} from './http-interceptors/index';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BooksComponent } from './books/books.component';
@@ -17,6 +18,7 @@ import interactionPlugin from '@fullcalendar/interaction'; // a plugin
 import dayGridPlugin from '@fullcalendar/daygrid';
 import listPlugin from '@fullcalendar/list';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import {FlexLayoutModule} from '@angular/flex-layout'
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatMenuModule} from '@angular/material/menu'
@@ -27,7 +29,7 @@ import {MatDialogModule, MatDialog, MatDialogRef} from '@angular/material/dialog
 import {MatSelectModule} from '@angular/material/select';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatToolbarModule} from '@angular/material/toolbar';
 import { LoginComponent } from './login/login.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -62,6 +64,7 @@ FullCalendarModule.registerPlugins([
     MatInputModule,
     FormsModule,
     BrowserAnimationsModule,
+    FlexLayoutModule,
     MatFormFieldModule,
     MatSidenavModule,
     MatListModule,
@@ -75,10 +78,10 @@ FullCalendarModule.registerPlugins([
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatTooltipModule
+    MatToolbarModule,
 
   ],
-  providers: [MatDatepickerModule],
+  providers: [httpInterceptorProviders,MatDatepickerModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -25,7 +25,8 @@ class UserController {
         return response.json({
           message : 'loggin in',
           token : token,
-          loginSuccess : true
+          loginSuccess : true,
+          user : user
         })
       }
     }

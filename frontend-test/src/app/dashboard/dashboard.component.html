@@ -1,6 +1,12 @@
 
 <header>
-    <h1>Project Management Portal</h1>
+  <mat-toolbar fxLayout="row" fxLayoutAlign="space-between baseline" id="flexToolbar">
+    
+    <span id="projectTitle">Project Management</span>
+    <span *ngIf="user">Welcome {{user.first_name}}</span>
+    <button mat-button color="warn" id="logout" (click)="logout()">Logout</button>
+   
+  </mat-toolbar>
   </header>
 
 <mat-sidenav-container class="container">
@@ -13,6 +19,7 @@
       </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content class="rightColumn">
+     
       <router-outlet></router-outlet>
     </mat-sidenav-content>
   </mat-sidenav-container>

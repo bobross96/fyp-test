@@ -26,8 +26,15 @@ export class AuthService {
   private setSession(authResult){
     console.log(authResult);
     localStorage.setItem('token_id', authResult.token.token)
+    const test = JSON.stringify(authResult.user)
+    console.log((test));
+    localStorage.setItem('user',test)
     console.log(localStorage.getItem('token_id'));
 
+  }
+
+  logout(){
+    localStorage.removeItem('token_id')
   }
 
   constructor(private http : HttpClient) { }

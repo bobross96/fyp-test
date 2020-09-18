@@ -1,9 +1,10 @@
+#flexToolbar{
+    height: 40px;
+}
+
+
 .container {
-    
-    /* top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0; */
+   
     background: #eee;
     padding-left: 0px;
     padding-right: 0px;
@@ -17,11 +18,12 @@
 
   header {
       text-align: center;
+      display: flex;
   }
 
-  mat-sidenav {
+/*   mat-sidenav {
      position: absolute;
-  }
+  } */
 
   .active-link{
       font-weight: bold;
