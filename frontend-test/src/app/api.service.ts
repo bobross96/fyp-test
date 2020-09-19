@@ -38,6 +38,7 @@ export class ApiService {
   }
 
   getUsers():Observable<any>{
+
     return this.http.get("/api/users")
   }
 }

@@ -32,6 +32,7 @@ export interface DialogData {
   styleUrls: ['./schedule.component.scss'],
 })
 export class ScheduleComponent implements OnInit {
+  thisSem = 1
   calendarVisible = true;
   calendarOptions: CalendarOptions = {
     headerToolbar: {
@@ -53,7 +54,7 @@ export class ScheduleComponent implements OnInit {
     eventRemove: this.handleEventRemove.bind(this),
     eventDisplay: 'block',
     weekNumbers: true,
-    weekText: `Sem 1 \n Week `,
+    weekText: `Sem 1 Week `,
     weekNumberContent: function (arg) {
       if (!arg.num || arg.num < 0 || arg.num > 14) {
         arg.text = '';
@@ -75,7 +76,7 @@ export class ScheduleComponent implements OnInit {
   };
 
   currentEvents: EventApi[] = [];
-
+  
   //bool to check for form showing
   showForm = false;
   tasks: any = [];

@@ -1,0 +1,46 @@
+
+<header>
+    <mat-toolbar fxLayout="row" fxLayoutAlign="space-between baseline" id="flexToolbar">
+      
+      <span id="projectTitle">Project Management</span>
+    
+      <button mat-button color="warn" id="logout" routerLink="/login" routerLinkActive="active">Login</button>
+     
+    </mat-toolbar>
+</header>
+<body>
+    <h2>Register</h2>
+    <form (ngSubmit)="onSubmit()" [formGroup]="registerForm">
+        <div class="form-group">
+            <mat-form-field>
+                <mat-label>Username</mat-label>
+                <input matInput type="text"  id="username" name="username" formControlName="username" required>
+            </mat-form-field>
+        </div>
+        <div class="form-group">
+            <mat-form-field>
+                <mat-label>Email</mat-label>
+                <input matInput type="text"  id="email" name="email" formControlName="email" required>
+            </mat-form-field>
+        </div>
+        <div class="form-group">
+            <mat-form-field>
+                <mat-label>First Name</mat-label>
+                <input matInput type="text"  id="first_name" name="first_name" formControlName="first_name" required>
+            </mat-form-field>
+        </div>
+        <div class="form-group">
+            <mat-form-field>
+                <mat-label>Last Name</mat-label>
+                <input matInput type="text"  id="last_name" name="last_name" formControlName="last_name" required>
+            </mat-form-field>
+        </div>
+        <div class="form-group">
+            <mat-form-field>
+                <mat-label>Password</mat-label>
+                <input matInput type="password" id="password" name="password" formControlName="password" required>
+            </mat-form-field>
+        </div>
+        <input type="submit" [disabled]="!registerForm.valid" value="Register">
+    </form>
+</body>

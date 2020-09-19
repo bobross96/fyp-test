@@ -11,6 +11,55 @@ const User = use('App/Models/User');
  * Resourceful controller for interacting with users
  */
 class UserController {
+  async login({auth,request,response}){
+    console.log('poop');
+    const {email, password} = request.post()
+    
+    try {
+      if (await auth.attempt(email,password)){
+        //will query and return user object based on email
+        let user = await User.findBy('email',email)
+        // generate jwt token based on user
+        let token = await auth.generate(user,true)
+
+        return response.json({
+          message : 'loggin in',
+          token : token,
+          loginSuccess : true,
+          user : user
+        })
+      }
+    }
+
+    catch(e){
+      console.log(e);
+      return response.json({
+        message : 'not registered',
+        loginSuccess : false})
+    }
+  
+    
+  }
+
+  async register({auth,request,response}){
+    console.log('inside register');
+    const {email,password,first_name,last_name,username} = request.post()
+    const user = new User()
+    user.username = username
+    user.email = email
+    user.first_name = first_name
+    user.last_name = last_name
+    user.password = password
+    await user.save()
+    let token = await auth.generate(user,true)
+
+    return response.json({
+      message : 'registering',
+      token : token,
+      registerSuccess : true,
+      user : user
+    })
+  }
   /**
    * Show a list of all users.
    * GET users
@@ -69,9 +118,20 @@ class UserController {
    * @param {Response} ctx.response
    */
   async store ({ request, response }) {
-    
-    
+    const {username, email, password,first_name, last_name,is_active } = request.post()
+    const user = new User()
+    user.username = username
+    user.email = email
+    user.password = password
+    user.first_name = first_name
+    user.last_name = last_name
+    user.is_active = is_active
+    console.log(user);
+    await user.save()
 
+    response.json({
+      message : `User ${user.first_name} saved`
+    })
   }
 
   /**
