@@ -14,3 +14,8 @@ What is done so far:
 - Connected to backend with proxy to server side localhost 
 - Added full calendar library for schedule, connected add events to db 
 - Added mat dialog to trigger on handle date events for user to post task to db
+- Added function that takes in Semester Start date to calculate NTU Calendar Week Number 
+- Added Login and Register
+- Added Auth guard to prevent unauthorized from accessing main application without registering/logging in
+- Added JWT authentication and store on localStorage to persist login session 
+- Added HTTP Interceptor to send all requests with JWT token to authenticate and make request to backend
