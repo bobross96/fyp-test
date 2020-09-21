@@ -2,24 +2,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <title>Library Page</title>
+  <title>Project Management Portal</title>
 </head>
 <body>
-  <header>
-    <h1>Project Management Portal</h1>
-  </header>
-
-  <mat-sidenav-container class="container">
-    <mat-sidenav mode="side" opened>
-      <mat-nav-list>
-        <a mat-list-item routerLink="/" routerLinkActive="active">Home</a>
-        <a mat-list-item routerLink="/books" routerLinkActive="active">Users</a>
-        <a mat-list-item routerLink="/schedule" routerLinkActive="active">Calendar</a>
-        <a mat-list-item routerLink="/test">Test</a>
-      </mat-nav-list>
-    </mat-sidenav>
-    <mat-sidenav-content class="rightColumn">
-      <router-outlet></router-outlet>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
+  
+<router-outlet></router-outlet>
+  
 </body>

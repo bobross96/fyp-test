@@ -1,5 +1,7 @@
 'use strict'
 
+const { RouteResource } = require('@adonisjs/framework/src/Route/Manager')
+
 /*
 |--------------------------------------------------------------------------
 | Routes
@@ -19,11 +21,19 @@ const Route = use('Route')
 Route.get('/', () => {
   return { greeting: 'Hello world in JSON' }
 })
+
+//admin routes 
 Route.get('api/projects','ProjectController.index')
-Route.resource('api/tasks','TaskController')
-Route.resource('api/users','UserController')
+Route.post('api/projects','ProjectController.store')
+
+
+//user routes
+Route.resource('api/tasks','TaskController').middleware('auth')
+Route.resource('api/users','UserController').middleware('auth')
 Route.get('api','TestController.index')
 Route.post('api/tasks','TaskController.create')
 Route.post('api/usersMany','UserController.storeMany')
 
-
+//login or register
+Route.post('api/login','UserController.login')
+Route.post('api/register','UserController.register')
