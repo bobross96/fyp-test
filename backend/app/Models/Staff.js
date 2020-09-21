@@ -5,14 +5,17 @@ const Model = use('Model')
 
 class Staff extends Model {
     user(){
-        return this.belongsTo('App/Model/User')
+        return this.belongsTo('App/Models/User')
     }
 
     project(){
-        return this.belongsToMany('App/Model/Project')
+        return this
+            .belongsToMany('App/Models/Project')
+            .pivotTable('staff_project')
     }
 
     
 }
 
 module.exports = Staff
+    

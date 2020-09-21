@@ -11,7 +11,7 @@ class Project extends Model {
     }
 
     staff(){
-        return this.belongsToMany('App/Models/Staff')
+        return this.belongsToMany('App/Models/Staff').pivotTable('staff_project')
     }
 
     task(){

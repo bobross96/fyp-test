@@ -34,8 +34,7 @@ export interface DialogData {
 export class ScheduleComponent implements OnInit {
   thisSem = 1
   calendarVisible = true;
-  user : any
-  student : any
+  
   calendarOptions: CalendarOptions = {
     headerToolbar: {
       left: 'prev,next today',
@@ -82,6 +81,9 @@ export class ScheduleComponent implements OnInit {
   //bool to check for form showing
   showForm = false;
   tasks: any = [];
+  user : any
+  userType : any
+  project_id: any;
 
   poop() {
     console.log('poop!');
@@ -146,6 +148,17 @@ export class ScheduleComponent implements OnInit {
         result.status &&
         result.hours_spent
       ) {
+        console.log(this.userType);
+        
+        if(this.userType.type == 'staff'){
+          this.project_id = 1
+        }
+
+        else if(this.userType.type == 'student'){
+          this.project_id = this.userType.project_id
+        }
+
+        
         const task = {
           title: result.title,
           content: result.content,
@@ -155,7 +168,7 @@ export class ScheduleComponent implements OnInit {
           status: result.status,
           hours_spent: result.hours_spent,
           user_id: this.user.id,
-          project_id : this.student.project_id
+          project_id : this.project_id
         };
         console.log(task);
 
@@ -222,10 +235,14 @@ export class ScheduleComponent implements OnInit {
   }
 
   getTasks() {
+    // needs to be specific for staff, query through projects
     this.api.getTasks().subscribe((res) => {
       console.log(res.data);
       
       res.data.forEach((task) => {
+        console.log(task);
+        
+        if (task){
         console.log(task.task_due_date);
         let color = '#3788d8';
         const dateString = task.task_due_date.toString();
@@ -247,7 +264,9 @@ export class ScheduleComponent implements OnInit {
           db_id: task.id,
           color: color,
         });
+      }
       });
+    
       console.log(this.tasks);
       this.calendarOptions.events = this.tasks;
     });
@@ -268,7 +287,9 @@ export class ScheduleComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('user'))
-    this.student = JSON.parse(localStorage.getItem('student'))
+    this.userType = JSON.parse(localStorage.getItem('userType'))
+    console.log(this.userType);
+    
     this.getTasks();
 
   }
