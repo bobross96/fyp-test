@@ -42,6 +42,7 @@ import { LoginComponent } from './login/login.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { RegisterComponent } from './register/register.component';
+import { MatRadioModule } from '@angular/material/radio'
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -87,6 +88,7 @@ FullCalendarModule.registerPlugins([
     MatDatepickerModule,
     MatNativeDateModule,
     MatToolbarModule,
+    MatRadioModule
   ],
   providers: [httpInterceptorProviders, MatDatepickerModule],
   bootstrap: [AppComponent],

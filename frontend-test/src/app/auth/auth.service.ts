@@ -37,9 +37,11 @@ export class AuthService {
   private setSession(authResult){
     console.log(authResult);
     localStorage.setItem('token_id', authResult.token.token)
-    const test = JSON.stringify(authResult.user)
-    console.log((test));
-    localStorage.setItem('user',test)
+    //store user and student object inside localStorage
+    const user = JSON.stringify(authResult.user)
+    const userType = JSON.stringify(authResult.userType)
+    localStorage.setItem('user',user)
+    localStorage.setItem('student',userType)
     console.log(localStorage.getItem('token_id'));
 
   }

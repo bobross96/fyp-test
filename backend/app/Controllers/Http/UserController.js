@@ -2,6 +2,8 @@
 
 
 const User = use('App/Models/User');
+const Student = use('App/Models/Student');
+const Project = use('App/Models/Project');
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -21,12 +23,14 @@ class UserController {
         let user = await User.findBy('email',email)
         // generate jwt token based on user
         let token = await auth.generate(user,true)
+        const student = await user.student().fetch()
 
         return response.json({
           message : 'loggin in',
           token : token,
           loginSuccess : true,
-          user : user
+          user : user,
+          userType : student
         })
       }
     }
@@ -43,22 +47,41 @@ class UserController {
 
   async register({auth,request,response}){
     console.log('inside register');
-    const {email,password,first_name,last_name,username} = request.post()
+    const {email,password,first_name,last_name,username,userType,is_active} = request.post()
     const user = new User()
     user.username = username
     user.email = email
     user.first_name = first_name
     user.last_name = last_name
     user.password = password
-    await user.save()
-    let token = await auth.generate(user,true)
+    user.is_active = is_active
+    if (userType == 'student'){
+      const student = new Student()
+      //for now just using one project only 
+      const project = await Project.find(1)
+      await user.save()
+      await user.student().save(student)
+      await project.students().save(student)
+      let token = await auth.generate(user,true)
+      return response.json({
+        message : 'registering',
+        token : token,
+        registerSuccess : true,
+        user : user,
+        userType : student
+      })
+    }
 
-    return response.json({
-      message : 'registering',
-      token : token,
-      registerSuccess : true,
-      user : user
-    })
+    else {
+      return response.json({
+        message : 'staff selected still workin on it'
+      })
+    }
+    
+    //add project id to user body for easy query
+    
+    
+    
   }
   /**
    * Show a list of all users.

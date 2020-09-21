@@ -41,6 +41,12 @@
                 <input matInput type="password" id="password" name="password" formControlName="password" required>
             </mat-form-field>
         </div>
+        <div class="form-group">
+                <mat-radio-group aria-label="Select an option" id="userType" formControlName="userType" required>
+                    <mat-radio-button value="student">Student </mat-radio-button>
+                    <mat-radio-button value="staff">Staff</mat-radio-button>
+                  </mat-radio-group>                  
+        </div>
         <input type="submit" [disabled]="!registerForm.valid" value="Register">
     </form>
 </body>

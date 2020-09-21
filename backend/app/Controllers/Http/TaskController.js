@@ -1,5 +1,9 @@
 'use strict'
+
+const auth = require('../../../config/auth')
+
 const Task = use('App/Models/Task')
+const Project = use('App/Models/Project')
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -18,14 +22,34 @@ class TaskController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index ({ request, response, view }) {
+  async index ({auth, request, response }) {
+    
+    try {
+      const user = await auth.getUser()
+      console.log(user);
+      //fetch project first, then fetch all task related to project.
+      const student = await user.student().fetch()
+      console.log(student);
+      const project = await student.project().fetch()
+      const tasks = await project.task().fetch()
+      console.log(tasks);
+      return response.json({
+        message : 'retrieval success',
+        data : tasks
+        
+      })
+      
+    }
+    catch(error) {
+      console.log(error);
+      return response.json({
+        message : 'error user not retrieved',
+        
+      })
+    }
+    //const tasks = await Task.all()
 
-    const tasks = await Task.all()
-
-    response.json({
-      message : 'hey resourcce works',
-      data : tasks
-    })
+    
   }
 
   
@@ -41,7 +65,7 @@ class TaskController {
   async store ({ request, response }) {
 
     console.log('asd');
-     const {title, content, task_type, status, task_due_date, submission_date,hours_spent,user_id} = request.all()
+     const {title, content, task_type, status, task_due_date, submission_date,hours_spent,user_id,project_id} = request.all()
      const newTask = new Task()
      newTask.title = title
      console.log(request.all());
@@ -52,8 +76,11 @@ class TaskController {
      newTask.submission_date = submission_date
      newTask.hours_spent = hours_spent
      newTask.user_id = user_id
-
+     
      await newTask.save()
+     const project = await Project.find(project_id)
+     // project has many task, so need to use it to save task to it
+     await project.task().save(newTask)
      response.json({
        message : 'saved success',
        db_id : newTask.id

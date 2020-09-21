@@ -18,6 +18,7 @@ export class RegisterComponent implements OnInit {
     first_name : ['',Validators.required],
     last_name : ['',Validators.required],
     password : ['',Validators.required],
+    userType : ['',Validators.required]
   });
 
   constructor(private loginApi : LoginService, 
@@ -32,7 +33,7 @@ export class RegisterComponent implements OnInit {
 
   onSubmit(){
     console.log(this.registerForm.value);
-    this.registerForm.value.is_active = true
+    this.registerForm.value.is_active = true 
     this.authApi.register(this.registerForm.value).subscribe((res) => {
       if (res.registerSuccess){
         this._router.navigateByUrl('/dashboard')

@@ -34,6 +34,8 @@ export interface DialogData {
 export class ScheduleComponent implements OnInit {
   thisSem = 1
   calendarVisible = true;
+  user : any
+  student : any
   calendarOptions: CalendarOptions = {
     headerToolbar: {
       left: 'prev,next today',
@@ -152,7 +154,8 @@ export class ScheduleComponent implements OnInit {
           task_type: result.task_type,
           status: result.status,
           hours_spent: result.hours_spent,
-          user_id: 3,
+          user_id: this.user.id,
+          project_id : this.student.project_id
         };
         console.log(task);
 
@@ -220,6 +223,8 @@ export class ScheduleComponent implements OnInit {
 
   getTasks() {
     this.api.getTasks().subscribe((res) => {
+      console.log(res.data);
+      
       res.data.forEach((task) => {
         console.log(task.task_due_date);
         let color = '#3788d8';
@@ -262,7 +267,10 @@ export class ScheduleComponent implements OnInit {
   constructor(private api: ApiService, public dialog: MatDialog) {}
 
   ngOnInit(): void {
+    this.user = JSON.parse(localStorage.getItem('user'))
+    this.student = JSON.parse(localStorage.getItem('student'))
     this.getTasks();
+
   }
 }
 
