@@ -1,5 +1,7 @@
 'use strict'
 const Project = use('App/Models/Project')
+const User = use('App/Models/User')
+const Staff = use('App/Models/Staff')
 
 class ProjectController {
     async index({request,response}){
@@ -23,6 +25,19 @@ class ProjectController {
 
         response.json({
             message : 'project successfully created'
+        })
+    }
+
+    async linkStaffToProject({ request,response}){
+        const data = request.post()
+        const user = await User.findBy('email',data.email)
+        const staff = await user.staff().fetch()
+        await staff.project().attach(data.project_id)
+
+
+        response.json({
+            message : 'linkstaff works',
+            email : user
         })
     }
 }

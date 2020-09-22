@@ -24,7 +24,9 @@ Route.get('/', () => {
 
 //admin routes 
 Route.get('api/projects','ProjectController.index')
+Route.post('api/projects/addProject','ProjectController.linkStaffToProject')
 Route.post('api/projects','ProjectController.store')
+
 
 
 //user routes
@@ -33,6 +35,7 @@ Route.resource('api/users','UserController').middleware('auth')
 Route.get('api','TestController.index')
 Route.post('api/tasks','TaskController.create')
 Route.post('api/usersMany','UserController.storeMany')
+
 
 //login or register
 Route.post('api/login','UserController.login')

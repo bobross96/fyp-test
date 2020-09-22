@@ -24,17 +24,37 @@ class TaskController {
    */
   async index({ auth, request, response }) {
       const user = await auth.getUser();
-      console.log(user);
       //fetch project first, then fetch all task related to project.
-       
-        // just return all tasks related to user? then filter accordingly.
-        const tasks = await user.task().fetch()
-        
+      if (await user.student().fetch()) {
+        const student = await user.student().fetch();
+        console.log(student);
+        const project = await student.project().fetch();
+        const tasks = await project.task().fetch();
         console.log(tasks);
         return response.json({
           message: "retrieval success",
-          data: tasks
+          data: tasks,
         });
+      } else if (await user.staff().fetch()) {
+        const staff = await user.staff().fetch();
+        const projects = await staff.project().fetch();
+        console.log(projects);
+        //mutliple project have multiple tasks
+        const tasks = await Promise.all(
+          projects.rows.map(async (project) => {
+            // will fetch all tasks related to each project
+            let tasks = await project.task().fetch();
+            // fuck this please read documentation to find a better soln
+            return tasks.rows;
+          })
+        );
+        let flatTask = await tasks.flat();
+        console.log(flatTask);
+        return response.json({
+          message: "retrieval success",
+          data: flatTask,
+        });
+      }
       
   }
 
