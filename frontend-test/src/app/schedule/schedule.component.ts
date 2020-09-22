@@ -81,13 +81,13 @@ export class ScheduleComponent implements OnInit {
   //bool to check for form showing
   showForm = false;
   tasks: any = [];
+  fetchedTasks : any = []
   user : any
   userType : any
   project_id: any;
+  selectedProject 
 
-  poop() {
-    console.log('poop!');
-  }
+  
 
   handleCalendarToggle() {
     this.calendarVisible = !this.calendarVisible;
@@ -151,7 +151,8 @@ export class ScheduleComponent implements OnInit {
         console.log(this.userType);
         
         if(this.userType.type == 'staff'){
-          this.project_id = 1
+
+          this.project_id = this.selectedProject
         }
 
         else if(this.userType.type == 'student'){
@@ -234,42 +235,72 @@ export class ScheduleComponent implements OnInit {
     this.currentEvents = events;
   }
 
+  changeProject() {
+    this.project_id = this.selectedProject
+    this.getTasksForStaff()
+  }
+
+  getTasksForStaff(){ 
+    //clears the calendar
+    this.calendarOptions.events = []
+    
+    const filteredTasks = this.fetchedTasks.filter(task => task.project_id == this.selectedProject)
+
+    console.log(this.calendarOptions.events);
+    this.taskToEvent(filteredTasks)
+    
+    
+    //set tasks based on project id chosen
+    console.log(this.userType);
+    
+    
+    // fetch depending on the id of project
+  }
+
+
   getTasks() {
     // needs to be specific for staff, query through projects
+    
     this.api.getTasks().subscribe((res) => {
       console.log(res.data);
+      this.fetchedTasks = res.data
+      this.taskToEvent(res.data)
       
-      res.data.forEach((task) => {
-        console.log(task);
-        
-        if (task){
-        console.log(task.task_due_date);
-        let color = '#3788d8';
-        const dateString = task.task_due_date.toString();
-        switch (task.task_type) {
-          case 'final':
-            color = 'red';
-            break;
-          case 'completed':
-            color = 'green';
-          default:
-            break;
-        }
-        console.log(dateString);
-
-        this.tasks.push({
-          id: createEventId(),
-          title: task.title,
-          start: dateString,
-          db_id: task.id,
-          color: color,
-        });
-      }
-      });
-    
-      console.log(this.tasks);
-      this.calendarOptions.events = this.tasks;
     });
+  }
+
+  taskToEvent(tasks){
+    this.tasks = []
+    tasks.forEach((task) => {
+      console.log(task);
+      
+      if (task){
+      console.log(task.task_due_date);
+      let color = '#3788d8';
+      const dateString = task.task_due_date.toString();
+      switch (task.task_type) {
+        case 'final':
+          color = 'red';
+          break;
+        case 'completed':
+          color = 'green';
+        default:
+          break;
+      }
+      console.log(dateString);
+
+      this.tasks.push({
+        id: createEventId(),
+        title: task.title,
+        start: dateString,
+        db_id: task.id,
+        color: color,
+      });
+    }
+    });
+  
+    console.log(this.tasks);
+    this.calendarOptions.events = this.tasks;
   }
 
   removeFromDB(id) {
