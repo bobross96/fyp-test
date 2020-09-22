@@ -5,16 +5,16 @@ const Schema = use('Schema')
 
 class StaffProjectSchema extends Schema {
   up () {
-    this.create('staff_projects', (table) => {
+    this.create('staff_project', (table) => {
       table.increments()
       table.timestamps()
-      table.integer('staff_id').unsigned().references('id').inTable('staff')
-      table.integer('project_id').unsigned().references('id').inTable('projects')
+      table.integer('staff_id').unsigned().references('id').inTable('staff').onDelete('cascade')
+      table.integer('project_id').unsigned().references('id').inTable('projects').onDelete('cascade')
     })
   }
 
   down () {
-    this.drop('staff_projects')
+    this.drop('staff_project')
   }
 }
 

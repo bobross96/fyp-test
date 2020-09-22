@@ -1,3 +1,15 @@
+
+
+
+
+<mat-form-field style="margin-left: 40px;" appearance="fill" *ngIf="projects">
+  <mat-label>Select a project</mat-label>
+  <mat-select [(value)]="selectedProject" (selectionChange)="changeProject()">
+    <mat-option>None</mat-option>
+    <mat-option *ngFor="let project of projects" value="{{project.id}}">{{project.project_name}}</mat-option>
+    
+  </mat-select>
+</mat-form-field>
 <div class='demo-app'>
 
     <!-- <div class='demo-app-sidebar'>
@@ -40,6 +52,7 @@
       </div>
     </div> -->
     <!-- <week-number></week-number> -->
+    
     <div class='demo-app-main'>
         <full-calendar *ngIf='calendarVisible' [options]='calendarOptions'></full-calendar>
     </div>

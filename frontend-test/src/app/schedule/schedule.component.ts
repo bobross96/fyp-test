@@ -21,6 +21,7 @@ import {
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
+import { FormBuilder } from '@angular/forms';
 
 export interface DialogData {
   title: string;
@@ -34,8 +35,7 @@ export interface DialogData {
 export class ScheduleComponent implements OnInit {
   thisSem = 1
   calendarVisible = true;
-  user : any
-  student : any
+  
   calendarOptions: CalendarOptions = {
     headerToolbar: {
       left: 'prev,next today',
@@ -82,10 +82,20 @@ export class ScheduleComponent implements OnInit {
   //bool to check for form showing
   showForm = false;
   tasks: any = [];
+  fetchedTasks : any = []
+  user : any
+  userType : any;
+  projects : any;
+  project_id: any;
+  // follows value from html page
+  selectedProject 
+  /* projectForm = this.fb.group([
 
-  poop() {
-    console.log('poop!');
-  }
+  ]) */
+
+
+
+  
 
   handleCalendarToggle() {
     this.calendarVisible = !this.calendarVisible;
@@ -146,6 +156,18 @@ export class ScheduleComponent implements OnInit {
         result.status &&
         result.hours_spent
       ) {
+        console.log(this.userType);
+        
+        if(this.userType.type == 'staff'){
+
+          this.project_id = this.selectedProject
+        }
+
+        else if(this.userType.type == 'student'){
+          this.project_id = this.userType.project_id
+        }
+
+        
         const task = {
           title: result.title,
           content: result.content,
@@ -155,7 +177,7 @@ export class ScheduleComponent implements OnInit {
           status: result.status,
           hours_spent: result.hours_spent,
           user_id: this.user.id,
-          project_id : this.student.project_id
+          project_id : this.project_id
         };
         console.log(task);
 
@@ -221,36 +243,72 @@ export class ScheduleComponent implements OnInit {
     this.currentEvents = events;
   }
 
+  changeProject() {
+    this.project_id = this.selectedProject
+    console.log(this.selectedProject);
+    
+    this.getTasksForStaff()
+  }
+
+  getTasksForStaff(){ 
+    //clears the calendar
+    this.calendarOptions.events = []
+    
+    const filteredTasks = this.fetchedTasks.filter(task => task.project_id == this.selectedProject)
+
+    
+    this.taskToEvent(filteredTasks)
+    
+    
+    //set tasks based on project id chosen
+    console.log(this.userType);
+    
+    
+    // fetch depending on the id of project
+  }
+
+
   getTasks() {
+    // needs to be specific for staff, query through projects
+    
     this.api.getTasks().subscribe((res) => {
       console.log(res.data);
+      this.fetchedTasks = res.data
+      this.taskToEvent(res.data)
       
-      res.data.forEach((task) => {
-        console.log(task.task_due_date);
-        let color = '#3788d8';
-        const dateString = task.task_due_date.toString();
-        switch (task.task_type) {
-          case 'final':
-            color = 'red';
-            break;
-          case 'completed':
-            color = 'green';
-          default:
-            break;
-        }
-        console.log(dateString);
-
-        this.tasks.push({
-          id: createEventId(),
-          title: task.title,
-          start: dateString,
-          db_id: task.id,
-          color: color,
-        });
-      });
-      console.log(this.tasks);
-      this.calendarOptions.events = this.tasks;
     });
+  }
+  // this function takes in the task data and converts to events on the calendar
+  taskToEvent(tasks){
+    this.tasks = []
+    tasks.forEach((task) => {
+      
+      if (task){
+      let color = '#3788d8';
+      const dateString = task.task_due_date.toString();
+      switch (task.task_type) {
+        case 'final':
+          color = 'red';
+          break;
+        case 'completed':
+          color = 'green';
+        default:
+          break;
+      }
+      
+
+      this.tasks.push({
+        id: createEventId(),
+        title: task.title,
+        start: dateString,
+        db_id: task.id,
+        color: color,
+      });
+    }
+    });
+  
+    
+    this.calendarOptions.events = this.tasks;
   }
 
   removeFromDB(id) {
@@ -264,11 +322,18 @@ export class ScheduleComponent implements OnInit {
 
     return new Date(date).toISOString().replace(/T.*$/, '');
   }
-  constructor(private api: ApiService, public dialog: MatDialog) {}
+  constructor(private api: ApiService, 
+              public dialog: MatDialog,
+              private fb : FormBuilder) {}
 
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('user'))
-    this.student = JSON.parse(localStorage.getItem('student'))
+    this.userType = JSON.parse(localStorage.getItem('userType'))
+    if (this.userType.type == 'staff'){
+      this.projects = this.userType.projects
+    }
+    console.log(this.userType);
+    
     this.getTasks();
 
   }
