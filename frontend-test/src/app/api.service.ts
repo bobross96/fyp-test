@@ -20,6 +20,10 @@ export class ApiService {
     return this.http.get("/api/tasks")
   }
 
+  getTaskById(taskID:number):Observable<any>{
+    return this.http.get("/api/tasks/" + taskID)
+  }
+
   postTask(task:any):Observable<any>{
     console.log('in post task');
     return this.http.post("/api/tasks",task)

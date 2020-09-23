@@ -42,7 +42,10 @@ import { LoginComponent } from './login/login.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { RegisterComponent } from './register/register.component';
-import { MatRadioModule } from '@angular/material/radio'
+import { MatRadioModule } from '@angular/material/radio';
+import { TaskComponent } from './task/task.component'
+import { MatCardModule } from '@angular/material/card';
+import { TaskAllComponent } from './task-all/task-all.component'
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -64,6 +67,8 @@ FullCalendarModule.registerPlugins([
     PageNotFoundComponent,
     DashboardComponent,
     RegisterComponent,
+    TaskComponent,
+    TaskAllComponent,
   ],
   imports: [
     BrowserModule,
@@ -88,7 +93,8 @@ FullCalendarModule.registerPlugins([
     MatDatepickerModule,
     MatNativeDateModule,
     MatToolbarModule,
-    MatRadioModule
+    MatRadioModule,
+    MatCardModule
   ],
   providers: [httpInterceptorProviders, MatDatepickerModule],
   bootstrap: [AppComponent],

@@ -8,6 +8,8 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthGuard } from './auth/auth.guard';
 import { RegisterComponent } from './register/register.component';
+import { TaskComponent} from './task/task.component'
+import { TaskAllComponent } from './task-all/task-all.component';
 
 const routes: Routes = [
   {
@@ -22,6 +24,8 @@ const routes: Routes = [
           { path: 'books', component: BooksComponent },
           { path: 'schedule', component: ScheduleComponent },
           { path: 'test', component: TestComponent },
+          { path: 'task',component : TaskComponent},
+          {path : 'allTasks',component : TaskAllComponent}
         ],
       },
     ],

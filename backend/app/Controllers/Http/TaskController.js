@@ -89,7 +89,7 @@ class TaskController {
     newTask.submission_date = submission_date;
     newTask.hours_spent = hours_spent;
     newTask.user_id = user_id;
-
+    console.log(project_id);
     await newTask.save();
     const project = await Project.find(project_id);
     // project has many task, so need to use it to save task to it
@@ -109,7 +109,16 @@ class TaskController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show({ params, request, response, view }) {}
+  async show({ params,request, response, view }) {
+    
+    const taskID = params.id
+    const task = await Task.find(taskID)
+
+    response.json({
+      message : 'query success',
+      task : task
+    })
+  }
 
   /**
    * Render a form to update an existing task.
