@@ -1,4 +1,21 @@
 
-<div class="container">
-<p>task-all works!</p>
+<div class="container" *ngFor="let task of tasks">
+    <mat-expansion-panel (opened)="panelOpenState = true"
+                       (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+        <mat-panel-title>
+          <span>{{task.id}}</span>
+        </mat-panel-title>
+        <mat-panel-description>
+            <span>{{task.task_type}}</span>
+            <span>{{task.status}}</span>
+          <span>{{task.submission_date}}</span>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      
+      {{task.content}}
+      <p>asdasd</p>
+      <p>POOP!</p>
+      <button mat-button (click)="taskView(task.id)" value="task.id">sad</button>
+    </mat-expansion-panel>
 </div>

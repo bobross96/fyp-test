@@ -46,6 +46,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { TaskComponent } from './task/task.component'
 import { MatCardModule } from '@angular/material/card';
 import { TaskAllComponent } from './task-all/task-all.component'
+import { MatExpansionModule } from '@angular/material/expansion'
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -94,7 +95,8 @@ FullCalendarModule.registerPlugins([
     MatNativeDateModule,
     MatToolbarModule,
     MatRadioModule,
-    MatCardModule
+    MatCardModule,
+    MatExpansionModule
   ],
   providers: [httpInterceptorProviders, MatDatepickerModule],
   bootstrap: [AppComponent],
