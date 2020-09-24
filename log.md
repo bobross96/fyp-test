@@ -23,7 +23,7 @@
 - Implemented GET,POST and DELETE for tasks on calendar
 - Added Dialogue when creating Task
 
-# Progress Meeting 1
+# ---Progress Meeting 1---
 
 # 15/9/2020
 - Added function to calculate NTU week to add to calendar
