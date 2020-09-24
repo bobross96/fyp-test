@@ -56,6 +56,8 @@
 - Added edit Task from the Task Detail View
 - Added submit Task from Task Detail View
 
+# ---Progress Meeting 2--- 
+
 # TODO during Recess Week
 - Comments for every Task
 - Add attachments to every Task
