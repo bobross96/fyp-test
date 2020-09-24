@@ -82,12 +82,9 @@ class TaskController {
     const newTask = new Task();
     newTask.title = title;
     console.log(request.all());
-    newTask.content = content;
     newTask.task_type = task_type;
-    newTask.status = status;
+    newTask.status = 'Pending';
     newTask.task_due_date = task_due_date;
-    newTask.submission_date = submission_date;
-    newTask.hours_spent = hours_spent;
     newTask.user_id = user_id;
     console.log(project_id);
     await newTask.save();
@@ -139,7 +136,24 @@ class TaskController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update({ params, request, response }) {}
+  async update({ params, request, response }) {
+    const id = params.id
+    const task = request.only(['title','content','submission_date','task_due_date','status','hours_spent'])
+    const taskFromDB = await Task.find(id)
+    if (task.task_type){
+      taskFromDB.task_type = task.task_type
+    }
+    taskFromDB.title = task.title
+    taskFromDB.content = task.content
+    taskFromDB.hours_spent = task.hours_spent
+
+    await taskFromDB.save()
+    
+    response.json({
+      task : taskFromDB
+    })
+
+  }
 
   /**
    * Delete a task with id.
@@ -157,6 +171,40 @@ class TaskController {
     response.json({
       message: "task deleted",
     });
+  }
+
+
+  async submitTask({ params,request, response}){
+    const task = request.only(['title','content','submission_date','task_due_date','status','hours_spent'])
+    const taskID = params.id
+    console.log(taskID);
+    const taskFromDB = await Task.find(taskID)
+    console.log(taskFromDB);
+    try {
+      
+    const submissionTime = new Date(task.submission_date).getTime()
+    const taskDueTime = taskFromDB.task_due_date.getTime()
+    taskFromDB.title = task.title
+    taskFromDB.content = task.content
+    taskFromDB.submission_date = task.submission_date
+    taskFromDB.hours_spent = task.hours_spent
+    if (submissionTime > taskDueTime){
+      taskFromDB.status = 'Late Submission'
+    }
+
+    else if (submissionTime <= taskDueTime){
+      taskFromDB.status = 'Completed'
+    }
+    await taskFromDB.save()  
+    } catch (error) {
+      console.log(error);
+    }
+    
+
+    response.json({
+      message : 'task saved successfully',
+      task : taskFromDB
+    })
   }
 }
 

@@ -10,12 +10,6 @@ import {
 import { INITIAL_EVENTS, createEventId } from './event-utils';
 import { ApiService } from '../api.service';
 import {
-  ComponentPortal,
-  DomPortal,
-  Portal,
-  TemplatePortal,
-} from '@angular/cdk/portal';
-import {
   MatDialog,
   MatDialogRef,
   MAT_DIALOG_DATA,
@@ -131,15 +125,14 @@ export class ScheduleComponent implements OnInit {
     const calendarApi = selectInfo.view.calendar;
     this.showForm = true;
     calendarApi.unselect(); // clear date selection
-
+    console.log(selectInfo);
+    this.date = new Date(selectInfo.startStr)
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
       width: '400px',
       data: {
-        title: this.title,
-        content: this.content,
-        status: this.status,
+        task_type : this.task_type,
         date: this.date,
-        hours_spent: this.hours_spent,
+        
       },
     });
 
@@ -151,14 +144,7 @@ export class ScheduleComponent implements OnInit {
       if (!result){
         return
       }
-      else if (
-        result.title &&
-        result.content &&
-        result.date &&
-        result.task_type &&
-        result.status &&
-        result.hours_spent
-      ) {
+      else if (result.date &&result.task_type){
         console.log(this.userType);
         
         if(this.userType.type == 'staff'){
@@ -176,13 +162,9 @@ export class ScheduleComponent implements OnInit {
         
         
         const task = {
-          title: result.title,
-          content: result.content,
-          submission_date: result.date,
           task_due_date: result.date,
           task_type: result.task_type,
-          status: result.status,
-          hours_spent: result.hours_spent,
+          status: "Pending",
           user_id: this.user.id,
           project_id : this.project_id
         };
@@ -191,12 +173,10 @@ export class ScheduleComponent implements OnInit {
         this.api.postTask(task).subscribe((res) => {
           console.log(res);
           let date = new Date(result.date);
-          console.log(date);
-          console.log(selectInfo.startStr);
-
+      
           calendarApi.addEvent({
             id: createEventId(),
-            title: result.title,
+            title: result.task_type,
             start: date,
             allDay: selectInfo.allDay,
             db_id: res.db_id,

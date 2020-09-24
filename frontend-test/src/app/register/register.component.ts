@@ -36,7 +36,7 @@ export class RegisterComponent implements OnInit {
     this.registerForm.value.is_active = true 
     this.authApi.register(this.registerForm.value).subscribe((res) => {
       if (res.registerSuccess){
-        this._router.navigateByUrl('/dashboard')
+        this._router.navigateByUrl('/dashboard/schedule')
       }
       else {
         alert('error encountered in creating new user')
