@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
      
         console.log(localStorage.getItem('token_id'));
       
-        this._router.navigateByUrl('/dashboard')
+        this._router.navigateByUrl('/dashboard/schedule')
       }
       else {
         alert('username/password incorrect!')

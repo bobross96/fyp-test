@@ -10,18 +10,13 @@ import {
 import { INITIAL_EVENTS, createEventId } from './event-utils';
 import { ApiService } from '../api.service';
 import {
-  ComponentPortal,
-  DomPortal,
-  Portal,
-  TemplatePortal,
-} from '@angular/cdk/portal';
-import {
   MatDialog,
   MatDialogRef,
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 
 export interface DialogData {
   title: string;
@@ -130,15 +125,14 @@ export class ScheduleComponent implements OnInit {
     const calendarApi = selectInfo.view.calendar;
     this.showForm = true;
     calendarApi.unselect(); // clear date selection
-
+    console.log(selectInfo);
+    this.date = new Date(selectInfo.startStr)
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
       width: '400px',
       data: {
-        title: this.title,
-        content: this.content,
-        status: this.status,
+        task_type : this.task_type,
         date: this.date,
-        hours_spent: this.hours_spent,
+        
       },
     });
 
@@ -147,35 +141,30 @@ export class ScheduleComponent implements OnInit {
       //insert post request here
       console.log(result);
       //console.log(this.title);
-
-      if (
-        result.title &&
-        result.content &&
-        result.date &&
-        result.task_type &&
-        result.status &&
-        result.hours_spent
-      ) {
+      if (!result){
+        return
+      }
+      else if (result.date &&result.task_type){
         console.log(this.userType);
         
         if(this.userType.type == 'staff'){
-
+          if (!this.selectedProject){
+            alert('please select a project!')
+            return
+            
+          }
           this.project_id = this.selectedProject
         }
 
         else if(this.userType.type == 'student'){
           this.project_id = this.userType.project_id
         }
-
+        
         
         const task = {
-          title: result.title,
-          content: result.content,
-          submission_date: result.date,
           task_due_date: result.date,
           task_type: result.task_type,
-          status: result.status,
-          hours_spent: result.hours_spent,
+          status: "Pending",
           user_id: this.user.id,
           project_id : this.project_id
         };
@@ -184,12 +173,10 @@ export class ScheduleComponent implements OnInit {
         this.api.postTask(task).subscribe((res) => {
           console.log(res);
           let date = new Date(result.date);
-          console.log(date);
-          console.log(selectInfo.startStr);
-
+      
           calendarApi.addEvent({
             id: createEventId(),
-            title: result.title,
+            title: result.task_type,
             start: date,
             allDay: selectInfo.allDay,
             db_id: res.db_id,
@@ -211,6 +198,8 @@ export class ScheduleComponent implements OnInit {
     console.log(clickInfo);
     let title = clickInfo.event._def.title;
     let toDelete = false;
+    let toView = false
+    let task = {}
     const dialogRef = this.dialog.open(EditEventDialog, {
       data: {
         title: clickInfo.event._def.title,
@@ -227,6 +216,17 @@ export class ScheduleComponent implements OnInit {
       }
     );
 
+    const viewTask = dialogRef.componentInstance.viewTask.subscribe(
+      (data) => {
+        if (data.view){
+          console.log(clickInfo.event._def);
+          toView = true
+        }
+      }
+    )
+
+
+
     dialogRef.afterClosed().subscribe((result) => {
       subscribeDialog.unsubscribe();
       console.log('dialogue log was closed');
@@ -235,6 +235,10 @@ export class ScheduleComponent implements OnInit {
 
         clickInfo.event.remove();
         //delete from db as well
+      }
+
+      else if (toView){
+        this.navigateToTask(clickInfo.event._def.extendedProps.db_id)
       }
     });
   }
@@ -322,9 +326,15 @@ export class ScheduleComponent implements OnInit {
 
     return new Date(date).toISOString().replace(/T.*$/, '');
   }
+
+
+  navigateToTask(taskID){
+    this.router.navigate(['/dashboard/task'], { queryParams: { id: taskID }});
+  }
   constructor(private api: ApiService, 
               public dialog: MatDialog,
-              private fb : FormBuilder) {}
+              private fb : FormBuilder,
+              private router : Router) {}
 
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('user'))
@@ -335,6 +345,7 @@ export class ScheduleComponent implements OnInit {
     console.log(this.userType);
     
     this.getTasks();
+    
 
   }
 }
@@ -364,6 +375,7 @@ export class DialogOverviewExampleDialog {
 })
 export class EditEventDialog {
   deleteTask = new EventEmitter();
+  viewTask = new EventEmitter();
 
   constructor(
     public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
@@ -374,6 +386,11 @@ export class EditEventDialog {
 
   submitUserDelete(): void {
     this.deleteTask.emit({ delete: true });
+    this.dialogRef.close();
+  }
+
+  submitUserEdit():void {
+    this.viewTask.emit({ view : true})
     this.dialogRef.close();
   }
 

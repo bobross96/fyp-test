@@ -1,0 +1,28 @@
+
+<div class="container" *ngIf="task">
+    <h2>{{task.task_type}} Submission</h2>
+    <mat-card>
+        
+        <mat-card-content>
+        <div style="display:flex; justify-content: space-between;">
+        <span><span class="category">Status</span>: {{task.status}}</span><span>Submitted on: {{task.submission_date}}</span>
+        </div>
+        <span class="category">Due on: </span><span *ngIf="task.task_due_date">{{task.task_due_date}}</span><br>
+        <span class="category">Title: </span><span *ngIf="task.title">{{task.title}}</span>
+        <p><span class="category">Content:</span> <br>{{task.content}}</p>
+
+        <p><span class="category">Hours Spent: </span><span *ngIf="task.hours_spent">{{task.hours_spent}}</span></p>
+        <h3>Attach Document: TODO</h3>
+        <div style="display:flex; justify-content: space-between;">
+        <button *ngIf="!task.submission_date" mat-stroked-button (click)="editTask()">Edit</button>
+        <button *ngIf="!task.submission_date" mat-stroked-button color="primary" (click)="submitTask()">Submit</button>
+        
+        </div>   
+        </mat-card-content>
+    </mat-card>
+    <br>
+    <mat-card>
+        comments (TODO)
+    </mat-card>
+
+</div>

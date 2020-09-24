@@ -30,6 +30,7 @@ Route.post('api/projects','ProjectController.store')
 
 
 //user routes
+Route.put('api/tasks/submit/:id','TaskController.submitTask')
 Route.resource('api/tasks','TaskController').middleware('auth')
 Route.resource('api/users','UserController').middleware('auth')
 Route.get('api','TestController.index')
