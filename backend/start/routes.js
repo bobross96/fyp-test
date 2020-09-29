@@ -41,3 +41,10 @@ Route.post('api/usersMany','UserController.storeMany')
 //login or register
 Route.post('api/login','UserController.login')
 Route.post('api/register','UserController.register')
+
+
+
+// retrieve comments
+Route.post('api/comments','CommentController.create')
+Route.get('api/comments/task/:id','CommentController.taskIndex')
+Route.get('api/comments/link/:id','CommentController.linkCommentToReply')

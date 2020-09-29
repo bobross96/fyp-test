@@ -11,6 +11,15 @@ class Comment extends Model {
     task(){
         return this.belongsTo("App/Models/Task")
     }
+
+    comments(){
+        return this
+            .belongsToMany('App/Models/Comment','parent_id','comment_id')
+            .pivotTable('comment_reply')
+
+    }
+
+    
 }
 
 module.exports = Comment
