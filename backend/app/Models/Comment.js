@@ -16,6 +16,19 @@ class Comment extends Model {
         return this
             .belongsToMany('App/Models/Comment','parent_id','comment_id')
             .pivotTable('comment_reply')
+    }
+
+    commentChild(){
+        return this
+            .belongsToMany('App/Models/Comment','parent_id')
+            .pivotTable('comment_reply')
+
+    }
+
+    commentParent(){
+        return this
+            .belongsToMany('App/Models/Comment','comment_id')
+            .pivotTable('comment_reply')
 
     }
 

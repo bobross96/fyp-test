@@ -18,16 +18,30 @@ class CommentController {
             const user = await comment.user().fetch()
             
             try {
-                comment.replies = await comment.comments().fetch()
-                if (comment.replies){
-                const repliesWithUser = await Promise.all(comment.replies.rows.map(async (reply) => {
+                comment.replies = await comment.commentChild().fetch()
+                // comment with replies 
+                if (comment.replies.rows.length != 0){
+                    const repliesWithUser = await Promise.all(comment.replies.rows.map(async (reply) => {
                     const user = await reply.user().fetch()
                     reply.username = user.username
                     return reply
                 }))
                 comment.replies = repliesWithUser
                 comment.username = user.username 
-                }   
+                } 
+                //condition for comment with no replies and replies
+                else {
+                    const checkForReply = await comment.commentParent().fetch()
+                    comment.username = user.username
+                    // is a reply
+                    if (checkForReply.rows.length != 0){ 
+                        comment.parent_id = comment.id
+                    }
+                    
+                }
+               
+
+                
             } catch (error) {
                 console.log(error);
             }
