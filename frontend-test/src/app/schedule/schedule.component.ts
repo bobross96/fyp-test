@@ -52,6 +52,7 @@ export class ScheduleComponent implements OnInit {
     eventDisplay: 'block',
     weekNumbers: true,
     weekText: `Sem 1 Week `,
+    contentHeight: 'auto',
     weekNumberContent: function (arg) {
       if (!arg.num || arg.num < 0 || arg.num > 14) {
         arg.text = '';
@@ -84,6 +85,7 @@ export class ScheduleComponent implements OnInit {
   project_id: any;
   // follows value from html page
   selectedProject 
+  studentProject: any;
   /* projectForm = this.fb.group([
 
   ]) */
@@ -341,6 +343,10 @@ export class ScheduleComponent implements OnInit {
     this.userType = JSON.parse(localStorage.getItem('userType'))
     if (this.userType.type == 'staff'){
       this.projects = this.userType.projects
+    }
+
+    else if (this.userType.type == 'student'){
+      this.studentProject = this.userType.project.project_name
     }
     console.log(this.userType);
     

@@ -88,9 +88,9 @@ export class TaskComponent implements OnInit {
   }
 
   changeDateForm(){
-    /* if (this.task.submission_date){
+    if (this.task.submission_date){
     this.task.submission_date = this.task.submission_date.substring(0,10)
-    } */
+    }
     this.task.task_due_date = this.task.task_due_date.substring(0,10)
   }
 
