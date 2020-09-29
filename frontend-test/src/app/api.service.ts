@@ -41,16 +41,18 @@ export class ApiService {
     return this.http.put("/api/tasks/submit/"+taskID,task)
   }
 
-  getBooks():Observable<any>{
-    return this.http.get("/api/catalog/books")
-  }
-
-  getBook(id):Observable<any>{
-    return this.http.get("/api/catalog/books/2")
-  }
 
   getUsers():Observable<any>{
 
     return this.http.get("/api/users")
   }
+
+  getCommentsByTask(taskID:number):Observable<any>{
+    return this.http.get("/api/comments/task/" + taskID)
+  }
+
+  postComment(comment:any):Observable<any>{
+    return this.http.post("api/comments",comment)
+  }
+
 }

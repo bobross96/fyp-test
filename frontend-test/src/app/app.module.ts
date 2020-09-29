@@ -48,6 +48,7 @@ import { MatCardModule } from '@angular/material/card';
 import { TaskAllComponent } from './task-all/task-all.component'
 import { MatExpansionModule } from '@angular/material/expansion'
 import {MatGridListModule} from '@angular/material/grid-list';
+import { CommentsComponent } from './comments/comments.component';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -71,7 +72,8 @@ FullCalendarModule.registerPlugins([
     RegisterComponent,
     TaskComponent,
     TaskAllComponent,
-    DialogEdit
+    DialogEdit,
+    CommentsComponent
   ],
   imports: [
     BrowserModule,

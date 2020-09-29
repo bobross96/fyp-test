@@ -25,7 +25,9 @@ class UserController {
 
       if (await user.student().fetch()) {
         const student = await user.student().fetch();
+        let project = await student.project().fetch()
         student.type = 'student'
+        student.project = project
         return response.json({
           message: "loggin in",
           token: token,
@@ -36,7 +38,9 @@ class UserController {
       } else if (await user.staff().fetch()) {
         const staff = await user.staff().fetch();
         let projects = await staff.project().fetch()
+        
         staff.projects = projects.rows
+        console.log(staff.projects);
         staff.type = 'staff'
         return response.json({
           message: "loggin in",
@@ -80,7 +84,9 @@ class UserController {
       //for now just using one project only
       const project = await Project.find(1);
       await user.save();
+      // save student type to user model
       await user.student().save(student);
+      // save project id one to student model
       await project.students().save(student);
       let token = await auth.generate(user, true);
       return response.json({
@@ -103,6 +109,9 @@ class UserController {
         console.log(err);
       }
       console.log("bleh");
+      let projects = await staff.project().fetch()
+        
+      staff.projects = projects.rows
       let token = await auth.generate(user, true);
       return response.json({
         message: "staff selected still workin on it",
