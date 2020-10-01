@@ -55,4 +55,9 @@ export class ApiService {
     return this.http.post("api/comments",comment)
   }
 
+
+  postDocument(file:any):Observable<any>{
+    return this.http.post("api/documents",file)
+  }
+
 }

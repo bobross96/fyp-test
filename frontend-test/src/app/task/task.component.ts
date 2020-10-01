@@ -10,6 +10,7 @@ import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dial
   styleUrls: ['./task.component.scss']
 })
 export class TaskComponent implements OnInit {
+  fileToUpload: any;
 
   constructor(public router : Router,
               private route : ActivatedRoute, 
@@ -92,6 +93,17 @@ export class TaskComponent implements OnInit {
     this.task.submission_date = this.task.submission_date.substring(0,10)
     }
     this.task.task_due_date = this.task.task_due_date.substring(0,10)
+  }
+
+
+  postFile(files : FileList){
+    this.fileToUpload = files.item(0);
+    let formData = new FormData();
+    formData.append('file',this.fileToUpload,this.fileToUpload.name);
+    this.api.postDocument(formData).subscribe((res) => {
+      console.log(res);
+    })
+
   }
 
 }
