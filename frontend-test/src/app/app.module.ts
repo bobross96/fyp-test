@@ -49,6 +49,7 @@ import { TaskAllComponent } from './task-all/task-all.component'
 import { MatExpansionModule } from '@angular/material/expansion'
 import {MatGridListModule} from '@angular/material/grid-list';
 import { CommentsComponent } from './comments/comments.component';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -101,7 +102,8 @@ FullCalendarModule.registerPlugins([
     MatRadioModule,
     MatCardModule,
     MatExpansionModule,
-    MatGridListModule
+    MatGridListModule,
+    PdfViewerModule
   ],
   providers: [httpInterceptorProviders, MatDatepickerModule],
   bootstrap: [AppComponent],

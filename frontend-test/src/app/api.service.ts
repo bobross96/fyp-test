@@ -56,8 +56,12 @@ export class ApiService {
   }
 
 
-  postDocument(file:any):Observable<any>{
-    return this.http.post("api/documents",file)
+  postDocument(file:any,taskID:number):Observable<any>{
+    return this.http.post("api/documents/"+taskID,file)
+  }
+
+  getDocument(taskID:number):Observable<any>{
+    return this.http.get("api/documents/" + taskID,{responseType : 'arraybuffer'})
   }
 
 }

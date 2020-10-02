@@ -11,12 +11,15 @@ import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dial
 })
 export class TaskComponent implements OnInit {
   fileToUpload: any;
+  fileFromDB: any;
+  uploadedFile: any;
 
   constructor(public router : Router,
               private route : ActivatedRoute, 
               private api : ApiService,
               public dialog : MatDialog) { }
   task : any
+  pdfSrc : any
   
   ngOnInit(): void {
 
@@ -26,6 +29,13 @@ export class TaskComponent implements OnInit {
     
     this.api.getTaskById(taskID).subscribe((res)=> {
       this.task = res.task
+      this.fileFromDB = res.file[0].document.data
+      
+      
+      
+      
+
+
       console.log(res);
       if (this.task.submission_date){
       this.task.submission_date = this.task.submission_date.substring(0,10)
@@ -39,6 +49,54 @@ export class TaskComponent implements OnInit {
     //take the id from the url and get the task?
     
     
+  }
+
+  poop(){
+    console.log('poop');
+    
+  }
+  showFile(){
+    this.api.getDocument(this.task.id).subscribe((res) => {      
+      this.fileFromDB = new Blob([res],{type:"application/pdf"})
+      this.uploadedFile = this.fileFromDB
+      console.log(this.fileFromDB);
+      let reader = new FileReader()
+      
+        reader.onload = (e:any) => {
+          
+          
+          this.pdfSrc = e.target.result;
+          console.log(this.pdfSrc);
+        }
+        
+        reader.readAsArrayBuffer(this.fileFromDB) 
+      
+      /* let fileUrl = URL.createObjectURL(this.fileFromDB)
+      const iframe = document.getElementById('pdfTest')
+      iframe.setAttribute('src',fileUrl)
+      URL.revokeObjectURL(fileUrl)  */
+    })
+
+
+    /* blob attempt
+    this.fileFromDB = new Blob([this.fileFromDB],{type:"application/pdf"})
+    console.log(this.fileFromDB);
+    
+    let fileUrl = URL.createObjectURL(this.fileFromDB)
+    const iframe = document.getElementById('pdfTest')
+    iframe.setAttribute('src',fileUrl)
+    URL.revokeObjectURL(fileUrl)  */
+    
+    /* let reader = new FileReader()
+      
+        reader.onload = (e:any) => {
+          
+          
+          this.pdfSrc = e.target.result;
+          console.log(this.pdfSrc);
+        }
+        
+        reader.readAsArrayBuffer(fileUrl)   */
   }
 
   editTask(){
@@ -98,12 +156,31 @@ export class TaskComponent implements OnInit {
 
   postFile(files : FileList){
     this.fileToUpload = files.item(0);
-    let formData = new FormData();
-    formData.append('file',this.fileToUpload,this.fileToUpload.name);
-    this.api.postDocument(formData).subscribe((res) => {
-      console.log(res);
-    })
+    console.log(this.fileToUpload);
+    let reader = new FileReader()
+    reader.onload = (e:any) => {
+      this.pdfSrc = e.target.result;
+      console.log(this.pdfSrc);
+      
+    }
+    reader.readAsArrayBuffer(this.fileToUpload)
+    
 
+  }
+
+  uploadFile(){
+    if(!this.fileToUpload){
+      alert('no file uploaded')
+      return;
+    }
+    else {
+      let formData = new FormData();
+      formData.append('file',this.fileToUpload,this.fileToUpload.name);
+      this.api.postDocument(formData,this.task.id).subscribe((res) => {
+        console.log(res);
+        alert('successfully uploaded!')
+      })
+    }
   }
 
 }

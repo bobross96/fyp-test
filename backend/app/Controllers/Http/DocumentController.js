@@ -1,16 +1,22 @@
 'use strict'
 const Drive = use('Drive')
 const File = use('App/Models/File')
+const Task = use('App/Models/Task')
 const fs = require('fs')
 const Helpers = use('Helpers')
 const path = require('path')
 
+
+
 class DocumentController {
 
 
-    async store({ request, response}){
+    async store({ params,request, response}){
         console.log('inside');
+        const taskID = params.taskID
+        
         const postData = request.file('file')
+        
         //console.log(postData);
         await postData.move(Helpers.tmpPath('uploads'), {
             name : 'blahem.pdf',
@@ -25,12 +31,14 @@ class DocumentController {
 
         try {
             var image2 = fs.readFileSync(path.resolve(__dirname,'../../../tmp/uploads/blahem.pdf'))
-            let imageDB = image2.toString('utf8')
             let arrByte = Uint8Array.from(image2)
-            file.title = 'blahem2'
+            console.log(arrByte);
+            file.title = postData.clientName
+            file.task_id = taskID
             file.document = arrByte
             await file.save()
-              
+            const task = await Task.find(taskID)
+            await task.files().save(file)
         } catch (error) {
             console.log(error);
         }
@@ -58,6 +66,15 @@ class DocumentController {
         
         
         response.json({message : 'blahem'})
+    }
+
+    async show({params,request,response}){
+        const taskID = params.taskID
+        const testDoc = await File.findBy({task_id : taskID})
+        console.log(testDoc);
+        
+        response.send(testDoc.document)
+
     }
 
 

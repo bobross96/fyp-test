@@ -110,10 +110,13 @@ class TaskController {
     
     const taskID = params.id
     const task = await Task.find(taskID)
+    const file = await task.files().fetch()
+    
 
     response.json({
       message : 'query success',
-      task : task
+      task : task,
+      file : file
     })
   }
 

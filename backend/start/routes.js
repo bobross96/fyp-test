@@ -52,4 +52,5 @@ Route.get('api/comments/link/:id','CommentController.linkCommentToReply')
 
 
 // submit task
-Route.post('api/documents','DocumentController.store')
+Route.post('api/documents/:taskID','DocumentController.store')
+Route.get('api/documents/:taskID','DocumentController.show')
