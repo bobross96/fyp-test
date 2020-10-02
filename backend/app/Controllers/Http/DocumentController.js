@@ -70,10 +70,11 @@ class DocumentController {
 
     async show({params,request,response}){
         const taskID = params.taskID
-        const testDoc = await File.findBy({task_id : taskID})
-        console.log(testDoc);
-        
-        response.send(testDoc.document)
+        const task = await Task.find(taskID)
+        const docs = await task.files().fetch()
+        //console.log(docs.rows[0])
+        //const testDoc = await File.findBy({task_id : taskID})
+        response.send(docs)
 
     }
 

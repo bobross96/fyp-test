@@ -20,44 +20,40 @@ export class TaskComponent implements OnInit {
               public dialog : MatDialog) { }
   task : any
   pdfSrc : any
+  attachments : any = []
   
   ngOnInit(): void {
 
     let taskID = parseInt(this.route.snapshot.queryParamMap.get('id'))
     console.log(taskID);
     
-    
+    // gets the task object
     this.api.getTaskById(taskID).subscribe((res)=> {
       this.task = res.task
-      this.fileFromDB = res.file[0].document.data
-      
-      
-      
-      
-
-
       console.log(res);
       if (this.task.submission_date){
       this.task.submission_date = this.task.submission_date.substring(0,10)
       }
       this.task.task_due_date = this.task.task_due_date.substring(0,10)
-      
-      
-      
-      
     })
-    //take the id from the url and get the task?
+    // gets the document realted to the task and inputting into an array
+
+    this.api.getDocument(taskID).subscribe((res) => {
+      this.attachments = res
+    })
     
     
   }
 
-  poop(){
-    console.log('poop');
+  poop(index){
+    this.showFile(index)
     
   }
-  showFile(){
-    this.api.getDocument(this.task.id).subscribe((res) => {      
-      this.fileFromDB = new Blob([res],{type:"application/pdf"})
+  showFile(docIndex){
+    
+      // receive the data, then convert to this fucking type to show..
+      let arrayBuff = Uint8Array.from(this.attachments[docIndex].document.data)
+      this.fileFromDB = new Blob([arrayBuff],{type:"application/pdf"})
       this.uploadedFile = this.fileFromDB
       console.log(this.fileFromDB);
       let reader = new FileReader()
@@ -75,7 +71,7 @@ export class TaskComponent implements OnInit {
       const iframe = document.getElementById('pdfTest')
       iframe.setAttribute('src',fileUrl)
       URL.revokeObjectURL(fileUrl)  */
-    })
+    
 
 
     /* blob attempt

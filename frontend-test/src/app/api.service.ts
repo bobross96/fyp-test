@@ -61,7 +61,7 @@ export class ApiService {
   }
 
   getDocument(taskID:number):Observable<any>{
-    return this.http.get("api/documents/" + taskID,{responseType : 'arraybuffer'})
+    return this.http.get("api/documents/" + taskID)
   }
 
 }

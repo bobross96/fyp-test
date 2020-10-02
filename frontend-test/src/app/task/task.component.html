@@ -18,8 +18,14 @@
         <form>
             <input id="fileForm" type="file" name="file" (change)="postFile($event.target.files)">
             <button mat-button color="primary" (click)=uploadFile()>Upload</button>
-        </form><br>
-        
+        </form>
+        <div *ngIf="attachments">
+            <div *ngFor="let attachment of attachments; let i = index">
+                <span style="cursor:pointer" (click)="poop(i)" class="material-icons">
+                    picture_as_pdf
+                    </span><span>{{attachment.title}}</span>
+            </div>
+        </div>
         
         <div *ngIf="pdfSrc">
         <pdf-viewer [src]="pdfSrc" 
