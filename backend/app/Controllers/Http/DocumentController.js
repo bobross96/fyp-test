@@ -78,6 +78,16 @@ class DocumentController {
 
     }
 
+    async destroy({params,request,response}){
+        console.log('in the zone');
+        const fileID = params.fileID
+        console.log(fileID);
+        const file = await File.find(fileID)
+        await file.delete()
+
+        response.json({message :'deleted success'})
+    }
+
 
 }
 

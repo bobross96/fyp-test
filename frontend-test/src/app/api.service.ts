@@ -64,4 +64,8 @@ export class ApiService {
     return this.http.get("api/documents/" + taskID)
   }
 
+  deleteDocument(fileID:number):Observable<any>{
+    return this.http.delete("api/documents/delete/"+fileID)
+  }
+
 }
