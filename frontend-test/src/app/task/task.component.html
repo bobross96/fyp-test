@@ -12,7 +12,29 @@
         <p><span class="category">Content:</span> <br>{{task.content}}</p>
 
         <p><span class="category">Hours Spent: </span><span *ngIf="task.hours_spent">{{task.hours_spent}}</span></p>
-        <h3>Attach Document: TODO</h3>
+        
+        
+        
+        <form>
+            <input id="fileForm" type="file" name="file" (change)="postFile($event.target.files)">
+            <button mat-button color="primary" (click)=uploadFile()>Upload</button>
+        </form>
+        <div *ngIf="attachments">
+            <div *ngFor="let attachment of attachments; let i = index">
+                <span style="cursor:pointer" (click)="showFile(i)" class="material-icons">
+                    picture_as_pdf
+                    </span><span>{{attachment.title}}</span>
+                    <span class="material-icons" style="cursor: pointer;" (click)="deleteFile(attachment.id,i)">delete</span>
+            </div>
+        </div>
+        
+        <div *ngIf="pdfSrc">
+        
+        
+        
+        </div>
+        
+        <button (click)="showFile()">Show File</button>
         <div style="display:flex; justify-content: space-between;">
         <button *ngIf="!task.submission_date" mat-stroked-button (click)="editTask()">Edit</button>
         <button *ngIf="!task.submission_date" mat-stroked-button color="primary" (click)="submitTask()">Submit</button>

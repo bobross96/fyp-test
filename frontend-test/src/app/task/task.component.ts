@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { ApiService } from '../api.service';
@@ -10,19 +10,26 @@ import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dial
   styleUrls: ['./task.component.scss']
 })
 export class TaskComponent implements OnInit {
+  fileToUpload: any;
+  fileFromDB: any;
+  uploadedFile: any;
+  pageVariable : any;
 
   constructor(public router : Router,
               private route : ActivatedRoute, 
               private api : ApiService,
-              public dialog : MatDialog) { }
+              public dialog : MatDialog,
+              private cdr : ChangeDetectorRef) { }
   task : any
+  pdfSrc : any
+  attachments : any = []
   
   ngOnInit(): void {
 
     let taskID = parseInt(this.route.snapshot.queryParamMap.get('id'))
     console.log(taskID);
     
-    
+    // gets the task object
     this.api.getTaskById(taskID).subscribe((res)=> {
       this.task = res.task
       console.log(res);
@@ -30,12 +37,107 @@ export class TaskComponent implements OnInit {
       this.task.submission_date = this.task.submission_date.substring(0,10)
       }
       this.task.task_due_date = this.task.task_due_date.substring(0,10)
-      
-      
-      
-      
     })
-    //take the id from the url and get the task?
+    // gets the document realted to the task and inputting into an array
+
+    this.api.getDocument(taskID).subscribe((res) => {
+      this.attachments = res
+    })
+    
+    
+  }
+
+
+  nextPage(){
+    this.pageVariable++
+  }
+
+  previousPage(){
+    if (this.pageVariable != 0){
+    this.pageVariable--
+    }
+    else {
+      return
+    }
+  }
+  async showFile(docIndex){
+    this.pageVariable = 1
+      // receive the data, then convert to this fucking type to show..
+      let arrayBuff = Uint8Array.from(this.attachments[docIndex].document.data)
+      this.fileFromDB = new Blob([arrayBuff],{type:"application/pdf"})
+      this.uploadedFile = this.fileFromDB
+      console.log(this.fileFromDB);
+      let reader = new FileReader()
+      
+      reader.onload = (e:any) => {
+        
+        
+        this.pdfSrc = e.target.result;
+        console.log(this.pdfSrc);
+        const dialogRef = this.dialog.open(DialogPdf, {
+          width : '600px',
+          data : {
+            pdfSrc : this.pdfSrc,
+            pageVariable : this.pageVariable
+          }
+  
+          
+        }
+        
+        
+        )
+      }
+      
+     reader.readAsArrayBuffer(this.fileFromDB) 
+    
+    
+
+     
+       
+       
+      /* let fileUrl = URL.createObjectURL(this.fileFromDB)
+      const iframe = document.getElementById('pdfTest')
+      iframe.setAttribute('src',fileUrl)
+      URL.revokeObjectURL(fileUrl)  */
+    
+
+
+    /* blob attempt
+    this.fileFromDB = new Blob([this.fileFromDB],{type:"application/pdf"})
+    console.log(this.fileFromDB);
+    
+    let fileUrl = URL.createObjectURL(this.fileFromDB)
+    const iframe = document.getElementById('pdfTest')
+    iframe.setAttribute('src',fileUrl)
+    URL.revokeObjectURL(fileUrl)  */
+    
+    /* let reader = new FileReader()
+      
+        reader.onload = (e:any) => {
+          
+          
+          this.pdfSrc = e.target.result;
+          console.log(this.pdfSrc);
+        }
+        
+        reader.readAsArrayBuffer(fileUrl)   */
+  }
+
+  deleteFile(id,index){
+    
+    this.api.deleteDocument(id).subscribe( async (res) => {
+      console.log(res);
+      this.api.getDocument(this.task.id).subscribe((res) => {
+        console.log(res);
+        this.attachments = res
+        this.cdr.detectChanges();
+        alert('File deleted')
+      })
+    
+    })
+
+    
+    
     
     
   }
@@ -94,6 +196,43 @@ export class TaskComponent implements OnInit {
     this.task.task_due_date = this.task.task_due_date.substring(0,10)
   }
 
+
+  postFile(files : FileList){
+    this.fileToUpload = files.item(0);
+    console.log(this.fileToUpload);
+    let reader = new FileReader()
+    reader.onload = (e:any) => {
+      this.pdfSrc = e.target.result;
+      console.log(this.pdfSrc);
+      
+    }
+    reader.readAsArrayBuffer(this.fileToUpload)
+    
+
+  }
+
+  uploadFile(){
+    if(!this.fileToUpload){
+      alert('no file uploaded')
+      return;
+    }
+    else {
+      let formData = new FormData();
+      formData.append('file',this.fileToUpload,this.fileToUpload.name);
+      this.api.postDocument(formData,this.task.id).subscribe((res) => {
+        console.log(res);
+        this.api.getDocument(this.task.id).subscribe((res) => {
+          console.log(res);
+          this.attachments = res
+          this.cdr.detectChanges();
+          
+        })
+        alert('successfully uploaded!')
+      })
+      
+    }
+  }
+
 }
 
 @Component({
@@ -109,4 +248,19 @@ export class DialogEdit {
   }
     
   
+}
+
+
+@Component({
+  selector : 'dialog-pdf',
+  templateUrl : './dialogPdf.html'
+})
+
+export class DialogPdf {
+  constructor(
+    public dialogRef:MatDialogRef<DialogPdf>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ){
+
+  }
 }

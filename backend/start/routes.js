@@ -48,3 +48,10 @@ Route.post('api/register','UserController.register')
 Route.post('api/comments','CommentController.create')
 Route.get('api/comments/task/:id','CommentController.taskIndex')
 Route.get('api/comments/link/:id','CommentController.linkCommentToReply')
+
+
+
+// submit task
+Route.delete('api/documents/delete/:fileID','DocumentController.destroy')
+Route.post('api/documents/:taskID','DocumentController.store')
+Route.get('api/documents/:taskID','DocumentController.show')

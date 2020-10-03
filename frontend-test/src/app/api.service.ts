@@ -55,4 +55,17 @@ export class ApiService {
     return this.http.post("api/comments",comment)
   }
 
+
+  postDocument(file:any,taskID:number):Observable<any>{
+    return this.http.post("api/documents/"+taskID,file)
+  }
+
+  getDocument(taskID:number):Observable<any>{
+    return this.http.get("api/documents/" + taskID)
+  }
+
+  deleteDocument(fileID:number):Observable<any>{
+    return this.http.delete("api/documents/delete/"+fileID)
+  }
+
 }

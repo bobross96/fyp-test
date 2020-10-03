@@ -43,12 +43,13 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { RegisterComponent } from './register/register.component';
 import { MatRadioModule } from '@angular/material/radio';
-import { TaskComponent, DialogEdit } from './task/task.component'
+import { TaskComponent, DialogEdit, DialogPdf } from './task/task.component'
 import { MatCardModule } from '@angular/material/card';
 import { TaskAllComponent } from './task-all/task-all.component'
 import { MatExpansionModule } from '@angular/material/expansion'
 import {MatGridListModule} from '@angular/material/grid-list';
 import { CommentsComponent } from './comments/comments.component';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -73,6 +74,7 @@ FullCalendarModule.registerPlugins([
     TaskComponent,
     TaskAllComponent,
     DialogEdit,
+    DialogPdf,
     CommentsComponent
   ],
   imports: [
@@ -101,7 +103,8 @@ FullCalendarModule.registerPlugins([
     MatRadioModule,
     MatCardModule,
     MatExpansionModule,
-    MatGridListModule
+    MatGridListModule,
+    PdfViewerModule
   ],
   providers: [httpInterceptorProviders, MatDatepickerModule],
   bootstrap: [AppComponent],

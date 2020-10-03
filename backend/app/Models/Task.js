@@ -22,6 +22,10 @@ class Task extends Model {
     comment(){
         return this.hasMany('App/Models/Comment')
     }
+
+    files(){
+        return this.hasMany('App/Models/File')
+    }
 }
 
 module.exports = Task
