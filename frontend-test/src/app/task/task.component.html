@@ -15,8 +15,9 @@
         
         
         
-        <form>
+        <form *ngIf=!task.submission_date>
             <input id="fileForm" type="file" name="file" (change)="postFile($event.target.files)">
+            <button *ngIf="fileToUpload" mat-button color="primary" (click)="showUploadedFile()">Preview</button>
             <button mat-button color="primary" (click)=uploadFile()>Upload</button>
         </form>
         <div *ngIf="attachments">
@@ -34,7 +35,7 @@
         
         </div>
         
-        <button (click)="showFile()">Show File</button>
+        
         <div style="display:flex; justify-content: space-between;">
         <button *ngIf="!task.submission_date" mat-stroked-button (click)="editTask()">Edit</button>
         <button *ngIf="!task.submission_date" mat-stroked-button color="primary" (click)="submitTask()">Submit</button>

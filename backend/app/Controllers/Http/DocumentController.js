@@ -19,7 +19,7 @@ class DocumentController {
         
         //console.log(postData);
         await postData.move(Helpers.tmpPath('uploads'), {
-            name : 'blahem.pdf',
+            name : 'blahem',
             overwrite : true
         })
 
@@ -30,7 +30,8 @@ class DocumentController {
         const file = new File()
 
         try {
-            var image2 = fs.readFileSync(path.resolve(__dirname,'../../../tmp/uploads/blahem.pdf'))
+            
+            var image2 = fs.readFileSync(path.resolve(__dirname,'../../../tmp/uploads/blahem'))
             let arrByte = Uint8Array.from(image2)
             console.log(arrByte);
             file.title = postData.clientName

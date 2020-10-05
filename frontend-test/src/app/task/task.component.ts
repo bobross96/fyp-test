@@ -2,105 +2,118 @@ import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { ApiService } from '../api.service';
-import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+} from '@angular/material/dialog';
+import { saveAs } from 'file-saver';
+import { mammoth } from 'mammoth/mammoth.browser';
 
 @Component({
   selector: 'app-task',
   templateUrl: './task.component.html',
-  styleUrls: ['./task.component.scss']
+  styleUrls: ['./task.component.scss'],
 })
 export class TaskComponent implements OnInit {
   fileToUpload: any;
   fileFromDB: any;
   uploadedFile: any;
-  pageVariable : any;
+  pageVariable: any;
 
-  constructor(public router : Router,
-              private route : ActivatedRoute, 
-              private api : ApiService,
-              public dialog : MatDialog,
-              private cdr : ChangeDetectorRef) { }
-  task : any
-  pdfSrc : any
-  attachments : any = []
-  
+  constructor(
+    public router: Router,
+    private route: ActivatedRoute,
+    private api: ApiService,
+    public dialog: MatDialog,
+    private cdr: ChangeDetectorRef
+  ) {}
+  task: any;
+  pdfSrc: any;
+  attachments: any = [];
+
   ngOnInit(): void {
-
-    let taskID = parseInt(this.route.snapshot.queryParamMap.get('id'))
+    let taskID = parseInt(this.route.snapshot.queryParamMap.get('id'));
     console.log(taskID);
-    
+
     // gets the task object
-    this.api.getTaskById(taskID).subscribe((res)=> {
-      this.task = res.task
+    this.api.getTaskById(taskID).subscribe((res) => {
+      this.task = res.task;
       console.log(res);
-      if (this.task.submission_date){
-      this.task.submission_date = this.task.submission_date.substring(0,10)
+      if (this.task.submission_date) {
+        this.task.submission_date = this.task.submission_date.substring(0, 10);
       }
-      this.task.task_due_date = this.task.task_due_date.substring(0,10)
-    })
+      this.task.task_due_date = this.task.task_due_date.substring(0, 10);
+    });
     // gets the document realted to the task and inputting into an array
 
     this.api.getDocument(taskID).subscribe((res) => {
-      this.attachments = res
-    })
-    
-    
+      this.attachments = res;
+    });
   }
 
-
-  nextPage(){
-    this.pageVariable++
+  nextPage() {
+    this.pageVariable++;
   }
 
-  previousPage(){
-    if (this.pageVariable != 0){
-    this.pageVariable--
-    }
-    else {
-      return
+  previousPage() {
+    if (this.pageVariable != 0) {
+      this.pageVariable--;
+    } else {
+      return;
     }
   }
-  async showFile(docIndex){
-    this.pageVariable = 1
-      // receive the data, then convert to this fucking type to show..
-      let arrayBuff = Uint8Array.from(this.attachments[docIndex].document.data)
-      this.fileFromDB = new Blob([arrayBuff],{type:"application/pdf"})
-      this.uploadedFile = this.fileFromDB
+  async showFile(docIndex) {
+    this.pageVariable = 1;
+    // receive the data, then convert to this fucking type to show..
+    let fileType = this.attachments[docIndex].title.slice(-3);
+
+    let arrayBuff = Uint8Array.from(this.attachments[docIndex].document.data);
+    if (fileType == 'pdf') {
+      this.fileFromDB = new Blob([arrayBuff], { type: 'application/pdf' });
+      this.uploadedFile = this.fileFromDB;
       console.log(this.fileFromDB);
-      let reader = new FileReader()
-      
-      reader.onload = (e:any) => {
-        
-        
+      let reader = new FileReader();
+
+      reader.onload = (e: any) => {
         this.pdfSrc = e.target.result;
         console.log(this.pdfSrc);
-        const dialogRef = this.dialog.open(DialogPdf, {
-          width : '600px',
-          data : {
-            pdfSrc : this.pdfSrc,
-            pageVariable : this.pageVariable
-          }
-  
-          
-        }
-        
-        
-        )
-      }
-      
-     reader.readAsArrayBuffer(this.fileFromDB) 
-    
-    
+        // prompt user if they want to save lol
+        /* var fileSaver = saveAs(this.fileFromDB,"test.pdf")
+        console.log(fileSaver); */
 
-     
-       
-       
-      /* let fileUrl = URL.createObjectURL(this.fileFromDB)
+        const dialogRef = this.dialog.open(DialogPdf, {
+          width: '600px',
+          data: {
+            pdfSrc: this.pdfSrc,
+            pageVariable: this.pageVariable,
+          },
+        });
+      };
+
+      reader.readAsArrayBuffer(this.fileFromDB);
+    } else if (fileType == 'ocx') {
+      this.fileFromDB = new Blob([arrayBuff], { type: 'application/pdf' });
+      this.uploadedFile = this.fileFromDB;
+      let objectUrl = URL.createObjectURL(this.fileFromDB);
+
+      // prompt user if they want to save lol
+      /* var fileSaver = saveAs(this.fileFromDB,"test.pdf")
+        console.log(fileSaver); */
+
+      const dialogRef = this.dialog.open(DialogPdf, {
+        width: '600px',
+        data: {
+          pageVariable: this.pageVariable,
+          objectUrl: objectUrl,
+        },
+      });
+    }
+
+    /* let fileUrl = URL.createObjectURL(this.fileFromDB)
       const iframe = document.getElementById('pdfTest')
       iframe.setAttribute('src',fileUrl)
       URL.revokeObjectURL(fileUrl)  */
-    
-
 
     /* blob attempt
     this.fileFromDB = new Blob([this.fileFromDB],{type:"application/pdf"})
@@ -110,7 +123,7 @@ export class TaskComponent implements OnInit {
     const iframe = document.getElementById('pdfTest')
     iframe.setAttribute('src',fileUrl)
     URL.revokeObjectURL(fileUrl)  */
-    
+
     /* let reader = new FileReader()
       
         reader.onload = (e:any) => {
@@ -123,121 +136,132 @@ export class TaskComponent implements OnInit {
         reader.readAsArrayBuffer(fileUrl)   */
   }
 
-  deleteFile(id,index){
-    
-    this.api.deleteDocument(id).subscribe( async (res) => {
+  deleteFile(id, index) {
+    this.api.deleteDocument(id).subscribe(async (res) => {
       console.log(res);
       this.api.getDocument(this.task.id).subscribe((res) => {
         console.log(res);
-        this.attachments = res
+        this.attachments = res;
         this.cdr.detectChanges();
-        alert('File deleted')
-      })
-    
-    })
-
-    
-    
-    
-    
+        alert('File deleted');
+      });
+    });
   }
 
-  editTask(){
+  editTask() {
     const dialogRef = this.dialog.open(DialogEdit, {
-      width : '600px',
-      data : {
-        task_type : this.task.task_type,
-        title : this.task.title,
-        content : this.task.content,
-        hours_spent : this.task.hours_spent
-
-      }
-    })
+      width: '600px',
+      data: {
+        task_type: this.task.task_type,
+        title: this.task.title,
+        content: this.task.content,
+        hours_spent: this.task.hours_spent,
+      },
+    });
     dialogRef.afterClosed().subscribe((result) => {
       console.log(result);
-      if (!result){
-        return
+      if (!result) {
+        return;
+      } else if (result.title && result.content && result.hours_spent) {
+        console.log('poop');
+
+        this.api.editTask(this.task.id, result).subscribe((res) => {
+          this.task = res.task;
+          this.changeDateForm();
+        });
+      } else {
+        alert('task not edited due to missing fields');
       }
-      else if (result.title &&
-        result.content &&
-        result.hours_spent){
-          console.log('poop');
-          
-          this.api.editTask(this.task.id,result).subscribe((res) => {
-            this.task = res.task
-            this.changeDateForm()
-          })
-        }
-      else {
-        alert('task not edited due to missing fields')
-      }
-     
-    })
+    });
   }
 
-  submitTask(){
-    this.task.submission_date = new Date()
-    this.api.submitTask(this.task.id,this.task).subscribe((res) => {
-      alert('task successfully submitted!')
-      this.task = res.task
-      this.changeDateForm()
-      
-    })
+  submitTask() {
+    this.task.submission_date = new Date();
+    this.api.submitTask(this.task.id, this.task).subscribe((res) => {
+      alert('task successfully submitted!');
+      this.task = res.task;
+      this.changeDateForm();
+    });
   }
 
-  getTask(id:number){
+  getTask(id: number) {
     //will get the task?
   }
 
-  changeDateForm(){
-    if (this.task.submission_date){
-    this.task.submission_date = this.task.submission_date.substring(0,10)
+  changeDateForm() {
+    if (this.task.submission_date) {
+      this.task.submission_date = this.task.submission_date.substring(0, 10);
     }
-    this.task.task_due_date = this.task.task_due_date.substring(0,10)
+    this.task.task_due_date = this.task.task_due_date.substring(0, 10);
   }
 
-
-  postFile(files : FileList){
+  postFile(files: FileList) {
     this.fileToUpload = files.item(0);
     console.log(this.fileToUpload);
-    let reader = new FileReader()
-    reader.onload = (e:any) => {
-      this.pdfSrc = e.target.result;
-      console.log(this.pdfSrc);
-      
-    }
-    reader.readAsArrayBuffer(this.fileToUpload)
-    
-
   }
 
-  uploadFile(){
-    if(!this.fileToUpload){
-      alert('no file uploaded')
-      return;
+  showUploadedFile() {
+    //let arrayBuff = Uint8Array.from(this.fileToUpload);
+    console.log(this.fileToUpload);
+    let fileType = this.fileToUpload.name.slice(-3);
+    if (fileType == 'pdf') {
+      let reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.pdfSrc = e.target.result;
+        console.log(this.pdfSrc);
+        const dialogRef = this.dialog.open(DialogPdf, {
+          width: '600px',
+          data: {
+            pdfSrc: this.pdfSrc,
+            pageVariable: this.pageVariable,
+          },
+        });
+      };
+      reader.readAsArrayBuffer(this.fileToUpload);
     }
-    else {
+    else if (fileType == 'ocx'){
+     // this.fileFromDB = new Blob([arrayBuff], { type: 'application/pdf' });
+
+      let objectUrl = URL.createObjectURL(this.fileToUpload);
+
+      // prompt user if they want to save lol
+      /* var fileSaver = saveAs(this.fileFromDB,"test.pdf")
+        console.log(fileSaver); */
+
+      const dialogRef = this.dialog.open(DialogPdf, {
+        width: '600px',
+        data: {
+          pageVariable: this.pageVariable,
+          objectUrl: objectUrl,
+        },
+      });
+
+    }
+  }
+
+  uploadFile() {
+    if (!this.fileToUpload) {
+      alert('no file uploaded');
+      return;
+    } else {
       let formData = new FormData();
-      formData.append('file',this.fileToUpload,this.fileToUpload.name);
-      this.api.postDocument(formData,this.task.id).subscribe((res) => {
+      formData.append('file', this.fileToUpload, this.fileToUpload.name);
+      this.api.postDocument(formData, this.task.id).subscribe((res) => {
         console.log(res);
         this.api.getDocument(this.task.id).subscribe((res) => {
           console.log(res);
-          this.attachments = res
+          this.attachments = res;
           this.cdr.detectChanges();
-          
-        })
-        alert('successfully uploaded!')
-      })
-      
+        });
+        alert('successfully uploaded!');
+      });
     }
   }
-
 }
 
 @Component({
-  selector : 'dialog-edit',
-  templateUrl : './dialogEdit.html'
+  selector: 'dialog-edit',
+  templateUrl: './dialogEdit.html',
 })
 export class DialogEdit {
   constructor(
@@ -246,21 +270,15 @@ export class DialogEdit {
   ) {
     console.log('constructor');
   }
-    
-  
 }
 
-
 @Component({
-  selector : 'dialog-pdf',
-  templateUrl : './dialogPdf.html'
+  selector: 'dialog-pdf',
+  templateUrl: './dialogPdf.html',
 })
-
 export class DialogPdf {
   constructor(
-    public dialogRef:MatDialogRef<DialogPdf>,
+    public dialogRef: MatDialogRef<DialogPdf>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ){
-
-  }
+  ) {}
 }
