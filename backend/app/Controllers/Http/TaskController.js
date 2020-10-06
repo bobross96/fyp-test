@@ -98,6 +98,7 @@ class TaskController {
     response.json({
       message: "saved success",
       db_id: newTask.id,
+      task : newTask
     });
   }
 

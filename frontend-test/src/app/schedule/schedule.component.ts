@@ -56,7 +56,8 @@ export class ScheduleComponent implements OnInit {
     eventsSet: this.handleEvents.bind(this),
     eventAdd: this.handleEventAdd.bind(this),
     eventRemove: this.handleEventRemove.bind(this),
-    eventDisplay: 'block',
+    eventDisplay: 'auto',
+    displayEventEnd : true,
     weekNumbers: true,
     weekText: `Sem 1 Week `,
     contentHeight: 'auto',
@@ -94,14 +95,9 @@ export class ScheduleComponent implements OnInit {
   selectedProject 
   studentProject: any;
   time: any;
-  /* projectForm = this.fb.group([
-
-  ]) */
-
-
-
-  
-
+  startDate: any;
+  endDate: any;
+ 
   handleCalendarToggle() {
     this.calendarVisible = !this.calendarVisible;
   }
@@ -159,7 +155,6 @@ export class ScheduleComponent implements OnInit {
         date: this.date,
         startTime : startTime,
         endTime : endTime,
-        spinners : false,
         showDate : false
         
       },
@@ -184,7 +179,6 @@ export class ScheduleComponent implements OnInit {
           if (!this.selectedProject){
             alert('please select a project!')
             return
-            
           }
           this.project_id = this.selectedProject
         }
@@ -192,33 +186,63 @@ export class ScheduleComponent implements OnInit {
         else if(this.userType.type == 'student'){
           this.project_id = this.userType.project_id
         }
-        
-        let startDate = helper.dateConverter(result.date,result.startTime.hour,result.startTime.minute)
-        let endDate = helper.dateConverter(result.date,result.endTime.hour,result.endTime.minute)
-        
-        
-        
+        if (!result.startTime){
+          this.startDate = null
+        }
+        if (!result.endTime){
+          this.endDate = null
+        }
+        if(result.startTime){
+          this.startDate = helper.dateConverter(result.date,result.startTime.hour,result.startTime.minute)
+          
+        }
+        if(result.endTime){
+          this.endDate = helper.dateConverter(result.date,result.endTime.hour,result.endTime.minute)
+        }
+
         const task = {
           task_due_date: result.date,
           task_type: result.task_type,
           status: "Pending",
           user_id: this.user.id,
           project_id : this.project_id,
-          start_date : startDate,
-          end_date : endDate
+          start_date : this.startDate,
+          end_date : this.endDate
         };
         console.log(task);
 
-        this.api.postTask(task).subscribe((res) => {
-          console.log(res);
+        this.api.postTask(task).subscribe((result) => {
+          console.log(result);
           let date = new Date(result.date);
-      
-          calendarApi.addEvent({
-            id: createEventId(),
-            title: result.task_type,
-            start: date,
-            db_id: res.db_id,
-          });
+          console.log(`result start date: ${result.task.start_date}, end date: ${result.task.end_date}`);
+          
+          if (result.task.start_date && result.task.end_date){
+            console.log('im being added!');
+            
+            calendarApi.addEvent({
+              id: createEventId(),
+              title: result.task.task_type,
+              start: result.task.start_date,
+              end: result.task.end_date,
+              db_id: result.db_id,
+              allDay: false
+            });
+          }
+          else {
+            console.log('imside');
+            console.log(result);
+            
+            calendarApi.addEvent({
+              id: createEventId(),
+              title: result.task.task_type,
+              start : result.task.task_due_date,
+              db_id: result.db_id,
+              allDay : true
+              
+            });
+          }
+
+          
         });
       } else {
         alert('Task not saved, form was incomplete');
@@ -344,6 +368,11 @@ export class ScheduleComponent implements OnInit {
           break;
       }
       
+      if(!task.title){
+        task.title = task.task_type
+      }
+
+
       if (task.start_date && task.end_date){
 
       this.tasks.push({
@@ -363,6 +392,7 @@ export class ScheduleComponent implements OnInit {
           start: dateString,
           db_id: task.id,
           color: color,
+          allDay : true
           
         });
       }
