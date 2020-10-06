@@ -2,7 +2,7 @@
 
 
 
-<mat-form-field style="margin-left: 40px;" appearance="fill" *ngIf="projects">
+<mat-form-field style="padding-left: 1em;" appearance="fill" *ngIf="projects">
   <mat-label>Select a project</mat-label>
   <mat-select [(value)]="selectedProject" (selectionChange)="changeProject()">
     <mat-option>None</mat-option>
@@ -10,54 +10,22 @@
     
   </mat-select>
 </mat-form-field>
-<div style="margin-left: 40px; font-weight: bold;"*ngIf="studentProject">
+<div style="padding-left: 1em; font-weight: bold;"*ngIf="studentProject">
   <h2>{{studentProject}}</h2>
 </div>
 <div class='demo-app'>
 
-    <!-- <div class='demo-app-sidebar'>
+     <div class='demo-app-sidebar'>
       <div class='demo-app-sidebar-section'>
-        <h2>Instructions</h2>
-        <ul>
-          <li>Select dates and you will be prompted to create a new event</li>
-          <li>Drag, drop, and resize events</li>
-          <li>Click an event to delete it</li>
-        </ul>
+        <button mat-raised-button (click)="handleDateSelect()">Add Event</button>
+        
       </div>
-      <div class='demo-app-sidebar-section'>
-        <label>
-          <input
-            type='checkbox'
-            [checked]='calendarVisible'
-            (change)='handleCalendarToggle()'
-          />
-          toggle whole calendar
-        </label>
-      </div>
-      <div class='demo-app-sidebar-section'>
-        <label>
-          <input
-            type='checkbox'
-            [checked]='calendarOptions.weekends'
-            (change)='handleWeekendsToggle()'
-          />
-          toggle weekends
-        </label>
-      </div>
-      <div class='demo-app-sidebar-section'>
-        <h2>All Events ({{currentEvents.length}})</h2>
-        <ul>
-          <li *ngFor='let event of currentEvents'>
-            <b>{{event.startStr}}</b>
-            <i>{{event.title}}</i>
-          </li>
-        </ul>
-      </div>
-    </div> -->
+
+    </div>
     <!-- <week-number></week-number> -->
     
     <div class='demo-app-main'>
-        <full-calendar *ngIf='calendarVisible' [options]='calendarOptions'></full-calendar>
+        <full-calendar #calendar *ngIf='calendarVisible' [options]='calendarOptions'></full-calendar>
     </div>
 
    

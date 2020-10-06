@@ -12,7 +12,7 @@ import {
   WeekNumber,
 } from './schedule/schedule.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { TestComponent } from './test/test.component';
@@ -50,6 +50,11 @@ import { MatExpansionModule } from '@angular/material/expansion'
 import {MatGridListModule} from '@angular/material/grid-list';
 import { CommentsComponent } from './comments/comments.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import {NgxDocViewerModule} from 'ngx-doc-viewer';
+import {NgxMatDatetimePickerModule, 
+  NgxMatNativeDateModule, NgxMatTimepickerModule} from '@angular-material-components/datetime-picker';
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -104,7 +109,12 @@ FullCalendarModule.registerPlugins([
     MatCardModule,
     MatExpansionModule,
     MatGridListModule,
-    PdfViewerModule
+    PdfViewerModule,
+    NgxDocViewerModule,
+    NgxMatDatetimePickerModule, 
+    NgxMatNativeDateModule, 
+    NgxMatTimepickerModule, NgbModule
+    
   ],
   providers: [httpInterceptorProviders, MatDatepickerModule],
   bootstrap: [AppComponent],
