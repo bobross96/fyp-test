@@ -1,5 +1,12 @@
-import { Component, OnInit, Inject, Output, EventEmitter, ViewChild } from '@angular/core';
-import * as helper from '../functions/helper'
+import {
+  Component,
+  OnInit,
+  Inject,
+  Output,
+  EventEmitter,
+  ViewChild,
+} from '@angular/core';
+import * as helper from '../functions/helper';
 import {
   FullCalendarComponent,
   CalendarOptions,
@@ -7,8 +14,7 @@ import {
   EventClickArg,
   EventApi,
   DayHeader,
-  DayCellContent, 
-  
+  DayCellContent,
 } from '@fullcalendar/angular'; // useful for typechecking
 import { INITIAL_EVENTS, createEventId } from './event-utils';
 import { ApiService } from '../api.service';
@@ -32,18 +38,17 @@ export interface DialogData {
 })
 export class ScheduleComponent implements OnInit {
   @ViewChild('calendar') calendarComponent: FullCalendarComponent;
-  
-  thisSem = 1
+
+  thisSem = 1;
   calendarVisible = true;
-  
+
   calendarOptions: CalendarOptions = {
-    
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
     },
-    
+
     initialView: 'dayGridMonth',
     weekends: false,
     editable: true,
@@ -57,7 +62,7 @@ export class ScheduleComponent implements OnInit {
     eventAdd: this.handleEventAdd.bind(this),
     eventRemove: this.handleEventRemove.bind(this),
     eventDisplay: 'auto',
-    displayEventEnd : true,
+    displayEventEnd: true,
     weekNumbers: true,
     weekText: `Sem 1 Week `,
     contentHeight: 'auto',
@@ -82,22 +87,22 @@ export class ScheduleComponent implements OnInit {
   };
 
   currentEvents: EventApi[] = [];
-  
+
   //bool to check for form showing
   showForm = false;
   tasks: any = [];
-  fetchedTasks : any = []
-  user : any
-  userType : any;
-  projects : any;
+  fetchedTasks: any = [];
+  user: any;
+  userType: any;
+  projects: any;
   project_id: any;
   // follows value from html page
-  selectedProject 
+  selectedProject;
   studentProject: any;
   time: any;
   startDate: any;
   endDate: any;
- 
+
   handleCalendarToggle() {
     this.calendarVisible = !this.calendarVisible;
   }
@@ -128,121 +133,117 @@ export class ScheduleComponent implements OnInit {
   handleDateSelect(selectInfo?: DateSelectArg) {
     //const title = prompt('Please enter a new title for your event');
     // const content = prompt('Content')
-    
+
     console.log(this.calendarComponent);
-    
-    const calendarApi = this.calendarComponent['calendar']
+
+    const calendarApi = this.calendarComponent['calendar'];
     //const calendarApi2 = selectInfo.view.calendar
 
     console.log(calendarApi);
     //console.log(calendarApi2);
-    
+
     this.showForm = true;
     calendarApi.unselect(); // clear date selection
     console.log(selectInfo);
-    if (!selectInfo){
-      this.date = new Date()
-    }
-    else {
-    this.date = new Date(selectInfo.startStr)
+    if (!selectInfo) {
+      this.date = new Date();
+    } else {
+      this.date = new Date(selectInfo.startStr);
     }
 
-    let startTime,endTime
+    let startTime, endTime;
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
       width: '400px',
       data: {
-        task_type : this.task_type,
+        task_type: this.task_type,
         date: this.date,
-        startTime : startTime,
-        endTime : endTime,
-        showDate : false
-        
+        startTime: startTime,
+        endTime: endTime,
+        showDate: false,
       },
-
-      
     });
 
-    
     dialogRef.afterClosed().subscribe((result) => {
-      
       console.log('The dialog was closed');
       //insert post request here
       console.log(result);
       //console.log(this.title);
-      if (!result){
-        return
-      }
-      else if (result.date &&result.task_type){
+      if (!result) {
+        return;
+      } else if (result.date && result.task_type) {
         console.log(this.userType);
-        
-        if(this.userType.type == 'staff'){
-          if (!this.selectedProject){
-            alert('please select a project!')
-            return
-          }
-          this.project_id = this.selectedProject
-        }
 
-        else if(this.userType.type == 'student'){
-          this.project_id = this.userType.project_id
+        if (this.userType.type == 'staff') {
+          if (!this.selectedProject) {
+            alert('please select a project!');
+            return;
+          }
+          this.project_id = this.selectedProject;
+        } else if (this.userType.type == 'student') {
+          this.project_id = this.userType.project_id;
         }
-        if (!result.startTime){
-          this.startDate = null
+        if (!result.startTime) {
+          this.startDate = null;
         }
-        if (!result.endTime){
-          this.endDate = null
+        if (!result.endTime) {
+          this.endDate = null;
         }
-        if(result.startTime){
-          this.startDate = helper.dateConverter(result.date,result.startTime.hour,result.startTime.minute)
-          
+        if (result.startTime) {
+          this.startDate = helper.dateConverter(
+            result.date,
+            result.startTime.hour,
+            result.startTime.minute
+          );
         }
-        if(result.endTime){
-          this.endDate = helper.dateConverter(result.date,result.endTime.hour,result.endTime.minute)
+        if (result.endTime) {
+          this.endDate = helper.dateConverter(
+            result.date,
+            result.endTime.hour,
+            result.endTime.minute
+          );
         }
 
         const task = {
           task_due_date: result.date,
           task_type: result.task_type,
-          status: "Pending",
+          status: 'Pending',
           user_id: this.user.id,
-          project_id : this.project_id,
-          start_date : this.startDate,
-          end_date : this.endDate
+          project_id: this.project_id,
+          start_date: this.startDate,
+          end_date: this.endDate,
         };
         console.log(task);
 
         this.api.postTask(task).subscribe((result) => {
           console.log(result);
           let date = new Date(result.date);
-          console.log(`result start date: ${result.task.start_date}, end date: ${result.task.end_date}`);
-          
-          if (result.task.start_date && result.task.end_date){
+          console.log(
+            `result start date: ${result.task.start_date}, end date: ${result.task.end_date}`
+          );
+
+          if (result.task.start_date && result.task.end_date) {
             console.log('im being added!');
-            
+
             calendarApi.addEvent({
               id: createEventId(),
               title: result.task.task_type,
               start: result.task.start_date,
               end: result.task.end_date,
               db_id: result.db_id,
-              allDay: false
+              allDay: false,
             });
-          }
-          else {
+          } else {
             console.log('imside');
             console.log(result);
-            
+
             calendarApi.addEvent({
               id: createEventId(),
               title: result.task.task_type,
-              start : result.task.task_due_date,
+              start: result.task.task_due_date,
               db_id: result.db_id,
-              allDay : true
-              
+              allDay: true,
             });
           }
-
-          
         });
       } else {
         alert('Task not saved, form was incomplete');
@@ -256,14 +257,12 @@ export class ScheduleComponent implements OnInit {
       }) */
   }
 
-  
-
   handleEventClick(clickInfo: EventClickArg) {
     console.log(clickInfo);
     let title = clickInfo.event._def.title;
     let toDelete = false;
-    let toView = false
-    let task = {}
+    let toView = false;
+    let task = {};
     const dialogRef = this.dialog.open(EditEventDialog, {
       data: {
         title: clickInfo.event._def.title,
@@ -280,16 +279,12 @@ export class ScheduleComponent implements OnInit {
       }
     );
 
-    const viewTask = dialogRef.componentInstance.viewTask.subscribe(
-      (data) => {
-        if (data.view){
-          console.log(clickInfo.event._def);
-          toView = true
-        }
+    const viewTask = dialogRef.componentInstance.viewTask.subscribe((data) => {
+      if (data.view) {
+        console.log(clickInfo.event._def);
+        toView = true;
       }
-    )
-
-
+    });
 
     dialogRef.afterClosed().subscribe((result) => {
       subscribeDialog.unsubscribe();
@@ -299,10 +294,8 @@ export class ScheduleComponent implements OnInit {
 
         clickInfo.event.remove();
         //delete from db as well
-      }
-
-      else if (toView){
-        this.navigateToTask(clickInfo.event._def.extendedProps.db_id)
+      } else if (toView) {
+        this.navigateToTask(clickInfo.event._def.extendedProps.db_id);
       }
     });
   }
@@ -312,100 +305,85 @@ export class ScheduleComponent implements OnInit {
   }
 
   changeProject() {
-    this.project_id = this.selectedProject
+    this.project_id = this.selectedProject;
     console.log(this.selectedProject);
-    
-    this.getTasksForStaff()
+
+    this.getTasksForStaff();
   }
 
-  getTasksForStaff(){ 
+  getTasksForStaff() {
     //clears the calendar
-    this.calendarOptions.events = []
-    
-    const filteredTasks = this.fetchedTasks.filter(task => task.project_id == this.selectedProject)
+    this.calendarOptions.events = [];
 
-    
-    this.taskToEvent(filteredTasks)
-    
-    
+    const filteredTasks = this.fetchedTasks.filter(
+      (task) => task.project_id == this.selectedProject
+    );
+
+    this.taskToEvent(filteredTasks);
+
     //set tasks based on project id chosen
     console.log(this.userType);
-    
-    
+
     // fetch depending on the id of project
   }
 
-
   getTasks() {
     // needs to be specific for staff, query through projects
-    
+
     this.api.getTasks().subscribe((res) => {
       console.log(res.data);
-      this.fetchedTasks = res.data
-      this.taskToEvent(res.data)
-      
+      this.fetchedTasks = res.data;
+      this.taskToEvent(res.data);
     });
   }
   // this function takes in the task data and converts to events on the calendar
-  taskToEvent(tasks){
-    this.tasks = []
+  taskToEvent(tasks) {
+    this.tasks = [];
     tasks.forEach((task) => {
-      
-      if (task){
-      let color = '#3788d8';
-      const dateString = task.task_due_date.toString();
-      switch (task.task_type) {
-        case 'final':
-          color = 'red';
-          break;
-        case 'completed':
-          color = 'green';
-          break;
-        case 'Meeting Notes':
-          color = '#66cc91';
-          break;
-        default:
-          break;
-      }
-      
-      if(!task.title){
-        task.title = task.task_type
-      }
+      if (task) {
+        let color = '#3788d8';
+        const dateString = task.task_due_date.toString();
+        switch (task.task_type) {
+          case 'final':
+            color = 'red';
+            break;
+          case 'completed':
+            color = 'green';
+            break;
+          case 'Meeting Notes':
+            color = '#66cc91';
+            break;
+          default:
+            break;
+        }
 
+        if (!task.title) {
+          task.title = task.task_type;
+        }
 
-      if (task.start_date && task.end_date){
-
-      this.tasks.push({
-        id: createEventId(),
-        title: task.title,
-        start: task.start_date,
-        end : task.end_date,
-        db_id: task.id,
-        color: color,
-        allDay:false
-      });
+        if (task.start_date && task.end_date) {
+          this.tasks.push({
+            id: createEventId(),
+            title: task.title,
+            start: task.start_date,
+            end: task.end_date,
+            db_id: task.id,
+            color: color,
+            allDay: false,
+          });
+        } else {
+          this.tasks.push({
+            id: createEventId(),
+            title: task.title,
+            start: dateString,
+            db_id: task.id,
+            color: color,
+            allDay: true,
+          });
+        }
       }
-      else {
-        this.tasks.push({
-          id: createEventId(),
-          title: task.title,
-          start: dateString,
-          db_id: task.id,
-          color: color,
-          allDay : true
-          
-        });
-      }
-    
-    
-    
-    
-    }
-
-    
     });
-  
-    
+
     this.calendarOptions.events = this.tasks;
   }
 
@@ -421,30 +399,27 @@ export class ScheduleComponent implements OnInit {
     return new Date(date).toISOString().replace(/T.*$/, '');
   }
 
-
-  navigateToTask(taskID){
-    this.router.navigate(['/dashboard/task'], { queryParams: { id: taskID }});
+  navigateToTask(taskID) {
+    this.router.navigate(['/dashboard/task'], { queryParams: { id: taskID } });
   }
-  constructor(private api: ApiService, 
-              public dialog: MatDialog,
-              private fb : FormBuilder,
-              private router : Router) {}
+  constructor(
+    private api: ApiService,
+    public dialog: MatDialog,
+    private fb: FormBuilder,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.user = JSON.parse(localStorage.getItem('user'))
-    this.userType = JSON.parse(localStorage.getItem('userType'))
-    if (this.userType.type == 'staff'){
-      this.projects = this.userType.projects
-    }
-
-    else if (this.userType.type == 'student'){
-      this.studentProject = this.userType.project.project_name
+    this.user = JSON.parse(localStorage.getItem('user'));
+    this.userType = JSON.parse(localStorage.getItem('userType'));
+    if (this.userType.type == 'staff') {
+      this.projects = this.userType.projects;
+    } else if (this.userType.type == 'student') {
+      this.studentProject = this.userType.project.project_name;
     }
     console.log(this.userType);
-    
-    this.getTasks();
-    
 
+    this.getTasks();
   }
 }
 
@@ -458,18 +433,9 @@ export class DialogOverviewExampleDialog {
     public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    console.log('constructor');
-  }
-  toggle(test){
-    console.log(test);
     
-    if(test){
-      test = false
-    }
-    else {
-      test = true
-    }
   }
+  
 
   onNoClick(): void {
     console.log(this.dialogRef);
@@ -498,8 +464,8 @@ export class EditEventDialog {
     this.dialogRef.close();
   }
 
-  submitUserEdit():void {
-    this.viewTask.emit({ view : true})
+  submitUserEdit(): void {
+    this.viewTask.emit({ view: true });
     this.dialogRef.close();
   }
 
