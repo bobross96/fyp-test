@@ -17,3 +17,12 @@ export function getSchoolWeek(currentDate) {
 
     return 'Week ' + intNumber;
   }
+
+export function dateConverter(date,hour,minute){
+  let year = date.getFullYear()
+  let month = date.getMonth()
+  let day = date.getDate()
+
+  let newStartDate = new Date(year,month,day,hour,minute)
+  return newStartDate
+}

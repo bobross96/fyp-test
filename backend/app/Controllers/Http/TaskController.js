@@ -78,6 +78,8 @@ class TaskController {
       hours_spent,
       user_id,
       project_id,
+      start_date,
+      end_date
     } = request.all();
     const newTask = new Task();
     newTask.title = title;
@@ -86,6 +88,8 @@ class TaskController {
     newTask.status = 'Pending';
     newTask.task_due_date = task_due_date;
     newTask.user_id = user_id;
+    newTask.start_date = start_date;
+    newTask.end_date = end_date;
     console.log(project_id);
     await newTask.save();
     const project = await Project.find(project_id);
@@ -184,6 +188,7 @@ class TaskController {
     const taskFromDB = await Task.find(taskID)
     console.log(taskFromDB);
     try {
+    
       
     const submissionTime = new Date(task.submission_date).getTime()
     const taskDueTime = taskFromDB.task_due_date.getTime()

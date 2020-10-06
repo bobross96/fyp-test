@@ -1,11 +1,14 @@
-import { Component, OnInit, Inject, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Inject, Output, EventEmitter, ViewChild } from '@angular/core';
+import * as helper from '../functions/helper'
 import {
+  FullCalendarComponent,
   CalendarOptions,
   DateSelectArg,
   EventClickArg,
   EventApi,
   DayHeader,
-  DayCellContent,
+  DayCellContent, 
+  
 } from '@fullcalendar/angular'; // useful for typechecking
 import { INITIAL_EVENTS, createEventId } from './event-utils';
 import { ApiService } from '../api.service';
@@ -28,17 +31,21 @@ export interface DialogData {
   styleUrls: ['./schedule.component.scss'],
 })
 export class ScheduleComponent implements OnInit {
+  @ViewChild('calendar') calendarComponent: FullCalendarComponent;
+  
   thisSem = 1
   calendarVisible = true;
   
   calendarOptions: CalendarOptions = {
+    
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
     },
+    
     initialView: 'dayGridMonth',
-    weekends: true,
+    weekends: false,
     editable: true,
     selectable: true,
     selectMirror: true,
@@ -86,6 +93,7 @@ export class ScheduleComponent implements OnInit {
   // follows value from html page
   selectedProject 
   studentProject: any;
+  time: any;
   /* projectForm = this.fb.group([
 
   ]) */
@@ -103,8 +111,8 @@ export class ScheduleComponent implements OnInit {
     calendarOptions.weekends = !calendarOptions.weekends;
   }
 
-  handleEventAdd(addInfo) {
-    console.log(addInfo.event._def.title);
+  handleEventAdd(addInfo?) {
+    console.log(addInfo);
   }
 
   handleEventRemove(removeInfo) {
@@ -121,24 +129,47 @@ export class ScheduleComponent implements OnInit {
   task_type: string;
   date: Date;
   hours_spent: number;
-  handleDateSelect(selectInfo: DateSelectArg) {
+  handleDateSelect(selectInfo?: DateSelectArg) {
     //const title = prompt('Please enter a new title for your event');
     // const content = prompt('Content')
-    const calendarApi = selectInfo.view.calendar;
+    
+    console.log(this.calendarComponent);
+    
+    const calendarApi = this.calendarComponent['calendar']
+    //const calendarApi2 = selectInfo.view.calendar
+
+    console.log(calendarApi);
+    //console.log(calendarApi2);
+    
     this.showForm = true;
     calendarApi.unselect(); // clear date selection
     console.log(selectInfo);
+    if (!selectInfo){
+      this.date = new Date()
+    }
+    else {
     this.date = new Date(selectInfo.startStr)
+    }
+
+    let startTime,endTime
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
       width: '400px',
       data: {
         task_type : this.task_type,
         date: this.date,
+        startTime : startTime,
+        endTime : endTime,
+        spinners : false,
+        showDate : false
         
       },
+
+      
     });
 
+    
     dialogRef.afterClosed().subscribe((result) => {
+      
       console.log('The dialog was closed');
       //insert post request here
       console.log(result);
@@ -162,13 +193,19 @@ export class ScheduleComponent implements OnInit {
           this.project_id = this.userType.project_id
         }
         
+        let startDate = helper.dateConverter(result.date,result.startTime.hour,result.startTime.minute)
+        let endDate = helper.dateConverter(result.date,result.endTime.hour,result.endTime.minute)
+        
+        
         
         const task = {
           task_due_date: result.date,
           task_type: result.task_type,
           status: "Pending",
           user_id: this.user.id,
-          project_id : this.project_id
+          project_id : this.project_id,
+          start_date : startDate,
+          end_date : endDate
         };
         console.log(task);
 
@@ -180,7 +217,6 @@ export class ScheduleComponent implements OnInit {
             id: createEventId(),
             title: result.task_type,
             start: date,
-            allDay: selectInfo.allDay,
             db_id: res.db_id,
           });
         });
@@ -195,6 +231,8 @@ export class ScheduleComponent implements OnInit {
     /* 
       }) */
   }
+
+  
 
   handleEventClick(clickInfo: EventClickArg) {
     console.log(clickInfo);
@@ -298,19 +336,43 @@ export class ScheduleComponent implements OnInit {
           break;
         case 'completed':
           color = 'green';
+          break;
+        case 'Meeting Notes':
+          color = '#66cc91';
+          break;
         default:
           break;
       }
       
+      if (task.start_date && task.end_date){
 
       this.tasks.push({
         id: createEventId(),
         title: task.title,
-        start: dateString,
+        start: task.start_date,
+        end : task.end_date,
         db_id: task.id,
         color: color,
+        allDay:false
       });
+      }
+      else {
+        this.tasks.push({
+          id: createEventId(),
+          title: task.title,
+          start: dateString,
+          db_id: task.id,
+          color: color,
+          
+        });
+      }
+    
+    
+    
+    
     }
+
+    
     });
   
     
@@ -359,6 +421,7 @@ export class ScheduleComponent implements OnInit {
 @Component({
   selector: 'dialog-overview-example-dialog',
   templateUrl: './dialog.html',
+  styleUrls: ['./schedule.component.scss'],
 })
 export class DialogOverviewExampleDialog {
   constructor(
@@ -366,6 +429,16 @@ export class DialogOverviewExampleDialog {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     console.log('constructor');
+  }
+  toggle(test){
+    console.log(test);
+    
+    if(test){
+      test = false
+    }
+    else {
+      test = true
+    }
   }
 
   onNoClick(): void {
