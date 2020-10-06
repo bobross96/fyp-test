@@ -62,3 +62,22 @@
 - Comments for every Task
 - Add attachments to every Task
 - Add notifications every time a Task is submitted(for Staff)/ Task is late (Both User and Staff)
+
+# 30/9/2020
+- Added comments section to every Task
+- User can reply to parent comment only
+- Use junction table to link parent and child comment
+
+# 2/10/2020
+- Added PDF upload functionality
+- User can upload and preview uploaded file
+- User can save file to the task
+- User can view or delete saved files 
+
+# 6/10/2020
+- Added docx upload functionality 
+- Rendered using mammoth.js library as HTML file
+- Added timings on events (primarily for meetings)
+- Changed view for timed VS non-timed events
+
+ 
