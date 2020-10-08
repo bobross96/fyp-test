@@ -136,6 +136,7 @@ export class ScheduleComponent implements OnInit {
 
     console.log(this.calendarComponent);
 
+    // selects the calendar component
     const calendarApi = this.calendarComponent['calendar'];
     //const calendarApi2 = selectInfo.view.calendar
 
@@ -179,9 +180,7 @@ export class ScheduleComponent implements OnInit {
             return;
           }
           this.project_id = this.selectedProject;
-        } else if (this.userType.type == 'student') {
-          this.project_id = this.userType.project_id;
-        }
+        } 
         if (!result.startTime) {
           this.startDate = null;
         }
@@ -215,35 +214,7 @@ export class ScheduleComponent implements OnInit {
         console.log(task);
 
         this.api.postTask(task).subscribe((result) => {
-          console.log(result);
-          let date = new Date(result.date);
-          console.log(
-            `result start date: ${result.task.start_date}, end date: ${result.task.end_date}`
-          );
-
-          if (result.task.start_date && result.task.end_date) {
-            console.log('im being added!');
-
-            calendarApi.addEvent({
-              id: createEventId(),
-              title: result.task.task_type,
-              start: result.task.start_date,
-              end: result.task.end_date,
-              db_id: result.db_id,
-              allDay: false,
-            });
-          } else {
-            console.log('imside');
-            console.log(result);
-
-            calendarApi.addEvent({
-              id: createEventId(),
-              title: result.task.task_type,
-              start: result.task.task_due_date,
-              db_id: result.db_id,
-              allDay: true,
-            });
-          }
+          helper.singleTaskToEvent(result.task,calendarApi,createEventId)
         });
       } else {
         alert('Task not saved, form was incomplete');
@@ -338,53 +309,17 @@ export class ScheduleComponent implements OnInit {
   }
   // this function takes in the task data and converts to events on the calendar
   taskToEvent(tasks) {
+    const calendarApi = this.calendarComponent['calendar'];
     this.tasks = [];
     tasks.forEach((task) => {
-      if (task) {
-        let color = '#3788d8';
-        const dateString = task.task_due_date.toString();
-        switch (task.task_type) {
-          case 'final':
-            color = 'red';
-            break;
-          case 'completed':
-            color = 'green';
-            break;
-          case 'Meeting Notes':
-            color = '#66cc91';
-            break;
-          default:
-            break;
-        }
-
-        if (!task.title) {
-          task.title = task.task_type;
-        }
-
-        if (task.start_date && task.end_date) {
-          this.tasks.push({
-            id: createEventId(),
-            title: task.title,
-            start: task.start_date,
-            end: task.end_date,
-            db_id: task.id,
-            color: color,
-            allDay: false,
-          });
-        } else {
-          this.tasks.push({
-            id: createEventId(),
-            title: task.title,
-            start: dateString,
-            db_id: task.id,
-            color: color,
-            allDay: true,
-          });
-        }
+      if (task){
+        helper.singleTaskToEvent(task,calendarApi,createEventId)
       }
     });
 
     this.calendarOptions.events = this.tasks;
+    console.log(this.calendarOptions.events);
+    
   }
 
   removeFromDB(id) {
@@ -414,10 +349,12 @@ export class ScheduleComponent implements OnInit {
     this.userType = JSON.parse(localStorage.getItem('userType'));
     if (this.userType.type == 'staff') {
       this.projects = this.userType.projects;
+      this.selectedProject = this.userType.projects[0].id;
     } else if (this.userType.type == 'student') {
       this.studentProject = this.userType.project.project_name;
+      this.project_id = this.userType.project_id;
     }
-    console.log(this.userType);
+    //console.log(this.userType);
 
     this.getTasks();
   }

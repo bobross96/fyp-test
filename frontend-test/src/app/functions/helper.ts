@@ -26,3 +26,58 @@ export function dateConverter(date,hour,minute){
   let newStartDate = new Date(year,month,day,hour,minute)
   return newStartDate
 }
+
+export function singleTaskToEvent(task,calendarApi,createEventId){
+  let color = '#3788d8';
+  switch (task.task_type) {
+    case 'final':
+            color = 'red';
+            break;
+          case 'completed':
+            color = 'green';
+            break;
+          case 'Meeting Notes':
+            color = '#66cc91';
+            break;
+          default:
+            break;
+  }
+
+  if (!task.title) {
+    task.title = task.task_type;
+  }
+
+  if (task.start_date && task.end_date) {
+    calendarApi.addEvent({
+      id: task.id,
+      title: task.title,
+      start: task.start_date,
+      end: task.end_date,
+      db_id: task.id,
+      color: color,
+      allDay: false,
+    });
+  } else {
+    calendarApi.addEvent({
+      id: task.id,
+      title: task.title,
+      start: task.task_due_date,
+      db_id: task.id,
+      color: color,
+      allDay: true,
+    });
+  }
+
+
+
+  
+
+
+
+
+}
+
+
+
+
+
