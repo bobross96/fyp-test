@@ -14,7 +14,7 @@ import {
   EventClickArg,
   EventApi,
   DayHeader,
-  DayCellContent,
+  DayCellContent, CalendarApi
 } from '@fullcalendar/angular'; // useful for typechecking
 import { INITIAL_EVENTS, createEventId } from './event-utils';
 import { ApiService } from '../api.service';
@@ -113,7 +113,7 @@ export class ScheduleComponent implements OnInit {
   }
 
   handleEventAdd(addInfo?) {
-    console.log(addInfo);
+    //console.log(addInfo);
   }
 
   handleEventRemove(removeInfo) {
@@ -284,7 +284,8 @@ export class ScheduleComponent implements OnInit {
 
   getTasksForStaff() {
     //clears the calendar
-    this.calendarOptions.events = [];
+    const calendarApi = this.calendarComponent['calendar'];
+    calendarApi.removeAllEvents()
 
     const filteredTasks = this.fetchedTasks.filter(
       (task) => task.project_id == this.selectedProject
@@ -349,7 +350,7 @@ export class ScheduleComponent implements OnInit {
     this.userType = JSON.parse(localStorage.getItem('userType'));
     if (this.userType.type == 'staff') {
       this.projects = this.userType.projects;
-      this.selectedProject = this.userType.projects[0].id;
+      //this.selectedProject = this.userType.projects[0].id;
     } else if (this.userType.type == 'student') {
       this.studentProject = this.userType.project.project_name;
       this.project_id = this.userType.project_id;
