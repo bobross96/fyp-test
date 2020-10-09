@@ -80,4 +80,6 @@
 - Added timings on events (primarily for meetings)
 - Changed view for timed VS non-timed events
 
+# 8/10/2020
+- Added query parameter based routing for different task types
  
