@@ -55,7 +55,7 @@ import {NgxMatDatetimePickerModule,
   NgxMatNativeDateModule, NgxMatTimepickerModule} from '@angular-material-components/datetime-picker';
 import { AdminComponent } from './admin-app/admin/admin.component';
 import { AdminLoginComponent} from './admin-app/admin-login/admin-login.component';
-import { AdminUsersComponent } from './admin-app/admin-users/admin-users.component';
+import { AdminUsersComponent,DialogAddUser } from './admin-app/admin-users/admin-users.component';
 import { AdminProjectsComponent } from './admin-app/admin-projects/admin-projects.component';
 import { AdminProjectComponent } from './admin-app/admin-project/admin-project.component';
 import { MatTableModule} from '@angular/material/table';
@@ -88,6 +88,7 @@ FullCalendarModule.registerPlugins([
     AdminComponent,
     AdminLoginComponent,
     AdminUsersComponent,
+    DialogAddUser,
     AdminProjectsComponent,
     AdminProjectComponent
   ],

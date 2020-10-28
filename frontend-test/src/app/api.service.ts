@@ -47,6 +47,8 @@ export class ApiService {
     return this.http.get("/api/users")
   }
 
+  
+
   getCommentsByTask(taskID:number):Observable<any>{
     return this.http.get("/api/comments/task/" + taskID)
   }
@@ -83,6 +85,11 @@ export class ApiService {
 
   linkUserToProject(data : any):Observable<any>{
     return this.http.post("api/projects/linkUserToProject",data)
+  }
+
+  addUser(userData:any):Observable<any>{
+    return this.http.post("api/register",userData)
+
   }
 
 }
