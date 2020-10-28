@@ -10,6 +10,8 @@ import { AuthGuard } from './auth/auth.guard';
 import { RegisterComponent } from './register/register.component';
 import { TaskComponent} from './task/task.component'
 import { TaskAllComponent } from './task-all/task-all.component';
+import { AdminComponent } from './admin-app/admin/admin.component';
+import { AdminLoginComponent } from './admin-app/admin-login/admin-login.component';
 
 const routes: Routes = [
   {
@@ -30,10 +32,19 @@ const routes: Routes = [
       },
     ],
   },
+  {
+    path :'admin',
+    component : AdminComponent,
+    children : [
+      
+    ]
+  },
   { path: 'login', component: LoginComponent },
   { path: 'register', component : RegisterComponent},
+  {path : 'admin-login',component : AdminLoginComponent},
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent },
+  
 ];
 
 @NgModule({

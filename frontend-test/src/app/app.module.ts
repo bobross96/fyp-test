@@ -53,7 +53,8 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import {NgxDocViewerModule} from 'ngx-doc-viewer';
 import {NgxMatDatetimePickerModule, 
   NgxMatNativeDateModule, NgxMatTimepickerModule} from '@angular-material-components/datetime-picker';
-import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import { AdminComponent } from './admin-app/admin/admin.component';
+import { AdminLoginComponent} from './admin-app/admin-login/admin-login.component';
 
 
 FullCalendarModule.registerPlugins([
@@ -80,7 +81,9 @@ FullCalendarModule.registerPlugins([
     TaskAllComponent,
     DialogEdit,
     DialogPdf,
-    CommentsComponent
+    CommentsComponent,
+    AdminComponent,
+    AdminLoginComponent
   ],
   imports: [
     BrowserModule,

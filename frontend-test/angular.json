@@ -130,6 +130,127 @@
           }
         }
       }
+    },
+    "adminpanel": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/adminpanel",
+      "sourceRoot": "projects/adminpanel/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/adminpanel",
+            "index": "projects/adminpanel/src/index.html",
+            "main": "projects/adminpanel/src/main.ts",
+            "polyfills": "projects/adminpanel/src/polyfills.ts",
+            "tsConfig": "projects/adminpanel/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "projects/adminpanel/src/favicon.ico",
+              "projects/adminpanel/src/assets"
+            ],
+            "styles": [
+              "projects/adminpanel/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/adminpanel/src/environments/environment.ts",
+                  "with": "projects/adminpanel/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "adminpanel:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "adminpanel:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "adminpanel:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/adminpanel/src/test.ts",
+            "polyfills": "projects/adminpanel/src/polyfills.ts",
+            "tsConfig": "projects/adminpanel/tsconfig.spec.json",
+            "karmaConfig": "projects/adminpanel/karma.conf.js",
+            "assets": [
+              "projects/adminpanel/src/favicon.ico",
+              "projects/adminpanel/src/assets"
+            ],
+            "styles": [
+              "projects/adminpanel/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/adminpanel/tsconfig.app.json",
+              "projects/adminpanel/tsconfig.spec.json",
+              "projects/adminpanel/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/adminpanel/e2e/protractor.conf.js",
+            "devServerTarget": "adminpanel:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "adminpanel:serve:production"
+            }
+          }
+        }
+      }
     }
   },
   "defaultProject": "library-app"
