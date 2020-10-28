@@ -1,0 +1,25 @@
+<header>
+    <mat-toolbar fxLayout="row" fxLayoutAlign="space-between baseline" id="flexToolbar">
+      
+      <span id="projectTitle">Project Management</span>
+      <span *ngIf="user">Welcome {{user.first_name}}</span>
+      <button mat-button color="warn" id="logout" (click)="logout()">Logout</button>
+     
+    </mat-toolbar>
+</header>
+<mat-sidenav-container class="container">
+    <mat-sidenav mode="side" opened>
+        <mat-nav-list>
+            <a mat-list-item routerLink="./admin-users" routerLinkActive="active">Manage Users</a>
+            <a mat-list-item routerLink="./admin-projects" routerLinkActive="active">Manage Projects</a>  
+
+        </mat-nav-list>
+    </mat-sidenav>
+
+<mat-sidenav-content class="rightColumn">
+    <router-outlet></router-outlet>
+</mat-sidenav-content>
+
+</mat-sidenav-container>
+
+

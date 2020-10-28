@@ -1,0 +1,13 @@
+
+
+<div *ngFor="let project of projects">
+    <div style="border : 1px solid black; padding: 40px;">
+    <p>Project ID: {{project.id}}</p>
+    <p>Project Desc: {{project.project_description}}</p>
+    <p>Students:</p>
+    <span *ngFor="let student of project.students">
+        <span>{{student.user_id}},</span>
+    </span><br>
+    <button mat-stroked-button (click)="projectView(project.id)">Edit Project</button>
+    </div>
+</div>

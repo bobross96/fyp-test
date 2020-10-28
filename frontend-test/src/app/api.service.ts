@@ -47,6 +47,8 @@ export class ApiService {
     return this.http.get("/api/users")
   }
 
+  
+
   getCommentsByTask(taskID:number):Observable<any>{
     return this.http.get("/api/comments/task/" + taskID)
   }
@@ -66,6 +68,28 @@ export class ApiService {
 
   deleteDocument(fileID:number):Observable<any>{
     return this.http.delete("api/documents/delete/"+fileID)
+  }
+
+  getProjects():Observable<any>{
+    return this.http.get("api/projects")
+  }
+
+  getProjectByID(projectID : number):Observable<any>{
+    return this.http.get("api/projects/" + projectID)
+  }
+
+
+  delinkUserToProject(data : any):Observable<any>{
+    return this.http.post("api/projects/delinkUserToProject",data)
+  }
+
+  linkUserToProject(data : any):Observable<any>{
+    return this.http.post("api/projects/linkUserToProject",data)
+  }
+
+  addUser(userData:any):Observable<any>{
+    return this.http.post("api/register",userData)
+
   }
 
 }

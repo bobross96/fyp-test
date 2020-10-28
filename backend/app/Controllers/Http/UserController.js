@@ -82,12 +82,10 @@ class UserController {
     if (userType == "student") {
       const student = new Student();
       //for now just using one project only
-      const project = await Project.find(1);
       await user.save();
       // save student type to user model
       await user.student().save(student);
       // save project id one to student model
-      await project.students().save(student);
       let token = await auth.generate(user, true);
       return response.json({
         message: "registering",
@@ -98,20 +96,8 @@ class UserController {
       });
     } else if (userType == "staff") {
       const staff = new Staff();
-      const project = await Project.find(1);
       await user.save();
       await user.staff().save(staff);
-      console.log(project.id);
-      //WHY DOSNT THIS WORK FUCKKKKK
-      try {
-        await staff.project().attach(project.id);
-      } catch (err) {
-        console.log(err);
-      }
-      console.log("bleh");
-      let projects = await staff.project().fetch()
-        
-      staff.projects = projects.rows
       let token = await auth.generate(user, true);
       return response.json({
         message: "staff selected still workin on it",
@@ -235,6 +221,41 @@ class UserController {
    * @param {Response} ctx.response
    */
   async destroy({ params, request, response }) {}
+
+
+  async adminLogin({auth,request,response}){
+      const {email,password} = request.post()
+      if (await auth.attempt(email,password)){
+        //will query and return user object based on email
+      let user = await User.findBy("email", email);
+      // generate jwt token based on user
+      let token = await auth.generate(user, true);
+        
+     
+      if (await user.staff().fetch()){
+        const staff = await user.staff().fetch();
+        return response.json({
+          message: "loggin in",
+          token: token,
+          loginSuccess: true,
+          user: user,
+          userType: staff,
+        });
+
+      }
+
+      else {
+        return response.json({
+          message: "not admin/staff",
+        });
+      }
+    }
+      else {
+        return response.json({
+          message: "not reigsterd at all",
+        });
+      }
+  }
 }
 
 module.exports = UserController;

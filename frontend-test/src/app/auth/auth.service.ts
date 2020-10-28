@@ -34,6 +34,18 @@ export class AuthService {
     )
   }
 
+  loginAdmin(user:any):Observable<any>{
+    return this.http.post("/api/admin-login",user).pipe(
+      tap(val => {
+        if (val.loginSuccess){
+          this.setSession(val)
+          this.isLoggedIn = true
+        }
+      })
+    )
+  }
+
+
   private setSession(authResult){
     console.log(authResult);
     localStorage.setItem('token_id', authResult.token.token)

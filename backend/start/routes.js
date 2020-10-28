@@ -26,6 +26,9 @@ Route.get('/', () => {
 Route.get('api/projects','ProjectController.index')
 Route.post('api/projects/addProject','ProjectController.linkStaffToProject')
 Route.post('api/projects','ProjectController.store')
+Route.get('api/projects/:id','ProjectController.projectDetails')
+Route.post('api/projects/linkUserToProject','ProjectController.linkUserToProject')
+Route.post('api/projects/delinkUserToProject','ProjectController.delinkUserToProject')
 
 
 
@@ -41,6 +44,7 @@ Route.post('api/usersMany','UserController.storeMany')
 //login or register
 Route.post('api/login','UserController.login')
 Route.post('api/register','UserController.register')
+Route.post('api/admin-login','UserController.adminLogin')
 
 
 
@@ -55,3 +59,8 @@ Route.get('api/comments/link/:id','CommentController.linkCommentToReply')
 Route.delete('api/documents/delete/:fileID','DocumentController.destroy')
 Route.post('api/documents/:taskID','DocumentController.store')
 Route.get('api/documents/:taskID','DocumentController.show')
+
+
+
+//admin routes 
+
