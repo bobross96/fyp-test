@@ -56,9 +56,11 @@ import {NgxMatDatetimePickerModule,
 import { AdminComponent } from './admin-app/admin/admin.component';
 import { AdminLoginComponent} from './admin-app/admin-login/admin-login.component';
 import { AdminUsersComponent,DialogAddUser } from './admin-app/admin-users/admin-users.component';
-import { AdminProjectsComponent } from './admin-app/admin-projects/admin-projects.component';
+import { AdminProjectsComponent,DialogAddProject } from './admin-app/admin-projects/admin-projects.component';
 import { AdminProjectComponent } from './admin-app/admin-project/admin-project.component';
 import { MatTableModule} from '@angular/material/table';
+import {MatSortModule} from '@angular/material/sort'; 
+import {MatPaginatorModule} from '@angular/material/paginator'; 
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -90,6 +92,7 @@ FullCalendarModule.registerPlugins([
     AdminUsersComponent,
     DialogAddUser,
     AdminProjectsComponent,
+    DialogAddProject,
     AdminProjectComponent
   ],
   imports: [
@@ -125,7 +128,9 @@ FullCalendarModule.registerPlugins([
     NgxMatNativeDateModule, 
     NgxMatTimepickerModule, 
     NgbModule,
-    MatTableModule
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule
     
   ],
   providers: [httpInterceptorProviders, MatDatepickerModule],

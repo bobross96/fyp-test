@@ -26,7 +26,9 @@ class ProjectController {
         console.log(newProject);
 
         response.json({
-            message : 'project successfully created'
+            message : 'project successfully created',
+            addSuccess : true
+
         })
     }
 

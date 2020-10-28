@@ -78,6 +78,10 @@ export class ApiService {
     return this.http.get("api/projects/" + projectID)
   }
 
+  addProject(projectData: any):Observable<any>{
+    return this.http.post("api/projects",projectData)
+  } 
+
 
   delinkUserToProject(data : any):Observable<any>{
     return this.http.post("api/projects/delinkUserToProject",data)

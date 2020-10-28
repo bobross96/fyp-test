@@ -1,8 +1,10 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog, 
   MAT_DIALOG_DATA,
   MatDialogRef,} from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from 'src/app/api.service';
 
@@ -13,6 +15,8 @@ import { ApiService } from 'src/app/api.service';
 })
 export class AdminUsersComponent implements OnInit {
   newUser :any
+  users: any;
+  dataSource : any;
   constructor(
     public router: Router,
     private route: ActivatedRoute,
@@ -21,8 +25,21 @@ export class AdminUsersComponent implements OnInit {
     private fb : FormBuilder
   ) { }
 
+  displayedColumns : string[] = ['id','username','first_name','email']
+  
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  
   ngOnInit(): void {
+    this.api.getUsers().subscribe((res) => {
+      this.users = res.data
+      console.log(this.users);
+      this.dataSource = new MatTableDataSource<any>(this.users);
+      this.dataSource.paginator = this.paginator;
+    })
   }
+
 
   addUser(){
     this.newUser = {}

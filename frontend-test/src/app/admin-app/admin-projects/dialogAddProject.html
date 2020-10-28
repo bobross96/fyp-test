@@ -1,0 +1,21 @@
+<form [formGroup]="addUserForm">
+    <div style="text-align: center;">
+    <h1 mat-dialog-title>Add Project</h1>
+    <div mat-dialog-content style>
+        <mat-form-field>
+            <mat-label>Project Name</mat-label>
+            <input matInput [(ngModel)]="data.project_name" appearance="fill" formControlName="project_name" required>
+        </mat-form-field><br>
+        <mat-form-field>
+            <mat-label>Project Description</mat-label>
+            <textarea matInput [(ngModel)]="data.project_description" appearance="fill" formControlName="project_description" required></textarea>
+        </mat-form-field><br>
+        
+    </div>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button  [disabled]="!addUserForm.valid" [mat-dialog-close]="data" type="submit">Add User</button>
+        <button mat-button [mat-dialog-close]>Cancel</button>
+      </div>
+    
+    </form>
