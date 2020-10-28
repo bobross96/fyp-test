@@ -80,6 +80,22 @@
 - Added timings on events (primarily for meetings)
 - Changed view for timed VS non-timed events
 
+# ---Progress Meeting 3--- 
+
 # 8/10/2020
 - Added query parameter based routing for different task types
  
+ 
+# 26/10/2020
+- Added admin-app to existing workspace
+- Added routes in frontend app to access admin-app
+
+# 27/10/2020
+- Added backend routes to link staff and students to projects
+- Reworked backend routes for registration
+
+# 28/10/2020
+- Added frontend view for admin-users and admin-projects component 
+- Used mat-table to display data 
+- Added link user to project on frontend 
+
