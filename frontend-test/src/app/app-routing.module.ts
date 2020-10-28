@@ -12,6 +12,9 @@ import { TaskComponent} from './task/task.component'
 import { TaskAllComponent } from './task-all/task-all.component';
 import { AdminComponent } from './admin-app/admin/admin.component';
 import { AdminLoginComponent } from './admin-app/admin-login/admin-login.component';
+import { AdminUsersComponent } from './admin-app/admin-users/admin-users.component';
+import { AdminProjectsComponent } from './admin-app/admin-projects/admin-projects.component';
+import { AdminProjectComponent } from './admin-app/admin-project/admin-project.component';
 
 const routes: Routes = [
   {
@@ -36,7 +39,9 @@ const routes: Routes = [
     path :'admin',
     component : AdminComponent,
     children : [
-      
+      {path : 'admin-users', component : AdminUsersComponent},
+      {path : 'admin-projects',component : AdminProjectsComponent},
+      {path : 'admin-project',component : AdminProjectComponent}
     ]
   },
   { path: 'login', component: LoginComponent },

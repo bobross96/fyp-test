@@ -68,4 +68,12 @@ export class ApiService {
     return this.http.delete("api/documents/delete/"+fileID)
   }
 
+  getProjects():Observable<any>{
+    return this.http.get("api/projects")
+  }
+
+  getProjectByID(projectID : number):Observable<any>{
+    return this.http.get("api/projects/" + projectID)
+  }
+
 }
