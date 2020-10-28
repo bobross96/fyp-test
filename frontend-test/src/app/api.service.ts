@@ -76,4 +76,13 @@ export class ApiService {
     return this.http.get("api/projects/" + projectID)
   }
 
+
+  delinkUserToProject(data : any):Observable<any>{
+    return this.http.post("api/projects/delinkUserToProject",data)
+  }
+
+  linkUserToProject(data : any):Observable<any>{
+    return this.http.post("api/projects/linkUserToProject",data)
+  }
+
 }
