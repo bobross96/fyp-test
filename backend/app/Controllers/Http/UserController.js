@@ -210,7 +210,30 @@ class UserController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update({ params, request, response }) {}
+  async update({ params, request, response }) {
+    let userID = params.id
+    let user = await User.find(userID)
+    const {
+      email,
+      first_name,
+      last_name,
+      username,
+      is_active,
+    } = request.post();
+
+    user.username = username;
+    user.email = email;
+    user.first_name = first_name;
+    user.last_name = last_name;
+    user.is_active = is_active;
+
+    await user.save()
+
+    return response.json({
+      message : 'update success'
+    })
+
+  }
 
   /**
    * Delete a user with id.
@@ -220,7 +243,23 @@ class UserController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy({ params, request, response }) {}
+  async destroy({ params, request, response }) {
+    console.log('inside');
+    let userID = params.id
+    let userFromDB = await User.find(userID)
+    console.log(userFromDB);
+    
+    try {
+      await userFromDB.delete()  
+    } catch (error) {
+      console.log(error);
+    }
+    
+
+    return response.json({
+      message : "delete success"
+    })
+  }
 
 
   async adminLogin({auth,request,response}){

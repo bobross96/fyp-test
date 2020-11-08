@@ -1,9 +1,9 @@
 
 <header>
   <mat-toolbar fxLayout="row" fxLayoutAlign="space-between baseline" id="flexToolbar">
-    
-    <span id="projectTitle">Project Management</span>
+    <div>
     <span *ngIf="user">Welcome {{user.first_name}}</span>
+    </div>
     <button mat-button color="warn" id="logout" (click)="logout()">Logout</button>
    
   </mat-toolbar>

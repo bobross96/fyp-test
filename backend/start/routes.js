@@ -35,7 +35,7 @@ Route.post('api/projects/delinkUserToProject','ProjectController.delinkUserToPro
 //user routes
 Route.put('api/tasks/submit/:id','TaskController.submitTask')
 Route.resource('api/tasks','TaskController').middleware('auth')
-Route.resource('api/users','UserController').middleware('auth')
+Route.resource('api/users','UserController')
 Route.get('api','TestController.index')
 Route.post('api/tasks','TaskController.create')
 Route.post('api/usersMany','UserController.storeMany')
