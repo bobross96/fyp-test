@@ -14,11 +14,22 @@ export class AuthService {
   login(user:any):Observable<any>{
     return this.http.post("/api/login",user).pipe(
       tap(val => {
+
+        console.log(val);
+        
         //will only set local storage true here
         if (val.loginSuccess){
         this.setSession(val)
         this.isLoggedIn = true
+
+        return "lalala"
         }
+
+        else {
+          return "boop"
+        }
+
+
     })
     )
   }

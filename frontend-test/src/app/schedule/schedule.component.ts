@@ -17,7 +17,8 @@ import {
   DayCellContent, CalendarApi
 } from '@fullcalendar/angular'; // useful for typechecking
 import { INITIAL_EVENTS, createEventId } from './event-utils';
-import { ApiService } from '../api.service';
+import { ApiService } from '../services/api.service';
+import { TaskService } from '../services/task.service';
 import {
   MatDialog,
   MatDialogRef,
@@ -213,7 +214,7 @@ export class ScheduleComponent implements OnInit {
         };
         console.log(task);
 
-        this.api.postTask(task).subscribe((result) => {
+        this.taskApi.postTask(task).subscribe((result) => {
           helper.singleTaskToEvent(result.task,calendarApi,createEventId)
         });
       } else {
@@ -302,7 +303,7 @@ export class ScheduleComponent implements OnInit {
   getTasks() {
     // needs to be specific for staff, query through projects
 
-    this.api.getTasks().subscribe((res) => {
+    this.taskApi.getTasks().subscribe((res) => {
       console.log(res.data);
       this.fetchedTasks = res.data;
       this.taskToEvent(res.data);
@@ -324,7 +325,7 @@ export class ScheduleComponent implements OnInit {
   }
 
   removeFromDB(id) {
-    this.api.deleteTask(id).subscribe((res) => {
+    this.taskApi.deleteTask(id).subscribe((res) => {
       console.log(res);
     });
   }
@@ -340,6 +341,7 @@ export class ScheduleComponent implements OnInit {
   }
   constructor(
     private api: ApiService,
+    private taskApi : TaskService,
     public dialog: MatDialog,
     private fb: FormBuilder,
     private router: Router

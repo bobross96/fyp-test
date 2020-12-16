@@ -1,14 +1,15 @@
 import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
-import { ApiService } from '../api.service';
+import { ApiService } from '../services/api.service';
+import {TaskService} from '../services/task.service';
+import { DocumentService } from "../services/document.service";
 import {
   MatDialog,
   MAT_DIALOG_DATA,
   MatDialogRef,
 } from '@angular/material/dialog';
-import { saveAs } from 'file-saver';
-import { mammoth } from 'mammoth/mammoth.browser';
+
 
 @Component({
   selector: 'app-task',
@@ -25,6 +26,8 @@ export class TaskComponent implements OnInit {
     public router: Router,
     private route: ActivatedRoute,
     private api: ApiService,
+    private taskApi : TaskService,
+    private documentApi : DocumentService, 
     public dialog: MatDialog,
     private cdr: ChangeDetectorRef
   ) {}
@@ -37,7 +40,7 @@ export class TaskComponent implements OnInit {
     console.log(taskID);
 
     // gets the task object
-    this.api.getTaskById(taskID).subscribe((res) => {
+    this.taskApi.getTaskById(taskID).subscribe((res) => {
       this.task = res.task;
       console.log(res);
       if (this.task.submission_date) {
@@ -47,7 +50,7 @@ export class TaskComponent implements OnInit {
     });
     // gets the document realted to the task and inputting into an array
 
-    this.api.getDocument(taskID).subscribe((res) => {
+    this.documentApi.getDocument(taskID).subscribe((res) => {
       this.attachments = res;
     });
   }
@@ -63,6 +66,8 @@ export class TaskComponent implements OnInit {
       return;
     }
   }
+
+  //should this be abstracted?
   async showFile(docIndex) {
     this.pageVariable = 1;
     // receive the data, then convert to this fucking type to show..
@@ -137,9 +142,9 @@ export class TaskComponent implements OnInit {
   }
 
   deleteFile(id, index) {
-    this.api.deleteDocument(id).subscribe(async (res) => {
+    this.documentApi.deleteDocument(id).subscribe(async (res) => {
       console.log(res);
-      this.api.getDocument(this.task.id).subscribe((res) => {
+      this.documentApi.getDocument(this.task.id).subscribe((res) => {
         console.log(res);
         this.attachments = res;
         this.cdr.detectChanges();
@@ -165,7 +170,7 @@ export class TaskComponent implements OnInit {
       } else if (result.title && result.content && result.hours_spent) {
         console.log('poop');
 
-        this.api.editTask(this.task.id, result).subscribe((res) => {
+        this.taskApi.editTask(this.task.id, result).subscribe((res) => {
           this.task = res.task;
           this.changeDateForm();
         });
@@ -177,7 +182,7 @@ export class TaskComponent implements OnInit {
 
   submitTask() {
     this.task.submission_date = new Date();
-    this.api.submitTask(this.task.id, this.task).subscribe((res) => {
+    this.taskApi.submitTask(this.task.id, this.task).subscribe((res) => {
       alert('task successfully submitted!');
       this.task = res.task;
       this.changeDateForm();
@@ -246,9 +251,9 @@ export class TaskComponent implements OnInit {
     } else {
       let formData = new FormData();
       formData.append('file', this.fileToUpload, this.fileToUpload.name);
-      this.api.postDocument(formData, this.task.id).subscribe((res) => {
+      this.documentApi.postDocument(formData, this.task.id).subscribe((res) => {
         console.log(res);
-        this.api.getDocument(this.task.id).subscribe((res) => {
+        this.documentApi.getDocument(this.task.id).subscribe((res) => {
           console.log(res);
           this.attachments = res;
           this.cdr.detectChanges();

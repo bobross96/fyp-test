@@ -12,18 +12,6 @@
     },
     {
       "path": "./tsconfig.spec.json"
-    },
-    {
-      "path": "./projects/admin-panel/tsconfig.app.json"
-    },
-    {
-      "path": "./projects/admin-panel/tsconfig.spec.json"
-    },
-    {
-      "path": "./projects/adminpanel/tsconfig.app.json"
-    },
-    {
-      "path": "./projects/adminpanel/tsconfig.spec.json"
     }
-]
+  ]
 }

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../api.service';
+import { ApiService } from '../services/api.service';
+import { TaskService } from '../services/task.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import * as helper from '../functions/helper'
+import * as helper from '../functions/helper';
 
 @Component({
   selector: 'app-task-all',
@@ -13,7 +14,8 @@ export class TaskAllComponent implements OnInit {
   constructor(
     private api : ApiService, 
     private router : Router,
-    private route : ActivatedRoute) { }
+    private route : ActivatedRoute,
+    private taskApi : TaskService) { }
   tasks : any
   panelOpenState = false;
   taskType : any
@@ -34,7 +36,7 @@ export class TaskAllComponent implements OnInit {
       }
 
       this.tasks = []
-      this.api.getTasks().subscribe((res) => {
+      this.taskApi.getTasks().subscribe((res) => {
         this.tasks = res.data
         console.log(this.tasks);
         //changes date to readable format 
