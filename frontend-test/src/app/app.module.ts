@@ -60,7 +60,9 @@ import { AdminProjectsComponent,DialogAddProject } from './admin-app/admin-proje
 import { AdminProjectComponent } from './admin-app/admin-project/admin-project.component';
 import { MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort'; 
-import {MatPaginatorModule} from '@angular/material/paginator'; 
+import {MatPaginatorModule} from '@angular/material/paginator';
+import { TeamboardComponent } from './teamboard/teamboard.component'; 
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -94,7 +96,8 @@ FullCalendarModule.registerPlugins([
     DialogAddUser,
     AdminProjectsComponent,
     DialogAddProject,
-    AdminProjectComponent
+    AdminProjectComponent,
+    TeamboardComponent
   ],
   imports: [
     BrowserModule,
@@ -131,7 +134,8 @@ FullCalendarModule.registerPlugins([
     NgbModule,
     MatTableModule,
     MatSortModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    DragDropModule
     
   ],
   providers: [httpInterceptorProviders, MatDatepickerModule],
