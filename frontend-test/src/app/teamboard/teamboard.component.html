@@ -1,4 +1,4 @@
-<p>Team Board</p>
+<p>Team Board <button>Update</button></p>
 
 <form [formGroup]="boardForm">
 <div cdkDropListGroup>
@@ -10,8 +10,8 @@
         [cdkDropListData]="boardForm.get('todo')['controls']"
         class="example-list"
         (cdkDropListDropped)="drop($event)">
-        <div class="example-box" *ngFor="let item of boardForm.get('todo')['controls']" cdkDrag>
-          <button style="float : right">X</button><br><br>
+        <div class="example-box" *ngFor="let item of boardForm.get('todo')['controls']; index as index" cdkDrag>
+          <button style="float : right" (click)="deleteControl(item,'todo',index)">X</button><br><br>
           <div [formGroup]="item">
               <input type="text" formControlName="job">
           </div>
@@ -27,8 +27,8 @@
         [cdkDropListData]="boardForm.get('doing')['controls']"
         class="example-list"
         (cdkDropListDropped)="drop($event)">
-        <div class="example-box" *ngFor="let item of boardForm.get('doing')['controls']" cdkDrag>
-          <button style="float : right">X</button><br><br>
+        <div class="example-box" *ngFor="let item of boardForm.get('doing')['controls']; index as index" cdkDrag>
+          <button style="float : right" (click)="deleteControl(item,'doing',index)">X</button><br><br>
           <div [formGroup]="item">
             <input type="text" formControlName="job">
           </div>
@@ -44,8 +44,8 @@
           [cdkDropListData]="boardForm.get('done')['controls']"
           class="example-list"
           (cdkDropListDropped)="drop($event)">
-          <div class="example-box" *ngFor="let item of boardForm.get('done')['controls']" cdkDrag>
-            <button style="float : right">X</button><br><br>
+          <div class="example-box" *ngFor="let item of boardForm.get('done')['controls']; index as index" cdkDrag>
+            <button style="float : right" (click)="deleteControl(item,'done',index)">X</button><br><br>
             <div [formGroup]="item">
               <input type="text" formControlName="job">
             </div>

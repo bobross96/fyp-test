@@ -45,6 +45,25 @@ export class TeamboardComponent implements OnInit {
     return this.boardForm.get('done') as FormArray
   }
 
+  deleteControl(lala,boardType,index){
+    console.log(lala);
+    
+    switch(boardType){
+      case "todo":
+        this.todo.removeAt(index)
+        break;
+      case "doing":
+        this.doing.removeAt(index)
+        break;
+      case "done":
+        this.done.removeAt(index)
+        break;
+      default:
+        break;
+    }
+    
+  }
+
   addJob(jobType){
     switch(jobType){
       case "todo":
@@ -70,6 +89,7 @@ export class TeamboardComponent implements OnInit {
 
   drop(event: CdkDragDrop<string[]>) {
     console.log(event);
+    //update index of formgroup?
     
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
