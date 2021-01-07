@@ -99,3 +99,17 @@
 - Used mat-table to display data 
 - Added link user to project on frontend 
 
+
+# ---Progress Meeting 4--- 
+
+# 16/12/2020
+- Broke up the services file into separate files
+- Fixed login not showing alert with wrong login information
+
+# 23/12/2020
+- Added teamboard component (todo list for groupwork)
+
+# 24/12/2020
+- Added basic CRUD functionalities to the board. Further development done on separate repo and will be integrated once completed 
+
+
