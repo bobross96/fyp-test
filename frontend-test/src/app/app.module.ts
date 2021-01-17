@@ -61,8 +61,9 @@ import { AdminProjectComponent } from './admin-app/admin-project/admin-project.c
 import { MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort'; 
 import {MatPaginatorModule} from '@angular/material/paginator';
-import { TeamboardComponent } from './teamboard/teamboard.component'; 
+import { TeamboardComponent, DialogJob } from './teamboard/teamboard.component'; 
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -97,7 +98,9 @@ FullCalendarModule.registerPlugins([
     AdminProjectsComponent,
     DialogAddProject,
     AdminProjectComponent,
-    TeamboardComponent
+    TeamboardComponent,
+    DialogJob
+    
   ],
   imports: [
     BrowserModule,
@@ -135,7 +138,8 @@ FullCalendarModule.registerPlugins([
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
-    DragDropModule
+    DragDropModule,
+    MatSnackBarModule
     
   ],
   providers: [httpInterceptorProviders, MatDatepickerModule],
