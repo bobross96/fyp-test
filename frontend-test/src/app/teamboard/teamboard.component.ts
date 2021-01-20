@@ -33,6 +33,7 @@ export class TeamboardComponent implements OnInit {
   currentFormArray: FormArray;
   previousFormArray: FormArray;
   dragging: boolean;
+  selectedOption: string;
   constructor(
     private fb : FormBuilder,
     public dialog: MatDialog) {
@@ -112,6 +113,7 @@ export class TeamboardComponent implements OnInit {
   }
 
   handleClick(event: MouseEvent, item, index, boardType): void {
+    
     if (this.dragging) {
       this.dragging = false;
       return;
@@ -120,6 +122,12 @@ export class TeamboardComponent implements OnInit {
     this.openDialog(item, index, boardType);
 
 
+  }
+
+  selectOption(event : Event){
+    this.selectedOption = (event.target as HTMLSelectElement).value;
+    console.log(this.selectedOption);
+    
   }
 
   openDialog(item, index, boardType) {
@@ -160,8 +168,8 @@ export class TeamboardComponent implements OnInit {
     return this.boardForm.get('done') as FormArray
   }
 
-  deleteControl(lala,boardType,index){
-    console.log(lala);
+  deleteControl(event : Event,boardType,index){
+    event.stopPropagation();
     
     switch(boardType){
       case "todo":
