@@ -10,6 +10,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { RegisterComponent } from './register/register.component';
 import { TaskComponent} from './task/task.component'
 import { TaskAllComponent } from './task-all/task-all.component';
+import { TeamboardComponent} from './teamboard/teamboard.component';
 import { AdminComponent } from './admin-app/admin/admin.component';
 import { AdminLoginComponent } from './admin-app/admin-login/admin-login.component';
 import { AdminUsersComponent } from './admin-app/admin-users/admin-users.component';
@@ -30,7 +31,8 @@ const routes: Routes = [
           { path: 'schedule', component: ScheduleComponent },
           { path: 'test', component: TestComponent },
           { path: 'task',component : TaskComponent},
-          { path: 'allTasks',component : TaskAllComponent}
+          { path: 'allTasks',component : TaskAllComponent},
+          { path: 'teamboard',component : TeamboardComponent}
         ],
       },
     ],

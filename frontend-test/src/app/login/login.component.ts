@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {LoginService} from '../login.service'
+import {LoginService} from '../services/login.service'
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 
@@ -22,18 +22,16 @@ export class LoginComponent implements OnInit {
   onSubmit(){
     console.log('poop');
     console.log(this.model);
-    this.authApi.login(this.model).subscribe((res) => {
-
-      if (res.loginSuccess){
-     
+    this.authApi.login(this.model).subscribe(
+      res => {
         console.log(localStorage.getItem('token_id'));
+        this._router.navigateByUrl('/dashboard/schedule') 
+      },
+      err => {
+        console.log(err);
+        alert(err.error[0].message)}
       
-        this._router.navigateByUrl('/dashboard/schedule')
-      }
-      else {
-        alert('username/password incorrect!')
-      }
-    })
+    )
     
   }
 }

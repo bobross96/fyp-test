@@ -1,13 +1,33 @@
 
+<div class="container">
+<button mat-raised-button (click)="addProject()">Add Project</button><br><br>
+<div *ngIf="projects" >
+    <table mat-table [dataSource]="projects" class="mat-elevation-z8">
+        <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>ID No. </th>
+            <td mat-cell *matCellDef="let project">{{project.id}}</td>
+        </ng-container>
+        <ng-container matColumnDef="project_name">
+            <th mat-header-cell *matHeaderCellDef>Project Name</th>
+            <td mat-cell *matCellDef="let project">{{project.project_name}}</td>
+        </ng-container>
+        <ng-container matColumnDef="project_description">
+            <th mat-header-cell *matHeaderCellDef>Project Description</th>
+            <td mat-cell *matCellDef="let project">{{project.project_description}}</td>
+        </ng-container> 
+        <ng-container matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef>Edit</th>
+            <td mat-cell *matCellDef="let project"><button mat-stroked-button (click)="projectView(project.id)">Edit Project</button></td>
+        </ng-container> 
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-<div *ngFor="let project of projects">
-    <div style="border : 1px solid black; padding: 40px;">
-    <p>Project ID: {{project.id}}</p>
-    <p>Project Desc: {{project.project_description}}</p>
-    <p>Students:</p>
-    <span *ngFor="let student of project.students">
-        <span>{{student.user_id}},</span>
-    </span><br>
-    <button mat-stroked-button (click)="projectView(project.id)">Edit Project</button>
-    </div>
+    
+
+    
+    
+    </table>
 </div>
+
+</div>
+

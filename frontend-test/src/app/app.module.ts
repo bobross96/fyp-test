@@ -55,10 +55,16 @@ import {NgxMatDatetimePickerModule,
   NgxMatNativeDateModule, NgxMatTimepickerModule} from '@angular-material-components/datetime-picker';
 import { AdminComponent } from './admin-app/admin/admin.component';
 import { AdminLoginComponent} from './admin-app/admin-login/admin-login.component';
-import { AdminUsersComponent,DialogAddUser } from './admin-app/admin-users/admin-users.component';
-import { AdminProjectsComponent } from './admin-app/admin-projects/admin-projects.component';
+import { AdminUsersComponent,DialogAddUser,DialogEditUser } from './admin-app/admin-users/admin-users.component';
+import { AdminProjectsComponent,DialogAddProject } from './admin-app/admin-projects/admin-projects.component';
 import { AdminProjectComponent } from './admin-app/admin-project/admin-project.component';
 import { MatTableModule} from '@angular/material/table';
+import {MatSortModule} from '@angular/material/sort'; 
+import {MatPaginatorModule} from '@angular/material/paginator';
+import { TeamboardComponent, DialogJob } from './teamboard/teamboard.component'; 
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -88,9 +94,14 @@ FullCalendarModule.registerPlugins([
     AdminComponent,
     AdminLoginComponent,
     AdminUsersComponent,
+    DialogEditUser,
     DialogAddUser,
     AdminProjectsComponent,
-    AdminProjectComponent
+    DialogAddProject,
+    AdminProjectComponent,
+    TeamboardComponent,
+    DialogJob
+    
   ],
   imports: [
     BrowserModule,
@@ -125,7 +136,12 @@ FullCalendarModule.registerPlugins([
     NgxMatNativeDateModule, 
     NgxMatTimepickerModule, 
     NgbModule,
-    MatTableModule
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    DragDropModule,
+    MatSnackBarModule,
+    FontAwesomeModule
     
   ],
   providers: [httpInterceptorProviders, MatDatepickerModule],

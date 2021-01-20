@@ -9,7 +9,7 @@
     </mat-toolbar>
 </header>
 <body>
-    <h2>Login Form</h2>
+    <h2>Login </h2>
     <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
         <div class="form-group">
             <mat-form-field>
@@ -23,6 +23,6 @@
                 <input matInput type="password" [(ngModel)]="model.password" id="password" name="password" #password='ngModel'>
             </mat-form-field>
         </div>
-        <input type="submit" value="Login">
+        <button mat-raised-button color="primary">Login</button>
     </form>
 </body>

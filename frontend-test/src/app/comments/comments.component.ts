@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../api.service';
+import { ApiService } from '../services/api.service';
+import { CommentService} from '../services/comment.service';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
 
@@ -12,6 +13,7 @@ export class CommentsComponent implements OnInit {
 
   constructor(
     private api : ApiService,
+    private commentApi : CommentService,
     private route : ActivatedRoute,
     private fb : FormBuilder
   ) { }
@@ -45,7 +47,7 @@ export class CommentsComponent implements OnInit {
   }
 
   loadComments(){
-    this.api.getCommentsByTask(this.taskID).subscribe((res) => {
+    this.commentApi.getCommentsByTask(this.taskID).subscribe((res) => {
       console.log(res);
       
       this.parentComments = []
@@ -67,7 +69,7 @@ export class CommentsComponent implements OnInit {
   onSubmit(){
     this.commentBody.parent_id = null
     this.commentBody.content = this.commentForm.value.comment
-    this.api.postComment(this.commentBody).subscribe((res) => {
+    this.commentApi.postComment(this.commentBody).subscribe((res) => {
       console.log(res);
       this.commentForm.reset()
       this.loadComments()
@@ -79,7 +81,7 @@ export class CommentsComponent implements OnInit {
     this.commentBody.parent_id = id
     this.commentBody.content = this.replyForm.value.reply
     console.log(this.commentBody)
-    this.api.postComment(this.commentBody).subscribe((res) => {
+    this.commentApi.postComment(this.commentBody).subscribe((res) => {
       console.log(res);
       this.replyForm.reset()
       this.loadComments()
