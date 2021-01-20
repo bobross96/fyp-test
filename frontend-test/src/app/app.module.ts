@@ -64,6 +64,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import { TeamboardComponent, DialogJob } from './teamboard/teamboard.component'; 
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -139,7 +140,8 @@ FullCalendarModule.registerPlugins([
     MatSortModule,
     MatPaginatorModule,
     DragDropModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    FontAwesomeModule
     
   ],
   providers: [httpInterceptorProviders, MatDatepickerModule],

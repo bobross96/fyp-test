@@ -12,12 +12,14 @@ import {
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
 
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-teamboard',
   templateUrl: './teamboard.component.html',
   styleUrls: ['./teamboard.component.scss']
 })
 export class TeamboardComponent implements OnInit {
+  faTimesCircle = faTimesCircle;
   boardForm: any;
   boardString: string;
   jobDetails: string;
@@ -99,6 +101,9 @@ export class TeamboardComponent implements OnInit {
   }
 
   onSubmit(){
+    this.boardString = JSON.stringify(this.boardForm.value);
+    localStorage.setItem('board', JSON.stringify(this.boardForm.value));
+    console.log(JSON.parse(localStorage.getItem('board')));
 
   }
 
@@ -304,6 +309,10 @@ export class DialogJob {
       jobOwner : [data.jobOwner,Validators.required]
     })
 
+  }
+
+  delete(){
+    alert('pretend this works')
   }
 
   
