@@ -69,15 +69,15 @@ export class ScheduleComponent implements OnInit {
     contentHeight: 'auto',
     weekNumberContent: function (arg) {
       if (!arg.num || arg.num < 0 || arg.num > 14) {
-        arg.text = '';
+        arg.text = 'Break';
       } else if (arg.num == 8) {
         arg.text = 'Recess Week';
       } else if (arg.num > 8) {
-        arg.text = `Sem 1 Week ${arg.num - 1}`;
+        arg.text = `Sem 2 Week ${arg.num - 1}`;
       }
     },
     weekNumberCalculation: function (local) {
-      let startDate = new Date('8/11/2020');
+      let startDate = new Date('1/11/2021');
       let intNumber =
         Math.ceil(
           (local.getTime() - startDate.getTime()) / (1000 * 3600 * 24 * 7)

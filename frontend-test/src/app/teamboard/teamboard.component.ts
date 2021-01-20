@@ -20,6 +20,7 @@ import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 })
 export class TeamboardComponent implements OnInit {
   faTimesCircle = faTimesCircle;
+  user: object;
   boardForm: any;
   boardString: string;
   jobDetails: string;
@@ -48,7 +49,11 @@ export class TeamboardComponent implements OnInit {
 
   //to be replaced with load from api data
   ngOnInit(): void {
+    if (localStorage.getItem('user')){
+      this.user = JSON.parse(localStorage.getItem('user'));
+    }
     if (localStorage.getItem('board')) {
+      //storedboard grab from backend instead
       const storedBoard = JSON.parse(localStorage.getItem('board'));
       console.log(storedBoard);
       for (const boardType in storedBoard) {
@@ -188,13 +193,17 @@ export class TeamboardComponent implements OnInit {
   }
 
   addJob(jobType){
+    let owner = "";
+    if (this.user){
+      owner = this.user['last_name']
+    }
     switch (jobType) {
       case 'todo':
         this.todo.push(
           this.fb.group({
             jobDetails: this.fb.control(''),
             jobBoard : this.fb.control(jobType),
-            jobOwner : this.fb.control('')
+            jobOwner : this.fb.control(owner)
 
           })
         );
@@ -204,7 +213,7 @@ export class TeamboardComponent implements OnInit {
           this.fb.group({
             jobDetails: this.fb.control(''),
             jobBoard : this.fb.control(jobType),
-            jobOwner : this.fb.control('')
+            jobOwner : this.fb.control(owner)
           })
         );
         break;
@@ -213,7 +222,7 @@ export class TeamboardComponent implements OnInit {
           this.fb.group({
             jobDetails: this.fb.control(''),
             jobBoard : this.fb.control(jobType),
-            jobOwner : this.fb.control('')
+            jobOwner : this.fb.control(owner)
           })
         );
         break;

@@ -1,5 +1,5 @@
 .example-container {
-  width: 25em;
+  width: 20em;
   max-width: 100%;
   display: inline-block;
   vertical-align: top;
@@ -23,7 +23,7 @@
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
-  cursor: move;
+  cursor: grab;
   background: white;
   font-size: 14px;
 }
