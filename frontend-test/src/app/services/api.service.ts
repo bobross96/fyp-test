@@ -17,7 +17,9 @@ export class ApiService {
   ) { }
 
  
-
+  showByProject(projectID:number):Observable<any> {
+    return this.http.get("/api/users/" + projectID)
+  }
 
   getUsers():Observable<any>{
 

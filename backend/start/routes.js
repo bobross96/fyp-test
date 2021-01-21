@@ -35,16 +35,23 @@ Route.post('api/projects/delinkUserToProject','ProjectController.delinkUserToPro
 //user routes
 Route.put('api/tasks/submit/:id','TaskController.submitTask')
 Route.resource('api/tasks','TaskController').middleware('auth')
-Route.resource('api/users','UserController')
+Route.get('api/users','UserController.index')
 Route.get('api','TestController.index')
 Route.post('api/tasks','TaskController.create')
 Route.post('api/usersMany','UserController.storeMany')
+
+//user retrieval
+
+Route.get('api/users/:projectID','UserController.showByProject')
+
 
 
 //login or register
 Route.post('api/login','UserController.login')
 Route.post('api/register','UserController.register')
 Route.post('api/admin-login','UserController.adminLogin')
+
+
 
 
 

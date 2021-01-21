@@ -189,7 +189,24 @@ class UserController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show({ params, request, response, view }) {}
+  async showByProject({ params, request, response, view }) {
+    console.log('inside');
+    const projectID = params.projectID
+    const project = await Project.find(projectID)
+    const students = await project.students().fetch()
+    const users = []
+
+    for (let student of students.rows){
+      const user = await student.user().fetch()
+      users.push(user)
+    }
+
+
+    response.json({
+      message: users,
+    });
+
+  }
 
   /**
    * Render a form to update an existing user.

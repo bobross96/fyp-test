@@ -13,6 +13,7 @@ import {
 } from '@angular/material/dialog';
 
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { ApiService } from '../services/api.service';
 @Component({
   selector: 'app-teamboard',
   templateUrl: './teamboard.component.html',
@@ -36,10 +37,12 @@ export class TeamboardComponent implements OnInit {
   dragging: boolean;
   selectedOption: string;
   userType: any;
+  userDict: any;
   constructor(
     private fb : FormBuilder,
     public dialog: MatDialog,
-    private api : JobService) {
+    private api : JobService,
+    private userApi : ApiService) {
     this.boardForm = this.fb.group({
       todo: this.fb.array([]),
 
@@ -53,10 +56,13 @@ export class TeamboardComponent implements OnInit {
   ngOnInit(): void {
       this.user = JSON.parse(localStorage.getItem('user'));
       this.userType = JSON.parse(localStorage.getItem('userType'));
-      
-      
-        //storedboard grab from backend instead
-        console.log(this.userType.project_id);
+      this.userApi.showByProject(this.userType.project_id).subscribe((result) => {
+        this.userDict = result.message.reduce((obj,item) => {
+          obj[item['id']] = item['first_name']
+          return obj
+        },{})
+
+        console.log(this.userDict);
         this.api.getJobs(this.userType.project_id).subscribe((result) => {
           let jobs = result.jobs
           jobs.forEach(job => {
@@ -66,8 +72,9 @@ export class TeamboardComponent implements OnInit {
                     this.fb.group({
                       jobDetails: this.fb.control(job.detail),
                       jobBoard: this.fb.control(job.status),
-                      jobOwner : this.fb.control(job.user_id),
-                      jobID : this.fb.control(job.id)
+                      jobOwner : this.fb.control(this.userDict[job.user_id]),
+                      jobID : this.fb.control(job.id),
+                      user_id : this.fb.control(job.user_id)
                     })
                   );
                 break;
@@ -76,8 +83,9 @@ export class TeamboardComponent implements OnInit {
                     this.fb.group({ 
                       jobDetails: this.fb.control(job.detail),
                       jobBoard: this.fb.control(job.status),
-                      jobOwner : this.fb.control(job.user_id),
-                      jobID : this.fb.control(job.id)
+                      jobOwner : this.fb.control(this.userDict[job.user_id]),
+                      jobID : this.fb.control(job.id),
+                      user_id : this.fb.control(job.user_id)
                     })
                   );
                 break;
@@ -86,8 +94,9 @@ export class TeamboardComponent implements OnInit {
                     this.fb.group({ 
                       jobDetails: this.fb.control(job.detail),
                       jobBoard: this.fb.control(job.status),
-                      jobOwner : this.fb.control(job.user_id),
-                      jobID : this.fb.control(job.id)
+                      jobOwner : this.fb.control(this.userDict[job.user_id]),
+                      jobID : this.fb.control(job.id),
+                      user_id : this.fb.control(job.user_id)
                     })
                   );
                 break;
@@ -98,14 +107,36 @@ export class TeamboardComponent implements OnInit {
             
           });
         })
+      })
+      
+        
       
        
   }
 
   onSubmit(){
     this.boardString = JSON.stringify(this.boardForm.value);
-    localStorage.setItem('board', JSON.stringify(this.boardForm.value));
-    console.log(JSON.parse(localStorage.getItem('board')));
+    let scrumBoard = JSON.parse(this.boardString)
+    console.log(scrumBoard);
+    
+    let jobs = []
+    for (let board of Object.keys(this.boardForm.value)){
+      this.boardForm.value[board].forEach(job => {
+        jobs.push({
+          id : job.jobID,
+          detail : job.jobDetails,
+          user_id : job.user_id,
+          project_id : this.userType.project_id,
+          status : board
+        })
+      });
+    }
+
+    console.log(jobs);
+    this.api.storeJobs({jobs : jobs}).subscribe((result) => {
+      console.log(result);
+      
+    })
 
   }
 
@@ -137,6 +168,7 @@ export class TeamboardComponent implements OnInit {
     let jobDetails = item.value.jobDetails;
     let jobBoard = boardType;
     let jobID = item.value.jobID
+    let user_id = item.value.user_id
     const dialogRef = this.dialog.open(DialogJob, {
       width: '650px',
       data: {
@@ -153,7 +185,8 @@ export class TeamboardComponent implements OnInit {
           { jobDetails: result.value.jobDetails, 
             jobOwner: result.value.jobOwner,
             jobBoard : boardType,
-            jobID : jobID });
+            jobID : jobID,
+            user_id : user_id });
 
         //array.push({owner : result.jobOwner})
       }
@@ -192,10 +225,8 @@ export class TeamboardComponent implements OnInit {
   }
 
   addJob(jobType){
-    let owner = "";
-    if (this.user){
-      owner = this.user['last_name']
-    }
+    let owner = this.user['first_name']
+    let ownerID = this.user['id']
     switch (jobType) {
       case 'todo':
         this.todo.push(
@@ -203,7 +234,8 @@ export class TeamboardComponent implements OnInit {
             jobDetails: this.fb.control(''),
             jobBoard : this.fb.control(jobType),
             jobOwner : this.fb.control(owner),
-            jobID : this.fb.control('')
+            jobID : this.fb.control(''),
+            user_id : ownerID
 
           })
         );
@@ -214,7 +246,8 @@ export class TeamboardComponent implements OnInit {
             jobDetails: this.fb.control(''),
             jobBoard : this.fb.control(jobType),
             jobOwner : this.fb.control(owner),
-            jobID : this.fb.control('')
+            jobID : this.fb.control(''),
+            user_id : ownerID
           })
         );
         break;
@@ -224,7 +257,8 @@ export class TeamboardComponent implements OnInit {
             jobDetails: this.fb.control(''),
             jobBoard : this.fb.control(jobType),
             jobOwner : this.fb.control(owner),
-            jobID : this.fb.control('')
+            jobID : this.fb.control(''),
+            user_id : ownerID
           })
         );
         break;
