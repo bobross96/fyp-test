@@ -62,5 +62,9 @@ Route.get('api/documents/:taskID','DocumentController.show')
 
 
 
-//admin routes 
+// submit job under board
+Route.get('api/jobs/:projectID','JobController.index')
+Route.post('api/jobs','JobController.storeAll')
+Route.delete('api/jobs/delete/:jobID','JobController.destroy')
+
 
