@@ -13,7 +13,7 @@ export class AuthService {
 
   login(user:any):Observable<any>{
     return this.http.post("/api/login",user).pipe(
-      tap(val => {
+      tap(val => {        
         //will only set local storage true here
         if (val.loginSuccess){
         this.setSession(val)
@@ -54,7 +54,7 @@ export class AuthService {
     const userType = JSON.stringify(authResult.userType)
     localStorage.setItem('user',user)
     localStorage.setItem('userType',userType)
-    console.log(localStorage.getItem('token_id'));
+    
 
   }
 

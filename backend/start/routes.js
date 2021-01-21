@@ -55,7 +55,7 @@ Route.get('api/comments/link/:id','CommentController.linkCommentToReply')
 
 
 
-// submit task
+// doucment routes
 Route.delete('api/documents/delete/:fileID','DocumentController.destroy')
 Route.post('api/documents/:taskID','DocumentController.store')
 Route.get('api/documents/:taskID','DocumentController.show')
@@ -65,6 +65,6 @@ Route.get('api/documents/:taskID','DocumentController.show')
 // submit job under board
 Route.get('api/jobs/:projectID','JobController.index')
 Route.post('api/jobs','JobController.storeAll')
-Route.delete('api/jobs/delete/:jobID','JobController.destroy')
+Route.delete('api/jobs/:jobID','JobController.destroy')
 
 
