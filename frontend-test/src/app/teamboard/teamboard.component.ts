@@ -205,8 +205,15 @@ export class TeamboardComponent implements OnInit {
     return this.boardForm.get('done') as FormArray
   }
 
-  deleteControl(event : Event,boardType,index){
+  deleteControl(event : Event,boardType,index,item){
     event.stopPropagation();
+    if (item.value['jobID']){
+      this.api.deleteJob(item.value['jobID']).subscribe((result) => {
+        console.log(result);
+        
+      })
+    }
+    
     
     switch(boardType){
       case "todo":
