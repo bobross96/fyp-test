@@ -56,6 +56,8 @@ export class TeamboardComponent implements OnInit {
   ngOnInit(): void {
       this.user = JSON.parse(localStorage.getItem('user'));
       this.userType = JSON.parse(localStorage.getItem('userType'));
+      console.log(this.userType);
+      
       this.userApi.showByProject(this.userType.project_id).subscribe((result) => {
         this.userDict = result.message.reduce((obj,item) => {
           obj[item['id']] = item['first_name']

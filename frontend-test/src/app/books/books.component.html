@@ -1,4 +1,6 @@
-<div *ngIf="users">
+
+<div style="padding-left:1em" *ngIf="users">
+    <h1>Group Members</h1>
     <div *ngFor="let user of users">
         <ul>
             <p>{{user.username}}</p>

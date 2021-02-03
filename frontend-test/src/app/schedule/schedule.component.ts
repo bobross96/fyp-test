@@ -1,3 +1,4 @@
+import * as $ from "jquery";
 import {
   Component,
   OnInit,
@@ -153,6 +154,10 @@ export class ScheduleComponent implements OnInit {
       this.date = new Date(selectInfo.startStr);
     }
 
+   
+
+
+    
     let startTime, endTime;
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
       width: '400px',

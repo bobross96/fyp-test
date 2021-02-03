@@ -8,7 +8,7 @@ export function Week(arg) {
     }
   }
 export function getSchoolWeek(currentDate) {
-    let startDate = new Date('8/11/2020');
+    let startDate = new Date('1/11/2021');
     let nowDate = new Date(currentDate)
     let intNumber =
       Math.ceil(
