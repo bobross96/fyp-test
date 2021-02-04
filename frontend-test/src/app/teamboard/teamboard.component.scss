@@ -28,8 +28,10 @@
   font-size: 14px;
 }
 
+
 .example-form-field {
   width: 20em;
+
 }
 
 .top-box {
@@ -38,6 +40,7 @@
   color: rgba(0, 0, 0, 0.87);
   /* display: flex; */
   /* flex-direction: row; */
+  text-align: center;
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
@@ -67,4 +70,17 @@
 
 .example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+
+.highlight {
+  padding: 0.3em;
+  border-radius: 0.3em;
+  text-align: center;
+}
+
+
+.list-group{
+  
+
 }

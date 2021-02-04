@@ -175,7 +175,7 @@ export class TeamboardComponent implements OnInit {
     let jobID = item.value.jobID
     let user_id = item.value.user_id
     const dialogRef = this.dialog.open(DialogJob, {
-      width: '650px',
+      width: '800px',
       data: {
         jobDetails: jobDetails,
         jobBoard: jobBoard,
@@ -185,7 +185,10 @@ export class TeamboardComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
+      if (result == 'delete'){
+        this.deleteControl(null,boardType,index,item)
+      }
+      else if (result) {
         item.setValue(
           { jobDetails: result.value.jobDetails, 
             jobOwner: result.value.jobOwner,
@@ -195,6 +198,10 @@ export class TeamboardComponent implements OnInit {
 
         //array.push({owner : result.jobOwner})
       }
+
+
+
+      
     });
   }
   
@@ -211,7 +218,10 @@ export class TeamboardComponent implements OnInit {
   }
 
   deleteControl(event : Event,boardType,index,item){
-    event.stopPropagation();
+    if (event){
+      event.stopPropagation();
+    }
+    
     if (item.value['jobID']){
       this.api.deleteJob(item.value['jobID']).subscribe((result) => {
         console.log(result);
@@ -377,7 +387,8 @@ export class DialogJob {
   }
 
   delete(){
-    alert('pretend this works')
+    alert('job deleted')
+    this.dialogRef.close('delete')
   }
 
   
