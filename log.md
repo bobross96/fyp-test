@@ -113,3 +113,39 @@
 - Added basic CRUD functionalities to the board. Further development done on separate repo and will be integrated once completed 
 
 
+# ---Progress Meeting 5---
+
+# 18/1/2021
+- Edited look and feel for whole application, added teamboard route to frontend
+
+# 20/1/2021
+- Added event stop propogation to allow for deleting of jobs
+- Teamboard page works on frontend with mock data
+
+# 21/1/2021
+- Did routes,controller and model for Job on the backend
+
+# 22/1/2021
+- Wired up backend to frontend
+- First prototype of teamboard was set up
+
+# ---Progress Meeting 6---
+
+# 3/2/2021
+- Edited checkbox position in task creation
+- altered FK fields for user_id and project_id to cascade upon deletion for files and comments 
+
+# 4/2/2021
+- Refactored data sent by user from backend to frontend, to allow for more standardised fetching of user specified data
+- Reworked auth guard by sending JWT token for every navigation to protected routes
+
+# 5/2/2021
+- Reworked design of teamboard
+  - changed owner and status to using chips
+  - deleted the x button, now can only be deleted from the dialog popup 
+  - added some colouring to the different boards
+  
+# ---Progress Meeting 7---
+
+
+
