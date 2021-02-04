@@ -38,6 +38,8 @@ export class TeamboardComponent implements OnInit {
   selectedOption: string;
   userType: any;
   userDict: any;
+  userInfo: any;
+  projectID: number;
   constructor(
     private fb : FormBuilder,
     public dialog: MatDialog,
@@ -54,18 +56,19 @@ export class TeamboardComponent implements OnInit {
 
   //to be replaced with load from api data
   ngOnInit(): void {
-      this.user = JSON.parse(localStorage.getItem('user'));
-      this.userType = JSON.parse(localStorage.getItem('userType'));
-      console.log(this.userType);
+      this.userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      this.projectID = this.userInfo.subTypeInfo.project_id
+      //add for staff
       
-      this.userApi.showByProject(this.userType.project_id).subscribe((result) => {
+      
+      this.userApi.showByProject(this.projectID).subscribe((result) => {
         this.userDict = result.message.reduce((obj,item) => {
           obj[item['id']] = item['first_name']
           return obj
         },{})
 
         console.log(this.userDict);
-        this.api.getJobs(this.userType.project_id).subscribe((result) => {
+        this.api.getJobs(this.projectID).subscribe((result) => {
           let jobs = result.jobs
           jobs.forEach(job => {
             switch (job.status) {
@@ -128,7 +131,7 @@ export class TeamboardComponent implements OnInit {
           id : job.jobID,
           detail : job.jobDetails,
           user_id : job.user_id,
-          project_id : this.userType.project_id,
+          project_id : this.projectID,
           status : board
         })
       });
@@ -234,8 +237,8 @@ export class TeamboardComponent implements OnInit {
   }
 
   addJob(jobType){
-    let owner = this.user['first_name']
-    let ownerID = this.user['id']
+    let owner = this.userInfo.user['first_name']
+    let ownerID = this.userInfo.user['id']
     switch (jobType) {
       case 'todo':
         this.todo.push(

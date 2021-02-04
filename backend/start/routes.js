@@ -75,3 +75,7 @@ Route.post('api/jobs','JobController.storeAll')
 Route.delete('api/jobs/:jobID','JobController.destroy')
 
 
+//token check?
+Route.post('api/token','UserController.checkToken')
+
+

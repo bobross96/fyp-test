@@ -5,6 +5,12 @@
       <h1>Scrum Board <span *ngIf="userType">({{userType.project.project_name}})</span></h1>
     <button mat-raised-button color="primary" type="submit" >Update Board</button>  
     </div>
+    <div>
+      Team Members:
+      <div *ngFor="let member of userDict | keyvalue">
+        {{member.value}}
+      </div>
+    </div>
     <!-- drop list group will link all div inside with cdkDropList -->
     <div style="display:flex; margin: auto; text-align: center; justify-content: center; " cdkDropListGroup >
     <div class="example-container" style="margin-right: 1em;">

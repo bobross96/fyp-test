@@ -104,6 +104,7 @@ export class ScheduleComponent implements OnInit {
   time: any;
   startDate: any;
   endDate: any;
+  userInfo: any;
 
   handleCalendarToggle() {
     this.calendarVisible = !this.calendarVisible;
@@ -212,7 +213,7 @@ export class ScheduleComponent implements OnInit {
           task_due_date: result.date,
           task_type: result.task_type,
           status: 'Pending',
-          user_id: this.user.id,
+          user_id: this.userInfo.id,
           project_id: this.project_id,
           start_date: this.startDate,
           end_date: this.endDate,
@@ -353,14 +354,14 @@ export class ScheduleComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.user = JSON.parse(localStorage.getItem('user'));
+    this.userInfo = JSON.parse(localStorage.getItem('userInfo'));
     this.userType = JSON.parse(localStorage.getItem('userType'));
-    if (this.userType.type == 'staff') {
-      this.projects = this.userType.projects;
+    if (this.userInfo.user.userType == 'staff') {
+      this.projects = this.userInfo.projectInfo;
       //this.selectedProject = this.userType.projects[0].id;
-    } else if (this.userType.type == 'student') {
-      this.studentProject = this.userType.project.project_name;
-      this.project_id = this.userType.project_id;
+    } else if (this.userInfo.user.userType == 'student') {
+      this.studentProject = this.userInfo.projectInfo.project_name;
+      this.project_id = this.userInfo.projectInfo.id;
     }
     //console.log(this.userType);
 
