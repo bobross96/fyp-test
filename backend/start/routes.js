@@ -78,6 +78,15 @@ Route.get('api/jobs/:projectID','JobController.index')
 Route.post('api/jobs','JobController.storeAll')
 Route.delete('api/jobs/:jobID','JobController.destroy')
 
+//create notif
+
+//simple create
+Route.post('api/notification/create/one','NotificationController.createOne')
+//create notif for groupmates 
+Route.post('api/notification/create/many','NotificationController.createMany')
+//delete notif by ID
+Route.delete('api/notification/delete/:notificationID','NotificationController.destroy')
+
 
 //token check
 Route.post('api/token','UserController.checkToken')

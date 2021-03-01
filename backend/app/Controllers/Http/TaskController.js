@@ -67,7 +67,6 @@ class TaskController {
    * @param {Response} ctx.response
    */
   async store({ request, response }) {
-    console.log("asd");
     const {
       title,
       content,

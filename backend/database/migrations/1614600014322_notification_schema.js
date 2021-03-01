@@ -10,8 +10,8 @@ class NotificationSchema extends Schema {
       table.timestamps()
       table.string('title')
       table.text('description')
-      table.integer('user_id').unsigned().references('id').inTable('users')
-      table.integer('source_user_id').unsigned().references('id').inTable('users')
+      table.integer('user_id').unsigned().references('id').inTable('users').onDelete('cascade')
+      table.integer('source_user_id').unsigned().references('id').inTable('users').onDelete('cascade')
       table.boolean('is_read')
     })
   }

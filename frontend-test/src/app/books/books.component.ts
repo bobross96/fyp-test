@@ -18,8 +18,6 @@ export class BooksComponent implements OnInit {
     this.projectID = JSON.parse(localStorage.getItem('userType')).project_id
    }
 
-
-  
   
   getUsers(projectID):void{
     this.api.showByProject(projectID).subscribe((res:any) => {

@@ -8,7 +8,6 @@ class FilesSchema extends Schema {
     this.table('files', (table) => {
       // alter table
       table.dropForeign('task_id')
-
       table.integer('task_id').unsigned().references('id').inTable('tasks').onDelete('cascade').alter()
     })
   }

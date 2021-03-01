@@ -9,9 +9,6 @@ const Project = use("App/Models/Project");
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
-/**
- * Resourceful controller for interacting with users
- */
 class UserController {
   async login({ auth, request, response }) {
     console.log("poop");
@@ -27,11 +24,16 @@ class UserController {
       if (user.userType == 'student') {
         const student = await user.student().fetch();
         const project = await student.project().fetch();
+        const students = await project.students().fetch();
+        const staff = await project.staff().fetch();
+
         return response.json({
           token: token,
           user: user,
           subTypeInfo : student,
-          projectInfo : project
+          projectInfo : project,
+          groupMates : students,
+          staff : staff
         });
 
       } else if (user.userType == 'staff') {
@@ -181,8 +183,7 @@ class UserController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async showByProject({ params, request, response, view }) {
-    console.log('inside');
+  async showByProject({ params, request, response }) {
     const projectID = params.projectID
     const project = await Project.find(projectID)
     const students = await project.students().fetch()
