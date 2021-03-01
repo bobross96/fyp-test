@@ -14,7 +14,7 @@
     <!-- drop list group will link all div inside with cdkDropList -->
     <div style="display:flex; margin: auto; justify-content: center;" cdkDropListGroup >
     <div class="example-container" style="margin-right: 1em;">
-      <h2><span class="highlight" style="background-color: #ffccd1;">To Do</span></h2>
+      <h2><span class="highlight" style="background-color: #ffccd1;">To Do</span>&nbsp;&nbsp;<span>{{todo['controls'].length}}</span></h2>
       <div
         cdkDropList
         id="todo"
@@ -38,7 +38,7 @@
     </div>
   
     <div class="example-container">
-      <h2><span class="highlight" style="background-color: #fbeecc;">Doing</span></h2>
+      <h2><span class="highlight" style="background-color: #fbeecc;">Doing</span>&nbsp;&nbsp;<span>{{doing['controls'].length}}</span></h2>
       <div
         cdkDropList
         id="doing"
@@ -60,7 +60,7 @@
 
 
     <div class="example-container" style="margin-left:1em">
-        <h2><span class="highlight" style="background-color: #cce7e1;">Done</span></h2>
+        <h2><span class="highlight" style="background-color: #cce7e1;">Done</span>&nbsp;&nbsp;<span>{{done['controls'].length}}</span></h2>
         <!-- used to have class example-list -->
         <div
           cdkDropList

@@ -18,10 +18,6 @@ const { RouteResource } = require('@adonisjs/framework/src/Route/Manager')
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
 
-Route.get('/', () => {
-  return { greeting: 'Hello world in JSON' }
-})
-
 //admin routes 
 Route.get('api/projects','ProjectController.index')
 Route.post('api/projects/addProject','ProjectController.linkStaffToProject')
@@ -30,31 +26,39 @@ Route.get('api/projects/:id','ProjectController.projectDetails')
 Route.post('api/projects/linkUserToProject','ProjectController.linkUserToProject')
 Route.post('api/projects/delinkUserToProject','ProjectController.delinkUserToProject')
 
+//crud for user 
+//create user
+//get user
+//update user
+//delete user
 
 
-//user routes
-Route.put('api/tasks/submit/:id','TaskController.submitTask')
-Route.resource('api/tasks','TaskController').middleware('auth')
-Route.get('api/users','UserController.index')
-Route.get('api','TestController.index')
-Route.post('api/tasks','TaskController.create')
-Route.post('api/usersMany','UserController.storeMany')
-
-//user retrieval
-
-Route.get('api/users/:projectID','UserController.showByProject')
 
 
+
+
+//UserController
 
 //login or register
 Route.post('api/login','UserController.login')
 Route.post('api/register','UserController.register')
 Route.post('api/admin-login','UserController.adminLogin')
+//user retrieval by project
+Route.get('api/users/:projectID','UserController.showByProject')
+//get all users 
+Route.get('api/users','UserController.index')
+//store multiplie users 
+Route.post('api/usersMany','UserController.storeMany')
 
 
+//TaskController
+
+Route.put('api/tasks/submit/:id','TaskController.submitTask')
+Route.resource('api/tasks','TaskController').middleware('auth')
+Route.post('api/tasks','TaskController.create')
 
 
-
+//CommentController
 // retrieve comments
 Route.post('api/comments','CommentController.create')
 Route.get('api/comments/task/:id','CommentController.taskIndex')
@@ -75,7 +79,10 @@ Route.post('api/jobs','JobController.storeAll')
 Route.delete('api/jobs/:jobID','JobController.destroy')
 
 
-//token check?
+//token check
 Route.post('api/token','UserController.checkToken')
+
+
+
 
 
