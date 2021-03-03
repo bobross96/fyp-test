@@ -4,7 +4,7 @@
 
 mat-sidenav-container {
     position: absolute;
-    top: 2em;
+    top: 3em;
     left: 0;
     right: 0;
     bottom: 0;
@@ -16,6 +16,7 @@ mat-sidenav-container {
   header {
       text-align: center;
       display: flex;
+      
   }
 
   mat-sidenav-content {

@@ -39,7 +39,9 @@ class NotificationController {
       description,
       user_id,
       source_user_id,
-      is_read
+      is_read,
+      event_id,
+      event_type
     } = request.all()
 
     const newNotif  = new Notification();
@@ -48,7 +50,8 @@ class NotificationController {
     newNotif.user_id = user_id
     newNotif.source_user_id = source_user_id
     newNotif.is_read = is_read
-
+    newNotif.event_id = event_id
+    newNotif.event_type = event_type
     await newNotif.save();
     response.json({
       message: 'notif create success'
@@ -61,7 +64,9 @@ class NotificationController {
       description,
       id_array,
       source_user_id,
-      is_read
+      is_read,
+      event_id,
+      event_type
     } = request.all()
 
     id_array.forEach(async id => {
@@ -71,6 +76,8 @@ class NotificationController {
         newNotif.user_id = id
         newNotif.source_user_id = source_user_id
         newNotif.is_read = is_read
+        newNotif.event_id = event_id
+        newNotif.event_type = event_type
         await newNotif.save()
     });
 
