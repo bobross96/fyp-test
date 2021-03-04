@@ -5,8 +5,11 @@
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 
-const Notification = use('App/Models/Notification');
 
+
+
+const Notification = use('App/Models/Notification');
+const User = use('App/Models/User')
 
 /**
  * Resourceful controller for interacting with notifications
@@ -22,7 +25,11 @@ class NotificationController {
    * @param {View} ctx.view
    */
   async index ({ request, response, view }) {
+
   }
+
+ 
+  
 
   /**
    * Render a form to be used for creating a new notification.
@@ -128,6 +135,35 @@ class NotificationController {
    * @param {View} ctx.view
    */
   async show ({ params, request, response, view }) {
+    const userID = params.userID
+    console.log(userID);
+
+    
+      const notifs = await Notification
+                .query()
+                .where('user_id',userID)
+                .fetch()
+
+    
+    
+
+    
+
+    let unreadNotifs = []
+    let json = await notifs.toJSON()
+
+    for (let notif in json){
+      console.log(notif);
+      if (!notif.is_read){
+        console.log('pushed in');
+        unreadNotifs.push(json[notif])
+      }
+    }
+    response.json({
+      message : "success",
+      data : unreadNotifs
+    })
+
   }
 
   /**
