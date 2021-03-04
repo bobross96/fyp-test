@@ -147,5 +147,25 @@
   
 # ---Progress Meeting 7---
 
+# 1/3/2021
+- Started work on notifications 
+- Aded routes in the backend 
+
+# 2/3/2021
+- Added controllers to store and delete notifications 
+- Added cascade on delete for tasks, staff and student when user is deleted
+
+# 3/3/2021
+- Added drawer for side menu 
+
+# 4/3/2021
+- Added route and controller to get notification by userID
+- Added notification services on frontend to get and post notifications
+
+# 5/3/2021
+- Minor style change to comment section
+- Added post notification function for comment, reply and task submit 
+
+
 
 
