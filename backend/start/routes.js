@@ -88,6 +88,10 @@ Route.get('api/notification/:userID','NotificationController.show')
 
 //simple create
 Route.post('api/notification/create/one','NotificationController.createOne')
+//update notification
+Route.patch('api/notification/:notifID','NotificationController.edit')
+
+
 //create notif for groupmates 
 Route.post('api/notification/create/many','NotificationController.createMany')
 //delete notif by ID

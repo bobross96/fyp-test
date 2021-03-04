@@ -67,6 +67,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatChipsModule} from '@angular/material/chips';
+import {MatBadgeModule} from '@angular/material/badge'; 
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -145,7 +146,8 @@ FullCalendarModule.registerPlugins([
     MatSnackBarModule,
     FontAwesomeModule,
     MatCheckboxModule,
-    MatChipsModule
+    MatChipsModule,
+    MatBadgeModule
     
   ],
   providers: [httpInterceptorProviders, MatDatepickerModule],

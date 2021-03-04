@@ -2,7 +2,27 @@
 <header>
   <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center" id="flexToolbar">
     <div>
-    <span *ngIf="user">Welcome {{user.first_name}}&nbsp;<i class="fas fa-bell"></i></span>
+    <span *ngIf="user">Welcome {{user.first_name}}&nbsp;
+      
+        <button mat-button [matMenuTriggerFor]="menu">
+          <span *ngIf="notifications;else noBadge">
+            <i [matBadge]="notifications.length" matBadgeSize="small" matBadgeColor="warn" class="fas fa-bell"></i>
+          </span>
+          <ng-template #noBadge>
+            <i class="fas fa-bell"></i>
+          </ng-template>
+        </button>
+        <mat-menu #menu="matMenu">
+          <div *ngIf="notifications; else elseBlock">
+            <div *ngFor="let notif of notifications">
+              <a [routerLink]="['./'+ notif.event_type]" [queryParams]="{id : notif.event_id}" (click)="poop(notif.id)" mat-menu-item>{{notif.title}}</a>
+            </div>
+          </div>
+          <ng-template #elseBlock><button mat-menu-item>No unread notifications</button></ng-template>
+        </mat-menu>
+        
+    
+    </span>
 
     </div>
     <button mat-button color="warn" id="logout" (click)="logout()">Logout</button>

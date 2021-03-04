@@ -144,17 +144,13 @@ class NotificationController {
                 .where('user_id',userID)
                 .fetch()
 
-    
-    
-
-    
 
     let unreadNotifs = []
     let json = await notifs.toJSON()
 
     for (let notif in json){
       console.log(notif);
-      if (!notif.is_read){
+      if (!json[notif].is_read){
         console.log('pushed in');
         unreadNotifs.push(json[notif])
       }
@@ -175,7 +171,16 @@ class NotificationController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async edit ({ params, request, response, view }) {
+  async edit ({ params, response }) {
+    const notifID = params.notifID
+    const notif = await Notification.find(notifID)
+    notif.is_read = true
+    await notif.save()
+
+    response.json({
+      message : 'success'
+    })
+
   }
 
   /**
