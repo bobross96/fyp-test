@@ -24,12 +24,12 @@ export class NotificationService {
     return this.http.patch("api/notification/" + notifID,body)
   }
 
-
+  //specifically for prof to take note
   postOneNotif(){
 
   }
 
-  postManyNotif(){
-
+  postManyNotif(array_id : any):Observable<any>{
+    return this.http.post("api/notification/createMany",array_id)
   }
 }

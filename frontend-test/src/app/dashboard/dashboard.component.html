@@ -2,7 +2,8 @@
 <header>
   <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center" id="flexToolbar">
     <div>
-    <span *ngIf="user">Welcome {{user.first_name}}&nbsp;
+    <span *ngIf="user">
+      <button mat-button disabled style="color: black;">Welcome {{user.first_name}}</button>&nbsp;
       
         <button mat-button [matMenuTriggerFor]="menu">
           <span *ngIf="notifications;else noBadge">

@@ -9,7 +9,7 @@
 
 
 
-<div *ngIf="parentComments">
+<div class="commentsContainer" *ngIf="parentComments">
     <div *ngFor="let comment of parentComments; let i = index" >
         <span><span style="font-weight: 700;">{{comment.username}} </span><span>{{comment.created_at}}</span></span>
         <div>{{comment.content}}</div>
