@@ -9,6 +9,7 @@ import {
   MAT_DIALOG_DATA,
   MatDialogRef,
 } from '@angular/material/dialog';
+import { NotificationService } from '../services/notification.service';
 
 
 @Component({
@@ -29,15 +30,37 @@ export class TaskComponent implements OnInit {
     private taskApi : TaskService,
     private documentApi : DocumentService, 
     public dialog: MatDialog,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private notifService : NotificationService
   ) {}
   task: any;
   pdfSrc: any;
   attachments: any = [];
+  related_id = []
+  notifBody : any
 
   ngOnInit(): void {
     let taskID = parseInt(this.route.snapshot.queryParamMap.get('id'));
     console.log(taskID);
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+
+    userInfo.groupMates.forEach(student => {
+      this.related_id.push(student.user_id)
+    });
+
+    userInfo.staff.forEach(staff => {
+      this.related_id.push(staff.user_id)
+    });
+
+    this.notifBody = {
+      title : "Task Submitted",
+      description : "",
+      id_array : this.related_id,
+      source_user_id : userInfo.user.id,
+      is_read : false,
+      event_id : taskID,
+      event_type : "task"
+    }
 
     // gets the task object
     this.taskApi.getTaskById(taskID).subscribe((res) => {
@@ -187,6 +210,16 @@ export class TaskComponent implements OnInit {
       this.task = res.task;
       this.changeDateForm();
     });
+
+
+    this.notifService.postManyNotif(this.notifBody).subscribe((res) => {
+      console.log(res);
+      
+    })
+
+
+
+
   }
 
   getTask(id: number) {

@@ -68,9 +68,7 @@ export class AuthService {
       staff : authResult.staff
     })
 
-    console.log(userInfo);
-    
-
+  
 
     localStorage.setItem('userInfo',userInfo)
 

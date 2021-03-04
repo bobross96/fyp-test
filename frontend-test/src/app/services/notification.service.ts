@@ -29,7 +29,7 @@ export class NotificationService {
 
   }
 
-  postManyNotif(array_id : any):Observable<any>{
-    return this.http.post("api/notification/createMany",array_id)
+  postManyNotif(body : any):Observable<any>{
+    return this.http.post("api/notification/create/many",body)
   }
 }

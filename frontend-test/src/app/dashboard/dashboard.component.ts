@@ -11,6 +11,7 @@ import { User } from '../User';
 })
 export class DashboardComponent implements OnInit {
   user : any
+  userInfo : any
   notifications : any
   constructor(
     private authService : AuthService,
@@ -23,10 +24,11 @@ export class DashboardComponent implements OnInit {
     this.router.navigateByUrl('/login')
   }
   ngOnInit(): void {
-    if (localStorage.getItem('user')){
-    this.user = JSON.parse(localStorage.getItem('user'))
-    console.log((this.user));
-    this.notifService.getUserNotif(this.user.id).subscribe((notifications) => {
+    if (localStorage.getItem('userInfo')){
+    this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    console.log(this.userInfo);
+    
+    this.notifService.getUserNotif(this.userInfo.user.id).subscribe((notifications) => {
       if (notifications.data.length == 0){
         this.notifications = false
       }
@@ -50,7 +52,7 @@ export class DashboardComponent implements OnInit {
     let body = {}
     this.notifService.setToRead(id,body).subscribe((response) => {
       console.log(response);
-      this.notifService.getUserNotif(this.user.id).subscribe((notifications) => {
+      this.notifService.getUserNotif(this.userInfo.user.id).subscribe((notifications) => {
         if (notifications.data.length == 0){
           this.notifications = false
         }
