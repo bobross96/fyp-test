@@ -24,13 +24,12 @@
         cdkDrag
         (click)="handleClick($event,item,index,'todo')"
         (cdkDragStarted)="handleDragStart($event)"
+        style="margin-bottom: 1em;"
         >
-          
           <div [formGroup]="item" style="text-align: center;">
-            <mat-form-field class="example-form-field" appearance="outline">
+            <mat-form-field class="example-form-field" appearance="none">
               <input matInput formControlName="jobDetails">
             </mat-form-field>
-            <!-- <span style="float:right; padding-bottom : 1em">{{item.get("jobOwner").value}}</span> -->
           </div>
         </div>
         <div><button mat-button color="primary" type="button" (click)="addJob('todo')">+ Add Job</button></div>
@@ -47,9 +46,10 @@
         <div class="example-box" *ngFor="let item of doing['controls']; index as index" 
         cdkDrag
         (click)="handleClick($event,item,index,'doing')"
-        (cdkDragStarted)="handleDragStart($event)">
+        (cdkDragStarted)="handleDragStart($event)"
+        style="margin-bottom: 1em;">
           <div [formGroup]="item" style="text-align: center;">
-            <mat-form-field class="example-form-field" appearance="outline">
+            <mat-form-field class="example-form-field" appearance="none">
               <input matInput formControlName="jobDetails">
             </mat-form-field>
           </div>
@@ -70,9 +70,10 @@
           <div class="example-box" *ngFor="let item of done['controls']; index as index" 
           cdkDrag
           (click)="handleClick($event,item,index,'done')"
-          (cdkDragStarted)="handleDragStart($event)">
+          (cdkDragStarted)="handleDragStart($event)"
+          style="margin-bottom: 1em;" >
             <div [formGroup]="item" style="text-align: center;">
-              <mat-form-field class="example-form-field" appearance="outline">
+              <mat-form-field class="example-form-field" appearance="none">
                 <input matInput formControlName="jobDetails">
               </mat-form-field>
             </div>

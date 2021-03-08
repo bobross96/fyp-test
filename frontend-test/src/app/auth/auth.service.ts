@@ -60,16 +60,26 @@ export class AuthService {
     localStorage.setItem('token_id', authResult.token.token)
     //store user and student object inside localStorage
     
+    let related_id = []
+    authResult.groupMates.forEach(student => {
+      related_id.push(student.user_id)
+    });
+
+    authResult.staff.forEach(staff => {
+      related_id.push(staff.user_id)
+    });
+
+
     const userInfo = JSON.stringify({
       user : authResult.user,
       subTypeInfo : authResult.subTypeInfo,
       projectInfo : authResult.projectInfo,
       groupMates : authResult.groupMates,
-      staff : authResult.staff
+      staff : authResult.staff,
+      related_id : related_id
     })
 
   
-
     localStorage.setItem('userInfo',userInfo)
 
   }

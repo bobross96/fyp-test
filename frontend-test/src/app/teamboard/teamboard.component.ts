@@ -14,6 +14,7 @@ import {
 
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { ApiService } from '../services/api.service';
+import { NotificationService } from '../services/notification.service';
 @Component({
   selector: 'app-teamboard',
   templateUrl: './teamboard.component.html',
@@ -40,11 +41,15 @@ export class TeamboardComponent implements OnInit {
   userDict: any;
   userInfo: any;
   projectID: number;
+  related_id = []
+  notifBody : any
+
   constructor(
     private fb : FormBuilder,
     public dialog: MatDialog,
     private api : JobService,
-    private userApi : ApiService) {
+    private userApi : ApiService,
+    private notifService : NotificationService) {
     this.boardForm = this.fb.group({
       todo: this.fb.array([]),
 
@@ -67,7 +72,10 @@ export class TeamboardComponent implements OnInit {
           return obj
         },{})
 
-        console.log(this.userDict);
+        console.log(this.userInfo);
+        
+
+        //console.log(this.userDict);
         this.api.getJobs(this.projectID).subscribe((result) => {
           let jobs = result.jobs
           jobs.forEach(job => {
@@ -140,7 +148,23 @@ export class TeamboardComponent implements OnInit {
     console.log(jobs);
     this.api.storeJobs({jobs : jobs}).subscribe((result) => {
       console.log(result);
-      
+    })
+
+    this.notifBody = {
+      title : "Teamboard updated",
+      description : "",
+      id_array : this.userInfo.related_id,
+      source_user_id : this.userInfo.user.id,
+      is_read : false,
+      event_id : "",
+      event_type : "teamboard"
+    }
+
+    console.log(this.notifBody);
+    
+
+    this.notifService.postManyNotif(this.notifBody).subscribe((result) => {
+      console.log(result);
     })
 
   }
