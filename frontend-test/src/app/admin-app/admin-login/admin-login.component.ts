@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {LoginService} from '../../services/login.service'
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-admin-login',
@@ -10,25 +11,34 @@ import { AuthService } from '../../auth/auth.service';
 })
 export class AdminLoginComponent implements OnInit {
 
+  
+
   constructor(private _router : Router, private authApi : AuthService) { }
 
   ngOnInit(): void {
   }
 
-  model = {
-    email : "",
-    password : ""
-  }
+  loginForm = new FormGroup({
+    email: new FormControl('', Validators.required),
+    password: new FormControl('', Validators.required),
+  });
+  
 
   onSubmit(){
-    console.log('poop');
-    console.log(this.model);
-    this.authApi.loginAdmin(this.model).subscribe(
+    
+    this.authApi.loginAdmin(this.loginForm.value).subscribe(
       res => {
         this._router.navigateByUrl('/admin')
       },
       err => {
-        alert(err.error[0].message)
+        if (err.error[0].message){
+          alert(err.error[0].message)
+        }
+        else {
+          alert(err.error)
+        }
+        
+        
       }
     )
     

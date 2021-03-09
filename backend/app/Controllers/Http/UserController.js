@@ -41,7 +41,6 @@ class UserController {
         const projects = await staff.project().fetch()
         
         staff.projects = projects.rows
-        console.log(staff.projects);
         staff.type = 'staff'
         return response.json({
           token: token,
@@ -126,9 +125,7 @@ class UserController {
   async storeMany({ request, response, view }) {
     const userBody = request.post().users;
     userBody.forEach((user) => {
-      console.log(user);
       const { username, email, password, is_active } = user;
-      console.log(username);
       let newUser = new User();
       newUser.username = username;
       newUser.password = password;
@@ -166,7 +163,6 @@ class UserController {
     user.first_name = first_name;
     user.last_name = last_name;
     user.is_active = is_active;
-    console.log(user);
     await user.save();
 
     response.json({
@@ -279,8 +275,6 @@ class UserController {
       let user = await User.findBy("email", email);
       // generate jwt token based on user
       let token = await auth.generate(user, true);
-        
-     
       if (user.is_admin){
         return response.json({
           message: "loggin in",
@@ -291,16 +285,10 @@ class UserController {
 
       }
       else {
-        return response.json({
-          message: "not admin/staff",
-        });
+        return response.status(401).send('User not admin')
       }
     }
-      else {
-        return response.json({
-          message: "not reigsterd at all",
-        });
-      }
+      
   }
 
   async checkToken({auth,request,response}){

@@ -111,7 +111,6 @@ FullCalendarModule.registerPlugins([
     BrowserModule,
     AdminAppModule,
     AppRoutingModule,
-    
     HttpClientModule,
     MatInputModule,
     FormsModule,

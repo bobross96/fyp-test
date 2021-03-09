@@ -10,6 +10,9 @@ import * as helper from '../functions/helper';
   styleUrls: ['./task-all.component.scss']
 })
 export class TaskAllComponent implements OnInit {
+  userInfo: any;
+  sem1Start: any;
+  sem2Start: any;
 
   constructor(
     private api : ApiService, 
@@ -21,6 +24,9 @@ export class TaskAllComponent implements OnInit {
   taskType : any
 
   ngOnInit(): void {
+    this.userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    this.sem1Start = this.userInfo.projectInfo.sem_1_start_date
+    this.sem2Start = this.userInfo.projectInfo.sem_2_start_date
     this.route.queryParams.subscribe(queries => {
       console.log(queries);
       switch (queries.taskType) {
@@ -56,7 +62,7 @@ export class TaskAllComponent implements OnInit {
 
         this.tasks.forEach(task => {
           if (task.task_due_date){
-          task.weekNumber = helper.getSchoolWeek(task.task_due_date)  
+          task.weekNumber = helper.getWeekForTasks(task.task_due_date,this.sem1Start,this.sem2Start)  
           task.task_due_date = task.task_due_date.substring(0,10)
           }
           if (task.submission_date){

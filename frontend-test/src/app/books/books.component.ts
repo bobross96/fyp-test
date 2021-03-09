@@ -15,7 +15,7 @@ export class BooksComponent implements OnInit {
 
 
   constructor(private api : ApiService) {
-    this.projectID = JSON.parse(localStorage.getItem('userType')).project_id
+    this.projectID = JSON.parse(localStorage.getItem('userInfo')).projectInfo.id
    }
 
   

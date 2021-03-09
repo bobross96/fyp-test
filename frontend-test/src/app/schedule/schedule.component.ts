@@ -66,26 +66,24 @@ export class ScheduleComponent implements OnInit {
     eventDisplay: 'auto',
     displayEventEnd: true,
     weekNumbers: true,
-    weekText: `Sem 1 Week `,
     contentHeight: 'auto',
     weekNumberContent: function (arg) {
       if (!arg.num || arg.num < 0 || arg.num > 14) {
         arg.text = 'Break';
       } else if (arg.num == 8) {
         arg.text = 'Recess Week';
-      } else if (arg.num > 8) {
-        arg.text = `Sem 2 Week ${arg.num - 1}`;
+      } else if (arg.num > 8){
+        arg.text = `Sem ${helper.whichSem(arg.date)} Week ${arg.num -1}`;
+      } else {
+        arg.text = `Sem ${helper.whichSem(arg.date)} Week ${arg.num }`
       }
+
     },
     weekNumberCalculation: function (local) {
-      let startDate = new Date('1/11/2021');
-      let intNumber =
-        Math.ceil(
-          (local.getTime() - startDate.getTime()) / (1000 * 3600 * 24 * 7)
-        ) + 1;
-
-      return intNumber;
-    },
+      return helper.getSchoolWeek(local,
+        JSON.parse(localStorage.getItem('userInfo')).projectInfo.sem_1_start_date,
+        JSON.parse(localStorage.getItem('userInfo')).projectInfo.sem_2_start_date)
+    }
   };
 
   currentEvents: EventApi[] = [];

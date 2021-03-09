@@ -23,39 +23,34 @@ class TaskController {
    * @param {View} ctx.view
    */
   async index({ auth, request, response }) {
-      const user = await auth.getUser();
-      //fetch project first, then fetch all task related to project.
-      if (await user.student().fetch()) {
-        const student = await user.student().fetch();
-        console.log(student);
-        const project = await student.project().fetch();
-        const tasks = await project.task().fetch();
-        console.log(tasks);
-        return response.json({
-          message: "retrieval success",
-          data: tasks,
-        });
-      } else if (await user.staff().fetch()) {
-        const staff = await user.staff().fetch();
-        const projects = await staff.project().fetch();
-        console.log(projects);
-        //mutliple project have multiple tasks
-        const tasks = await Promise.all(
-          projects.rows.map(async (project) => {
-            // will fetch all tasks related to each project
-            let tasks = await project.task().fetch();
-            // fuck this please read documentation to find a better soln
-            return tasks.rows;
-          })
-        );
-        let flatTask = await tasks.flat();
-        console.log(flatTask);
-        return response.json({
-          message: "retrieval success",
-          data: flatTask,
-        });
-      }
-      
+    const user = await auth.getUser();
+    //fetch project first, then fetch all task related to project.
+    if (await user.student().fetch()) {
+      const student = await user.student().fetch();
+      const project = await student.project().fetch();
+      const tasks = await project.task().fetch();
+      return response.json({
+        message: "retrieval success",
+        data: tasks,
+      });
+    } else if (await user.staff().fetch()) {
+      const staff = await user.staff().fetch();
+      const projects = await staff.project().fetch();
+      //mutliple project have multiple tasks
+      const tasks = await Promise.all(
+        projects.rows.map(async (project) => {
+          // will fetch all tasks related to each project
+          let tasks = await project.task().fetch();
+          // fuck this please read documentation to find a better soln
+          return tasks.rows;
+        })
+      );
+      let flatTask = await tasks.flat();
+      return response.json({
+        message: "retrieval success",
+        data: flatTask,
+      });
+    }
   }
 
   /**
@@ -78,18 +73,16 @@ class TaskController {
       user_id,
       project_id,
       start_date,
-      end_date
+      end_date,
     } = request.all();
     const newTask = new Task();
     newTask.title = title;
-    console.log(request.all());
     newTask.task_type = task_type;
-    newTask.status = 'Pending';
+    newTask.status = "Pending";
     newTask.task_due_date = task_due_date;
     newTask.user_id = user_id;
     newTask.start_date = start_date;
     newTask.end_date = end_date;
-    console.log(project_id);
     await newTask.save();
     const project = await Project.find(project_id);
     // project has many task, so need to use it to save task to it
@@ -97,7 +90,7 @@ class TaskController {
     response.json({
       message: "saved success",
       db_id: newTask.id,
-      task : newTask
+      task: newTask,
     });
   }
 
@@ -110,18 +103,16 @@ class TaskController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show({ params,request, response, view }) {
-    
-    const taskID = params.id
-    const task = await Task.find(taskID)
-    const file = await task.files().fetch()
-    
+  async show({ params, request, response, view }) {
+    const taskID = params.id;
+    const task = await Task.find(taskID);
+    const file = await task.files().fetch();
 
     response.json({
-      message : 'query success',
-      task : task,
-      file : file
-    })
+      message: "query success",
+      task: task,
+      file: file,
+    });
   }
 
   /**
@@ -144,22 +135,21 @@ class TaskController {
    * @param {Response} ctx.response
    */
   async update({ params, request, response }) {
-    const id = params.id
-    const task = request.only(['title','content','submission_date','task_due_date','status','hours_spent'])
-    const taskFromDB = await Task.find(id)
-    if (task.task_type){
-      taskFromDB.task_type = task.task_type
+    const id = params.id;
+    const task = request.all();
+    const taskFromDB = await Task.find(id);
+    if (task.task_type) {
+      taskFromDB.task_type = task.task_type;
     }
-    taskFromDB.title = task.title
-    taskFromDB.content = task.content
-    taskFromDB.hours_spent = task.hours_spent
+    taskFromDB.title = task.title;
+    taskFromDB.content = task.content;
+    taskFromDB.hours_spent = task.hours_spent;
 
-    await taskFromDB.save()
-    
+    await taskFromDB.save();
+
     response.json({
-      task : taskFromDB
-    })
-
+      task: taskFromDB,
+    });
   }
 
   /**
@@ -180,39 +170,27 @@ class TaskController {
     });
   }
 
-
-  async submitTask({ params,request, response}){
-    const task = request.only(['title','content','submission_date','task_due_date','status','hours_spent'])
-    const taskID = params.id
-    console.log(taskID);
-    const taskFromDB = await Task.find(taskID)
-    console.log(taskFromDB);
-    try {
-    
-      
-    const submissionTime = new Date(task.submission_date).getTime()
-    const taskDueTime = taskFromDB.task_due_date.getTime()
-    taskFromDB.title = task.title
-    taskFromDB.content = task.content
-    taskFromDB.submission_date = task.submission_date
-    taskFromDB.hours_spent = task.hours_spent
-    if (submissionTime > taskDueTime){
-      taskFromDB.status = 'Late Submission'
+  async submitTask({ params, request, response }) {
+    const task = request.all();
+    const taskID = params.id;
+    const taskFromDB = await Task.find(taskID);
+    const submissionTime = new Date(task.submission_date).getTime();
+    const taskDueTime = taskFromDB.task_due_date.getTime();
+    taskFromDB.title = task.title;
+    taskFromDB.content = task.content;
+    taskFromDB.submission_date = task.submission_date;
+    taskFromDB.hours_spent = task.hours_spent;
+    if (submissionTime > taskDueTime) {
+      taskFromDB.status = "Late Submission";
+    } else if (submissionTime <= taskDueTime) {
+      taskFromDB.status = "Completed";
     }
-
-    else if (submissionTime <= taskDueTime){
-      taskFromDB.status = 'Completed'
-    }
-    await taskFromDB.save()  
-    } catch (error) {
-      console.log(error);
-    }
-    
+    await taskFromDB.save();
 
     response.json({
-      message : 'task saved successfully',
-      task : taskFromDB
-    })
+      message: "task saved successfully",
+      task: taskFromDB,
+    });
   }
 }
 

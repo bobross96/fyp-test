@@ -98,6 +98,13 @@ Route.post('api/notification/create/many','NotificationController.createMany')
 Route.delete('api/notification/delete/:notificationID','NotificationController.destroy')
 
 
+//sem routes
+Route.get('api/semester','SemesterController.index')
+//post new sem
+Route.post('api/semester','SemesterController.store')
+//update new sem 
+Route.patch('api/semester','SemesterController.edit')
+
 
 //token check
 Route.post('api/token','UserController.checkToken')

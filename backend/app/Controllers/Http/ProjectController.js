@@ -7,7 +7,7 @@ const Student = use('App/Models/Student')
 
 class ProjectController {
     async index({request,response}){
-        console.log('poop');
+
         // eager loading example 
         // add logic to check if student or staff?
         
@@ -49,7 +49,6 @@ class ProjectController {
         console.log('inside linkusertoproject');
         const data = request.post()
         const user = await User.findBy('email',data.email)
-        console.log(user);
         const project = await Project.find(data.project_id)
         
         if (data.userType === 'student'){

@@ -52,4 +52,8 @@ export class ApiService {
 
   }
 
+  getSemDate(){
+    return this.http.get("api/semester")
+  }
+
 }
