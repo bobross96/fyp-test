@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import {AdminAppModule} from './admin-app/admin-app.module'
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { httpInterceptorProviders } from './http-interceptors/index';
 import { AppRoutingModule } from './app-routing.module';
@@ -108,7 +109,9 @@ FullCalendarModule.registerPlugins([
   ],
   imports: [
     BrowserModule,
+    AdminAppModule,
     AppRoutingModule,
+    
     HttpClientModule,
     MatInputModule,
     FormsModule,

@@ -23,19 +23,14 @@ export class AdminLoginComponent implements OnInit {
   onSubmit(){
     console.log('poop');
     console.log(this.model);
-    this.authApi.loginAdmin(this.model).subscribe((res) => {
-      console.log(res);
-      
-      if (res.loginSuccess){
-     
-        console.log(localStorage.getItem('token_id'));
-      
+    this.authApi.loginAdmin(this.model).subscribe(
+      res => {
         this._router.navigateByUrl('/admin')
+      },
+      err => {
+        alert(err.error[0].message)
       }
-      else {
-        alert('username/password incorrect!')
-      }
-    })
+    )
     
   }  
 

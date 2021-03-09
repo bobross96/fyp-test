@@ -281,21 +281,15 @@ class UserController {
       let token = await auth.generate(user, true);
         
      
-      if (await user.staff().fetch()){
-        const staff = await user.staff().fetch();
+      if (user.is_admin){
         return response.json({
           message: "loggin in",
           token: token,
           loginSuccess: true,
           user: user,
-          userType: staff,
         });
 
       }
-
-      
-      
-
       else {
         return response.json({
           message: "not admin/staff",

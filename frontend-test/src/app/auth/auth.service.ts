@@ -38,7 +38,7 @@ export class AuthService {
     return this.http.post("/api/admin-login",user).pipe(
       tap(val => {
         if (val.loginSuccess){
-          this.setSession(val)
+          this.setAdminSession(val)
           this.isLoggedIn = true
         }
       })
@@ -59,17 +59,13 @@ export class AuthService {
     
     localStorage.setItem('token_id', authResult.token.token)
     //store user and student object inside localStorage
-    
     let related_id = []
     authResult.groupMates.forEach(student => {
       related_id.push(student.user_id)
     });
-
     authResult.staff.forEach(staff => {
       related_id.push(staff.user_id)
     });
-
-
     const userInfo = JSON.stringify({
       user : authResult.user,
       subTypeInfo : authResult.subTypeInfo,
@@ -82,6 +78,15 @@ export class AuthService {
   
     localStorage.setItem('userInfo',userInfo)
 
+  }
+
+  private setAdminSession(authResult){
+    localStorage.setItem('token_id', authResult.token.token)
+    const adminInfo = JSON.stringify({
+      user : authResult.user,
+    })
+
+    localStorage.setItem('adminInfo',adminInfo)
   }
 
   logout(){

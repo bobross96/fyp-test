@@ -34,21 +34,12 @@ const routes: Routes = [
           { path: 'allTasks',component : TaskAllComponent},
           { path: 'teamboard',component : TeamboardComponent}
         ],
-      },
+      }
     ],
   },
-  {
-    path :'admin',
-    component : AdminComponent,
-    children : [
-      {path : 'admin-users', component : AdminUsersComponent},
-      {path : 'admin-projects',component : AdminProjectsComponent},
-      {path : 'admin-project',component : AdminProjectComponent}
-    ]
-  },
+  
   { path: 'login', component: LoginComponent },
   { path: 'register', component : RegisterComponent},
-  {path : 'admin-login',component : AdminLoginComponent},
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent },
   
