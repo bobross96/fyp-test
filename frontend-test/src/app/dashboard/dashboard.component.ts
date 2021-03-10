@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { NotificationService } from '../services/notification.service'
 import { Router } from '@angular/router';
 import { User } from '../User';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,8 +14,11 @@ export class DashboardComponent implements OnInit {
   user : any
   userInfo : any
   notifications : any
+  projects: any;
+  selectedProject : any
   constructor(
     private authService : AuthService,
+    private api : ApiService,
     private router:Router,
     private notifService : NotificationService) { }
 
@@ -24,9 +28,12 @@ export class DashboardComponent implements OnInit {
     this.router.navigateByUrl('/login')
   }
   ngOnInit(): void {
-    if (localStorage.getItem('userInfo')){
     this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
-    console.log(this.userInfo);
+    if (this.userInfo.user.userType == 'staff') {
+      this.projects = this.userInfo.projectInfo;
+      
+      //this.selectedProject = this.userType.projects[0].id;
+    }
     
     this.notifService.getUserNotif(this.userInfo.user.id).subscribe((notifications) => {
       if (notifications.data.length == 0){
@@ -42,9 +49,11 @@ export class DashboardComponent implements OnInit {
       //console.log(this.notifications);
       
     })
+  }
+
+  changeProject(){
+    this.api.changeProject(this.selectedProject)
     
-    
-    }
   }
 
   poop(id){

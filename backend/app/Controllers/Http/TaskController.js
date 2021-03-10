@@ -53,6 +53,19 @@ class TaskController {
     }
   }
 
+
+  async getByProject({request, response, params}){
+      const projectID = params.projectID
+      const project = await Project.find(projectID)
+      const tasks = await project.task().fetch()
+
+      return response.json({
+        data : tasks
+      })
+
+
+  }
+
   /**
    * Create/save a new task.
    * POST tasks

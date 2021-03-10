@@ -1,4 +1,4 @@
-import * as $ from "jquery";
+import * as $ from 'jquery';
 import {
   Component,
   OnInit,
@@ -15,7 +15,8 @@ import {
   EventClickArg,
   EventApi,
   DayHeader,
-  DayCellContent, CalendarApi
+  DayCellContent,
+  CalendarApi,
 } from '@fullcalendar/angular'; // useful for typechecking
 import { INITIAL_EVENTS, createEventId } from './event-utils';
 import { ApiService } from '../services/api.service';
@@ -28,6 +29,7 @@ import {
 import { Observable } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DashboardComponent } from '../dashboard/dashboard.component';
 
 export interface DialogData {
   title: string;
@@ -72,18 +74,21 @@ export class ScheduleComponent implements OnInit {
         arg.text = 'Break';
       } else if (arg.num == 8) {
         arg.text = 'Recess Week';
-      } else if (arg.num > 8){
-        arg.text = `Sem ${helper.whichSem(arg.date)} Week ${arg.num -1}`;
+      } else if (arg.num > 8) {
+        arg.text = `Sem ${helper.whichSem(arg.date)} Week ${arg.num - 1}`;
       } else {
-        arg.text = `Sem ${helper.whichSem(arg.date)} Week ${arg.num }`
+        arg.text = `Sem ${helper.whichSem(arg.date)} Week ${arg.num}`;
       }
-
     },
     weekNumberCalculation: function (local) {
-      return helper.getSchoolWeek(local,
-        JSON.parse(localStorage.getItem('userInfo')).projectInfo.sem_1_start_date,
-        JSON.parse(localStorage.getItem('userInfo')).projectInfo.sem_2_start_date)
-    }
+      return helper.getSchoolWeek(
+        local,
+        JSON.parse(localStorage.getItem('userInfo')).projectInfo
+          .sem_1_start_date,
+        JSON.parse(localStorage.getItem('userInfo')).projectInfo
+          .sem_2_start_date
+      );
+    },
   };
 
   currentEvents: EventApi[] = [];
@@ -153,10 +158,6 @@ export class ScheduleComponent implements OnInit {
       this.date = new Date(selectInfo.startStr);
     }
 
-   
-
-
-    
     let startTime, endTime;
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
       width: '400px',
@@ -185,7 +186,7 @@ export class ScheduleComponent implements OnInit {
             return;
           }
           this.project_id = this.selectedProject;
-        } 
+        }
         if (!result.startTime) {
           this.startDate = null;
         }
@@ -219,7 +220,7 @@ export class ScheduleComponent implements OnInit {
         console.log(task);
 
         this.taskApi.postTask(task).subscribe((result) => {
-          helper.singleTaskToEvent(result.task,calendarApi,createEventId)
+          helper.singleTaskToEvent(result.task, calendarApi, createEventId);
         });
       } else {
         alert('Task not saved, form was incomplete');
@@ -280,17 +281,18 @@ export class ScheduleComponent implements OnInit {
     this.currentEvents = events;
   }
 
-  changeProject() {
+  async changeProject() {
+    //just change this to localstorage
     this.project_id = this.selectedProject;
     console.log(this.selectedProject);
 
-    this.getTasksForStaff();
+    await this.getTasksForStaff();
   }
 
-  getTasksForStaff() {
+  async getTasksForStaff() {
     //clears the calendar
-    const calendarApi = this.calendarComponent['calendar'];
-    calendarApi.removeAllEvents()
+    const calendarApi = await this.calendarComponent['calendar'];
+    calendarApi.removeAllEvents();
 
     const filteredTasks = this.fetchedTasks.filter(
       (task) => task.project_id == this.selectedProject
@@ -318,14 +320,13 @@ export class ScheduleComponent implements OnInit {
     const calendarApi = this.calendarComponent['calendar'];
     this.tasks = [];
     tasks.forEach((task) => {
-      if (task){
-        helper.singleTaskToEvent(task,calendarApi,createEventId)
+      if (task) {
+        helper.singleTaskToEvent(task, calendarApi, createEventId);
       }
     });
 
     this.calendarOptions.events = this.tasks;
     console.log(this.calendarOptions.events);
-    
   }
 
   removeFromDB(id) {
@@ -345,7 +346,7 @@ export class ScheduleComponent implements OnInit {
   }
   constructor(
     private api: ApiService,
-    private taskApi : TaskService,
+    private taskApi: TaskService,
     public dialog: MatDialog,
     private fb: FormBuilder,
     private router: Router
@@ -354,16 +355,21 @@ export class ScheduleComponent implements OnInit {
   ngOnInit(): void {
     this.userInfo = JSON.parse(localStorage.getItem('userInfo'));
     this.userType = JSON.parse(localStorage.getItem('userType'));
+    this.getTasks();
     if (this.userInfo.user.userType == 'staff') {
       this.projects = this.userInfo.projectInfo;
+      this.api.currentProject.subscribe((projectID) => {
+        this.selectedProject = projectID;
+        if (this.selectedProject) {
+          this.changeProject();
+        }
+      });
       //this.selectedProject = this.userType.projects[0].id;
     } else if (this.userInfo.user.userType == 'student') {
       this.studentProject = this.userInfo.projectInfo.project_name;
       this.project_id = this.userInfo.projectInfo.id;
     }
     //console.log(this.userType);
-
-    this.getTasks();
   }
 }
 
@@ -376,10 +382,7 @@ export class DialogOverviewExampleDialog {
   constructor(
     public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
-    
-  }
-  
+  ) {}
 
   onNoClick(): void {
     console.log(this.dialogRef);

@@ -59,24 +59,47 @@ export class AuthService {
     
     localStorage.setItem('token_id', authResult.token.token)
     //store user and student object inside localStorage
-    let related_id = []
-    authResult.groupMates.forEach(student => {
-      related_id.push(student.user_id)
-    });
-    authResult.staff.forEach(staff => {
-      related_id.push(staff.user_id)
-    });
-    const userInfo = JSON.stringify({
-      user : authResult.user,
-      subTypeInfo : authResult.subTypeInfo,
-      projectInfo : authResult.projectInfo,
-      groupMates : authResult.groupMates,
-      staff : authResult.staff,
-      related_id : related_id
-    })
+    
+
+    //if user,
+
+    //if staff
+    if (authResult.groupMates){
+      let related_id = []
+      authResult.groupMates.forEach(student => {
+        related_id.push(student.user_id)
+      });
+      authResult.staff.forEach(staff => {
+        related_id.push(staff.user_id)
+      });
+      const userInfo = JSON.stringify({
+        user : authResult.user,
+        subTypeInfo : authResult.subTypeInfo,
+        projectInfo : authResult.projectInfo,
+        groupMates : authResult.groupMates,
+        staff : authResult.staff,
+        related_id : related_id
+      })
+
+      localStorage.setItem('userInfo',userInfo)
+    }
+
+    else {
+      const userInfo = JSON.stringify({
+        user : authResult.user,
+        subTypeInfo : authResult.subTypeInfo,
+        projectInfo : authResult.projectInfo,
+
+      })
+
+      localStorage.setItem('userInfo',userInfo)
+    }
+    
+
+
 
   
-    localStorage.setItem('userInfo',userInfo)
+    
 
   }
 
@@ -90,7 +113,7 @@ export class AuthService {
   }
 
   logout(){
-    localStorage.removeItem('token_id')
+    localStorage.clear()
   }
 
   constructor(private http : HttpClient) { }

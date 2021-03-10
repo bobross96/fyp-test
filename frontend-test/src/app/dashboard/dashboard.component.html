@@ -1,10 +1,8 @@
-
 <header>
   <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center" id="flexToolbar">
     <div>
-    <span *ngIf="userInfo">
-      <button mat-button disabled style="color: black;">Welcome {{userInfo.user.first_name}}</button>&nbsp;
-      
+        <button mat-button disabled style="color: black;">Welcome {{userInfo.user.first_name}}</button>&nbsp;
+
         <button mat-button [matMenuTriggerFor]="menu">
           <span *ngIf="notifications;else noBadge">
             <i [matBadge]="notifications.length" matBadgeSize="small" matBadgeColor="warn" class="fas fa-bell"></i>
@@ -16,33 +14,38 @@
         <mat-menu #menu="matMenu">
           <div *ngIf="notifications; else elseBlock">
             <div *ngFor="let notif of notifications">
-              <a [routerLink]="['./'+ notif.event_type]" [queryParams]="{id : notif.event_id}" (click)="poop(notif.id)" mat-menu-item>{{notif.title}}</a>
+              <a [routerLink]="['./'+ notif.event_type]" [queryParams]="{id : notif.event_id}" (click)="poop(notif.id)"
+                mat-menu-item>{{notif.title}}</a>
             </div>
           </div>
           <ng-template #elseBlock><button mat-menu-item>No unread notifications</button></ng-template>
         </mat-menu>
-        
-    
-    </span>
+        <mat-form-field class="toolbar-form" style="padding-left: 1em;" appearance="legacy" *ngIf="projects">
+          <!-- <mat-label>Select a project</mat-label> -->
+          <mat-select [(value)]="selectedProject" (selectionChange)="changeProject()">
+            <mat-option>None</mat-option>
+            <mat-option *ngFor="let project of projects" value="{{project.id}}">{{project.project_name}}</mat-option>
 
+          </mat-select>
+        </mat-form-field>
     </div>
     <button mat-button color="warn" id="logout" (click)="logout()">Logout</button>
   </mat-toolbar>
-  </header>
+</header>
 
 <mat-sidenav-container>
-    <mat-sidenav #sidenav mode="side" opened>
-      <mat-nav-list>
-        <a mat-list-item routerLink="./schedule" routerLinkActive="active">Calendar</a> 
-        <a mat-list-item routerLink="./books" routerLinkActive="active">Users</a>
-        <a mat-list-item [routerLink]="['./allTasks']" [queryParams]="{taskType : 'meetingNotes'}">Meeting Notes</a>
-        <a mat-list-item [routerLink]="['./allTasks']" [queryParams]="{taskType : 'weeklyReports'}">Weekly Reports</a>
-        <a mat-list-item [routerLink]="['./allTasks']" [queryParams]="{taskType : 'otherReports'}">Other Reports</a>
-        <a mat-list-item [routerLink]="['./teamboard']">Team Board</a>
-      </mat-nav-list>
-    </mat-sidenav>
-    <mat-sidenav-content>
-      <p><button mat-button (click)="sidenav.toggle()">
+  <mat-sidenav #sidenav mode="side" opened>
+    <mat-nav-list>
+      <a mat-list-item routerLink="./schedule" routerLinkActive="active">Calendar</a>
+      <a mat-list-item routerLink="./books" routerLinkActive="active">Users</a>
+      <a mat-list-item [routerLink]="['./allTasks']" [queryParams]="{taskType : 'meetingNotes'}">Meeting Notes</a>
+      <a mat-list-item [routerLink]="['./allTasks']" [queryParams]="{taskType : 'weeklyReports'}">Weekly Reports</a>
+      <a mat-list-item [routerLink]="['./allTasks']" [queryParams]="{taskType : 'otherReports'}">Other Reports</a>
+      <a mat-list-item [routerLink]="['./teamboard']">Team Board</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <p><button mat-button (click)="sidenav.toggle()">
         <div *ngIf=!sidenav.opened>
           <i class="fas fa-bars"></i>
         </div>
@@ -50,7 +53,7 @@
           <i class="fas fa-chevron-left"></i>
         </div>
       </button></p>
-      <router-outlet></router-outlet>
-      
-    </mat-sidenav-content>
-  </mat-sidenav-container>
+    <router-outlet></router-outlet>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

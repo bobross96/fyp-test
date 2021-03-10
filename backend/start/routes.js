@@ -56,6 +56,7 @@ Route.post('api/usersMany','UserController.storeMany')
 Route.put('api/tasks/submit/:id','TaskController.submitTask')
 Route.resource('api/tasks','TaskController').middleware('auth')
 Route.post('api/tasks','TaskController.create')
+Route.get('api/tasks/project/:projectID','TaskController.getByProject')
 
 
 //CommentController
