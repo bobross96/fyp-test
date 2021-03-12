@@ -337,13 +337,12 @@ export class ScheduleComponent implements OnInit {
     if (this.userInfo.user.userType == 'staff') {
       this.projects = this.userInfo.projectInfo;
       //get chosen project from service that is tied to dashboard, on change then it will fire?
-      this.api.currentProject.subscribe((projectID) => {
+      this.api.currentProject.subscribe(async (projectID) => {
         if (projectID) {
           this.selectedProject = projectID
           this.project_id = projectID
-          this.taskApi.getTasksByProjectId(this.project_id).subscribe((tasks) => {
-            this.taskToEvent(tasks.data);
-          });
+          let tasks = await this.taskApi.fetchTasksByProjectId(this.project_id)
+          this.taskToEvent(tasks.data)
         }
         //this case runs when no project is selected
         else {
