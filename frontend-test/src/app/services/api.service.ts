@@ -13,17 +13,22 @@ const apiUrl = "/api/catalog";
 export class ApiService {
 
   //1 is defualt message?
-  private projectSource = new BehaviorSubject('');
+
+  private projectSource = new BehaviorSubject(JSON.parse(localStorage.getItem('selectedProject')));
   currentProject = this.projectSource.asObservable();
 
   constructor(
     private http : HttpClient,
   ) { }
 
-  changeProject(projectID):void{
+  changeProject(projectID:number):void{
     this.projectSource.next(projectID)
   }
  
+  fetchByProject(projectID:number):Promise<any>{
+    return this.http.get("/api/users/" + projectID).toPromise()
+  }
+
   showByProject(projectID:number):Observable<any> {
     return this.http.get("/api/users/" + projectID)
   }

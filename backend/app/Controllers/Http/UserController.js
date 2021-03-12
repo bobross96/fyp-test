@@ -179,20 +179,30 @@ class UserController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
+
+  //this is sad for staff!! cannot see! better route at 
+  //project get all users tied to project
   async showByProject({ params, request, response }) {
     const projectID = params.projectID
     const project = await Project.find(projectID)
     const students = await project.students().fetch()
-    const users = []
+    const staff = await project.staff().fetch()
 
+
+    const userInfo = []
+
+    //need to get first name , so extract user info
     for (let student of students.rows){
-      const user = await student.user().fetch()
-      users.push(user)
+      const studentData = await student.user().fetch()
+      userInfo.push(studentData)
     }
 
-
+    for (let staf of staff.rows){
+      const staffData = await staf.user().fetch()
+      userInfo.push(staffData)
+    }
     response.json({
-      message: users,
+      message: userInfo,
     });
 
   }

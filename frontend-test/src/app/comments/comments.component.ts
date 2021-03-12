@@ -38,6 +38,7 @@ export class CommentsComponent implements OnInit {
   showInput = []
   related_id = []
   notifBody : any
+  selectedProject : number
   ngOnInit(): void {
     // get task id 
     this.taskID = parseInt(this.route.snapshot.queryParamMap.get('id'))
@@ -47,20 +48,14 @@ export class CommentsComponent implements OnInit {
     this.commentBody.user_id = userInfo.user.id
     this.commentBody.task_id = this.taskID
     this.loadComments()
-    userInfo.groupMates.forEach(student => {
-      this.related_id.push(student.user_id)
-    });
-
-    userInfo.staff.forEach(staff => {
-      this.related_id.push(staff.user_id)
-    });
-
-    console.log(this.related_id);
+    this.api.currentProject.subscribe(projectID => {
+      this.selectedProject = projectID
+    })
     
+
     this.notifBody = {
       title : "New Comment",
       description : "",
-      id_array : this.related_id,
       source_user_id : userInfo.user.id,
       is_read : false,
       event_id : this.taskID,
@@ -103,8 +98,9 @@ export class CommentsComponent implements OnInit {
 
     this.notifBody.description = this.commentBody.content
 
-    this.notifService.postManyNotif(this.notifBody).subscribe((res) => {
-      console.log(res);
+    this.notifService.postNotifByProjectID(this.selectedProject,this.notifBody).subscribe((res) => {
+      err => console.log(err);
+      res => console.log(res);
     })
 
 
@@ -123,8 +119,9 @@ export class CommentsComponent implements OnInit {
 
     this.notifBody.description = this.commentBody.content
 
-    this.notifService.postManyNotif(this.notifBody).subscribe((res) => {
-      console.log(res);
+    this.notifService.postNotifByProjectID(this.selectedProject,this.notifBody).subscribe((res) => {
+      err => console.log(err);
+      res => console.log(res);
     })
 
 

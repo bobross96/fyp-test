@@ -11,6 +11,10 @@ export class JobService {
     private http : HttpClient
   ) { }
 
+    fetchJobs(projectID:number):Promise<any>{
+      return this.http.get("/api/jobs/" + projectID).toPromise()
+    }  
+
     getJobs(projectID : number):Observable<any>{
       return this.http.get("/api/jobs/" + projectID)
     }

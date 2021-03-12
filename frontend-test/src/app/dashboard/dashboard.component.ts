@@ -29,12 +29,10 @@ export class DashboardComponent implements OnInit {
   }
   ngOnInit(): void {
     this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
-    if (this.userInfo.user.userType == 'staff') {
-      this.projects = this.userInfo.projectInfo;
-      
-      //this.selectedProject = this.userType.projects[0].id;
+    this.selectedProject = this.userInfo.selectedProject
+    if (this.userInfo.user.userType == 'staff'){
+      this.projects = this.userInfo.projectInfo
     }
-    
     this.notifService.getUserNotif(this.userInfo.user.id).subscribe((notifications) => {
       if (notifications.data.length == 0){
         this.notifications = false
@@ -42,18 +40,16 @@ export class DashboardComponent implements OnInit {
       else {
         this.notifications = notifications.data
       }
-      
       console.log(this.notifications);
-
-      
       //console.log(this.notifications);
       
     })
   }
 
   changeProject(){
+    //fuck this method, just going to put inside localstorage
     this.api.changeProject(this.selectedProject)
-    
+    localStorage.setItem('selectedProject',this.selectedProject)
   }
 
   poop(id){

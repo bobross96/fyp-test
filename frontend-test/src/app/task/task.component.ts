@@ -38,24 +38,22 @@ export class TaskComponent implements OnInit {
   attachments: any = [];
   related_id = []
   notifBody : any
+  selectedProject : number
 
   ngOnInit(): void {
     let taskID = parseInt(this.route.snapshot.queryParamMap.get('id'));
     console.log(taskID);
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-
-    userInfo.groupMates.forEach(student => {
-      this.related_id.push(student.user_id)
-    });
-
-    userInfo.staff.forEach(staff => {
-      this.related_id.push(staff.user_id)
-    });
+    this.selectedProject = JSON.parse(localStorage.getItem('selectedProject'))
+    //on any change of current project, it will update selectedproject accordingly
+    this.api.currentProject.subscribe(projectID => {
+      console.log('task component still alive');
+      this.selectedProject = projectID
+    })
 
     this.notifBody = {
       title : "Task Submitted",
       description : "",
-      id_array : this.related_id,
       source_user_id : userInfo.user.id,
       is_read : false,
       event_id : taskID,
@@ -211,8 +209,8 @@ export class TaskComponent implements OnInit {
       this.changeDateForm();
     });
 
-
-    this.notifService.postManyNotif(this.notifBody).subscribe((res) => {
+    //to post notification 
+    this.notifService.postNotifByProjectID(this.selectedProject,this.notifBody).subscribe((res) => {
       console.log(res);
       
     })

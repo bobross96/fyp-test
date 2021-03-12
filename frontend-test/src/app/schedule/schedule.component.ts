@@ -178,15 +178,6 @@ export class ScheduleComponent implements OnInit {
       if (!result) {
         return;
       } else if (result.date && result.task_type) {
-        console.log(this.userType);
-
-        if (this.userType.type == 'staff') {
-          if (!this.selectedProject) {
-            alert('please select a project!');
-            return;
-          }
-          this.project_id = this.selectedProject;
-        }
         if (!result.startTime) {
           this.startDate = null;
         }
@@ -281,14 +272,6 @@ export class ScheduleComponent implements OnInit {
     this.currentEvents = events;
   }
 
-  async changeProject() {
-    //just change this to localstorage
-    this.project_id = this.selectedProject;
-    console.log(this.selectedProject);
-
-    await this.getTasksForStaff();
-  }
-
   async getTasksForStaff() {
     //clears the calendar
     const calendarApi = await this.calendarComponent['calendar'];
@@ -306,29 +289,24 @@ export class ScheduleComponent implements OnInit {
     // fetch depending on the id of project
   }
 
-  getTasks() {
-    // needs to be specific for staff, query through projects
-
-    this.taskApi.getTasks().subscribe((res) => {
-      console.log(res.data);
-      this.fetchedTasks = res.data;
-      this.taskToEvent(res.data);
-    });
-  }
   // this function takes in the task data and converts to events on the calendar
   taskToEvent(tasks) {
     const calendarApi = this.calendarComponent['calendar'];
-    this.tasks = [];
-    tasks.forEach((task) => {
-      if (task) {
-        helper.singleTaskToEvent(task, calendarApi, createEventId);
-      }
-    });
+    //if isntance of calendar doesnt exist, dont run all the functions 
+    if (calendarApi){
+      calendarApi.removeAllEvents();
+      this.tasks = [];
+      tasks.forEach((task) => {
+        if (task) {
+          helper.singleTaskToEvent(task, calendarApi, createEventId);
+        }
+      });
 
-    this.calendarOptions.events = this.tasks;
-    console.log(this.calendarOptions.events);
+      this.calendarOptions.events = this.tasks;
+      console.log(this.calendarOptions.events);
+    }
+    
   }
-
   removeFromDB(id) {
     this.taskApi.deleteTask(id).subscribe((res) => {
       console.log(res);
@@ -355,20 +333,32 @@ export class ScheduleComponent implements OnInit {
   ngOnInit(): void {
     this.userInfo = JSON.parse(localStorage.getItem('userInfo'));
     this.userType = JSON.parse(localStorage.getItem('userType'));
-    this.getTasks();
+    this.selectedProject = this.userInfo.selectedProject
     if (this.userInfo.user.userType == 'staff') {
       this.projects = this.userInfo.projectInfo;
+      //get chosen project from service that is tied to dashboard, on change then it will fire?
       this.api.currentProject.subscribe((projectID) => {
-        this.selectedProject = projectID;
-        if (this.selectedProject) {
-          this.changeProject();
+        if (projectID) {
+          this.selectedProject = projectID
+          this.project_id = projectID
+          this.taskApi.getTasksByProjectId(this.project_id).subscribe((tasks) => {
+            this.taskToEvent(tasks.data);
+          });
+        }
+        //this case runs when no project is selected
+        else {
+          this.api.changeProject(this.selectedProject);
         }
       });
-      //this.selectedProject = this.userType.projects[0].id;
+      
     } else if (this.userInfo.user.userType == 'student') {
       this.studentProject = this.userInfo.projectInfo.project_name;
       this.project_id = this.userInfo.projectInfo.id;
+      this.taskApi.getTasksByProjectId(this.project_id).subscribe((tasks) => {
+        this.taskToEvent(tasks.data);
+      });
     }
+
     //console.log(this.userType);
   }
 }

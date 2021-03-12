@@ -93,10 +93,12 @@ Route.post('api/notification/create/one','NotificationController.createOne')
 Route.patch('api/notification/:notifID','NotificationController.edit')
 
 
-//create notif for groupmates 
+//create notif for array
 Route.post('api/notification/create/many','NotificationController.createMany')
 //delete notif by ID
 Route.delete('api/notification/delete/:notificationID','NotificationController.destroy')
+//create notifs tagged to projectID
+Route.post('api/notification/createByProjectID/:projectID','NotificationController.createByProjectID')
 
 
 //sem routes
