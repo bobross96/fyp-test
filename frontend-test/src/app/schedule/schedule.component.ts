@@ -1,3 +1,4 @@
+import * as $ from 'jquery';
 import {
   Component,
   OnInit,
@@ -14,7 +15,8 @@ import {
   EventClickArg,
   EventApi,
   DayHeader,
-  DayCellContent, CalendarApi
+  DayCellContent,
+  CalendarApi,
 } from '@fullcalendar/angular'; // useful for typechecking
 import { INITIAL_EVENTS, createEventId } from './event-utils';
 import { ApiService } from '../services/api.service';
@@ -27,6 +29,7 @@ import {
 import { Observable } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DashboardComponent } from '../dashboard/dashboard.component';
 
 export interface DialogData {
   title: string;
@@ -65,7 +68,6 @@ export class ScheduleComponent implements OnInit {
     eventDisplay: 'auto',
     displayEventEnd: true,
     weekNumbers: true,
-    weekText: `Sem 1 Week `,
     contentHeight: 'auto',
     weekNumberContent: function (arg) {
       if (!arg.num || arg.num < 0 || arg.num > 14) {
@@ -73,17 +75,19 @@ export class ScheduleComponent implements OnInit {
       } else if (arg.num == 8) {
         arg.text = 'Recess Week';
       } else if (arg.num > 8) {
-        arg.text = `Sem 2 Week ${arg.num - 1}`;
+        arg.text = `Sem ${helper.whichSem(arg.date)} Week ${arg.num - 1}`;
+      } else {
+        arg.text = `Sem ${helper.whichSem(arg.date)} Week ${arg.num}`;
       }
     },
     weekNumberCalculation: function (local) {
-      let startDate = new Date('1/11/2021');
-      let intNumber =
-        Math.ceil(
-          (local.getTime() - startDate.getTime()) / (1000 * 3600 * 24 * 7)
-        ) + 1;
-
-      return intNumber;
+      return helper.getSchoolWeek(
+        local,
+        JSON.parse(localStorage.getItem('userInfo')).projectInfo
+          .sem_1_start_date,
+        JSON.parse(localStorage.getItem('userInfo')).projectInfo
+          .sem_2_start_date
+      );
     },
   };
 
@@ -103,6 +107,7 @@ export class ScheduleComponent implements OnInit {
   time: any;
   startDate: any;
   endDate: any;
+  userInfo: any;
 
   handleCalendarToggle() {
     this.calendarVisible = !this.calendarVisible;
@@ -173,15 +178,6 @@ export class ScheduleComponent implements OnInit {
       if (!result) {
         return;
       } else if (result.date && result.task_type) {
-        console.log(this.userType);
-
-        if (this.userType.type == 'staff') {
-          if (!this.selectedProject) {
-            alert('please select a project!');
-            return;
-          }
-          this.project_id = this.selectedProject;
-        } 
         if (!result.startTime) {
           this.startDate = null;
         }
@@ -207,7 +203,7 @@ export class ScheduleComponent implements OnInit {
           task_due_date: result.date,
           task_type: result.task_type,
           status: 'Pending',
-          user_id: this.user.id,
+          user_id: this.userInfo.id,
           project_id: this.project_id,
           start_date: this.startDate,
           end_date: this.endDate,
@@ -215,7 +211,7 @@ export class ScheduleComponent implements OnInit {
         console.log(task);
 
         this.taskApi.postTask(task).subscribe((result) => {
-          helper.singleTaskToEvent(result.task,calendarApi,createEventId)
+          helper.singleTaskToEvent(result.task, calendarApi, createEventId);
         });
       } else {
         alert('Task not saved, form was incomplete');
@@ -276,17 +272,10 @@ export class ScheduleComponent implements OnInit {
     this.currentEvents = events;
   }
 
-  changeProject() {
-    this.project_id = this.selectedProject;
-    console.log(this.selectedProject);
-
-    this.getTasksForStaff();
-  }
-
-  getTasksForStaff() {
+  async getTasksForStaff() {
     //clears the calendar
-    const calendarApi = this.calendarComponent['calendar'];
-    calendarApi.removeAllEvents()
+    const calendarApi = await this.calendarComponent['calendar'];
+    calendarApi.removeAllEvents();
 
     const filteredTasks = this.fetchedTasks.filter(
       (task) => task.project_id == this.selectedProject
@@ -300,30 +289,24 @@ export class ScheduleComponent implements OnInit {
     // fetch depending on the id of project
   }
 
-  getTasks() {
-    // needs to be specific for staff, query through projects
-
-    this.taskApi.getTasks().subscribe((res) => {
-      console.log(res.data);
-      this.fetchedTasks = res.data;
-      this.taskToEvent(res.data);
-    });
-  }
   // this function takes in the task data and converts to events on the calendar
   taskToEvent(tasks) {
     const calendarApi = this.calendarComponent['calendar'];
-    this.tasks = [];
-    tasks.forEach((task) => {
-      if (task){
-        helper.singleTaskToEvent(task,calendarApi,createEventId)
-      }
-    });
+    //if isntance of calendar doesnt exist, dont run all the functions 
+    if (calendarApi){
+      calendarApi.removeAllEvents();
+      this.tasks = [];
+      tasks.forEach((task) => {
+        if (task) {
+          helper.singleTaskToEvent(task, calendarApi, createEventId);
+        }
+      });
 
-    this.calendarOptions.events = this.tasks;
-    console.log(this.calendarOptions.events);
+      this.calendarOptions.events = this.tasks;
+      console.log(this.calendarOptions.events);
+    }
     
   }
-
   removeFromDB(id) {
     this.taskApi.deleteTask(id).subscribe((res) => {
       console.log(res);
@@ -341,25 +324,41 @@ export class ScheduleComponent implements OnInit {
   }
   constructor(
     private api: ApiService,
-    private taskApi : TaskService,
+    private taskApi: TaskService,
     public dialog: MatDialog,
     private fb: FormBuilder,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.user = JSON.parse(localStorage.getItem('user'));
+    this.userInfo = JSON.parse(localStorage.getItem('userInfo'));
     this.userType = JSON.parse(localStorage.getItem('userType'));
-    if (this.userType.type == 'staff') {
-      this.projects = this.userType.projects;
-      //this.selectedProject = this.userType.projects[0].id;
-    } else if (this.userType.type == 'student') {
-      this.studentProject = this.userType.project.project_name;
-      this.project_id = this.userType.project_id;
+    this.selectedProject = this.userInfo.selectedProject
+    if (this.userInfo.user.userType == 'staff') {
+      this.projects = this.userInfo.projectInfo;
+      //get chosen project from service that is tied to dashboard, on change then it will fire?
+      this.api.currentProject.subscribe(async (projectID) => {
+        if (projectID) {
+          this.selectedProject = projectID
+          this.project_id = projectID
+          let tasks = await this.taskApi.fetchTasksByProjectId(this.project_id)
+          this.taskToEvent(tasks.data)
+        }
+        //this case runs when no project is selected
+        else {
+          this.api.changeProject(this.selectedProject);
+        }
+      });
+      
+    } else if (this.userInfo.user.userType == 'student') {
+      this.studentProject = this.userInfo.projectInfo.project_name;
+      this.project_id = this.userInfo.projectInfo.id;
+      this.taskApi.getTasksByProjectId(this.project_id).subscribe((tasks) => {
+        this.taskToEvent(tasks.data);
+      });
     }
-    //console.log(this.userType);
 
-    this.getTasks();
+    //console.log(this.userType);
   }
 }
 
@@ -372,10 +371,7 @@ export class DialogOverviewExampleDialog {
   constructor(
     public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
-    
-  }
-  
+  ) {}
 
   onNoClick(): void {
     console.log(this.dialogRef);

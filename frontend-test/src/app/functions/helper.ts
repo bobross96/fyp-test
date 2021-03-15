@@ -7,16 +7,59 @@ export function Week(arg) {
       arg.text = `Sem 1 Week ${arg.num - 1}`;
     }
   }
-export function getSchoolWeek(currentDate) {
-    let startDate = new Date('8/11/2020');
+export function getSchoolWeek(currentDate,sem1Start,sem2Start) {
+    //console.log('helper running');
+    
+    let startDateSem2 = new Date('1/11/2021');
+    let startDateSem1 = new Date('8/10/2020');
     let nowDate = new Date(currentDate)
+    let startDate = startDateSem1
+    if (nowDate.getTime() >= startDateSem2.getTime()){
+      startDate = startDateSem2
+    }
     let intNumber =
       Math.ceil(
         (nowDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24 * 7)
       ) + 1;
 
-    return 'Week ' + intNumber;
+      return intNumber
+
+    
   }
+
+export function getWeekForTasks(dueDate,sem1Start,sem2Start){
+  let startDateSem2 = new Date('1/11/2021');
+  let startDateSem1 = new Date('8/10/2020');
+  let nowDate = new Date(dueDate)
+  let startDate = startDateSem1
+  if (nowDate.getTime() >= startDateSem2.getTime()){
+    startDate = startDateSem2
+  }
+  let intNumber =
+    Math.ceil(
+      (nowDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24 * 7)
+    );
+
+  if (intNumber == 8){
+    return 'Recess Week'
+  }
+
+  else if (intNumber > 8){
+    return (intNumber -1)
+  }
+  else {
+    return intNumber
+  }
+}
+
+export function whichSem(currentDate){
+  let startDateSem2 = new Date('1/11/2021');
+  let startDateSem1 = new Date('8/10/2020');
+  if (currentDate.getTime() > startDateSem2.getTime()){
+    return "2"
+  }
+  else return "1"
+}  
 
 export function dateConverter(date,hour,minute){
   let year = date.getFullYear()
@@ -30,11 +73,11 @@ export function dateConverter(date,hour,minute){
 export function singleTaskToEvent(task,calendarApi,createEventId){
   let color = '#3788d8';
   switch (task.task_type) {
-    case 'final':
-            color = 'red';
+    case 'Final Report':
+            color = '#4285f4';
             break;
-          case 'completed':
-            color = 'green';
+          case 'Interim Report':
+            color = '#3f51b5';
             break;
           case 'Meeting Notes':
             color = '#66cc91';
@@ -43,9 +86,21 @@ export function singleTaskToEvent(task,calendarApi,createEventId){
             break;
   }
 
+  //if due date is passed 
+  let dueDate = new Date(task.task_due_date)
+  let nowDate = new Date()
+  if (task.status == 'Pending' && dueDate.getTime() < nowDate.getTime()){
+    
+    
+    color = "red"
+  }
+  
+
   if (!task.title) {
     task.title = task.task_type;
   }
+
+  //if date is on the day itself, add red border?
 
   if (task.start_date && task.end_date) {
     calendarApi.addEvent({

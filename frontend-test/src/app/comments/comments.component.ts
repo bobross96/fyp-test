@@ -3,6 +3,7 @@ import { ApiService } from '../services/api.service';
 import { CommentService} from '../services/comment.service';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
+import { NotificationService } from '../services/notification.service';
 
 @Component({
   selector: 'app-comments',
@@ -15,7 +16,8 @@ export class CommentsComponent implements OnInit {
     private api : ApiService,
     private commentApi : CommentService,
     private route : ActivatedRoute,
-    private fb : FormBuilder
+    private fb : FormBuilder,
+    private notifService : NotificationService
   ) { }
   
   commentForm = this.fb.group({
@@ -26,6 +28,7 @@ export class CommentsComponent implements OnInit {
     reply : ['',Validators.required]
   })
 
+  
 
   taskID : number
   comments : any
@@ -33,15 +36,31 @@ export class CommentsComponent implements OnInit {
   replies : any
   commentBody : any
   showInput = []
+  related_id = []
+  notifBody : any
+  selectedProject : number
   ngOnInit(): void {
     // get task id 
     this.taskID = parseInt(this.route.snapshot.queryParamMap.get('id'))
-    const user = JSON.parse(localStorage.getItem('user'));
-    console.log(user.id);
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    console.log(userInfo);
     this.commentBody = {}
-    this.commentBody.user_id = user.id
+    this.commentBody.user_id = userInfo.user.id
     this.commentBody.task_id = this.taskID
     this.loadComments()
+    this.api.currentProject.subscribe(projectID => {
+      this.selectedProject = projectID
+    })
+    
+
+    this.notifBody = {
+      title : "New Comment",
+      description : "",
+      source_user_id : userInfo.user.id,
+      is_read : false,
+      event_id : this.taskID,
+      event_type : "task"
+    }
     // then get the comments
     
   }
@@ -69,12 +88,22 @@ export class CommentsComponent implements OnInit {
   onSubmit(){
     this.commentBody.parent_id = null
     this.commentBody.content = this.commentForm.value.comment
+
     this.commentApi.postComment(this.commentBody).subscribe((res) => {
       console.log(res);
       this.commentForm.reset()
       this.loadComments()
       
     })
+
+    this.notifBody.description = this.commentBody.content
+
+    this.notifService.postNotifByProjectID(this.selectedProject,this.notifBody).subscribe((res) => {
+      err => console.log(err);
+      res => console.log(res);
+    })
+
+
   }
 
   replySubmit(id){
@@ -87,6 +116,15 @@ export class CommentsComponent implements OnInit {
       this.loadComments()
       
     })
+
+    this.notifBody.description = this.commentBody.content
+
+    this.notifService.postNotifByProjectID(this.selectedProject,this.notifBody).subscribe((res) => {
+      err => console.log(err);
+      res => console.log(res);
+    })
+
+
   }
 
   showReply(i){

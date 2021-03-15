@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 
 
@@ -12,12 +12,26 @@ const apiUrl = "/api/catalog";
 })
 export class ApiService {
 
+  //1 is defualt message?
+
+  private projectSource = new BehaviorSubject(JSON.parse(localStorage.getItem('selectedProject')));
+  currentProject = this.projectSource.asObservable();
+
   constructor(
     private http : HttpClient,
   ) { }
 
+  changeProject(projectID:number):void{
+    this.projectSource.next(projectID)
+  }
  
+  fetchByProject(projectID:number):Promise<any>{
+    return this.http.get("/api/users/" + projectID).toPromise()
+  }
 
+  showByProject(projectID:number):Observable<any> {
+    return this.http.get("/api/users/" + projectID)
+  }
 
   getUsers():Observable<any>{
 
@@ -49,5 +63,12 @@ export class ApiService {
     return this.http.post("api/register",userData)
 
   }
+
+  getSemDate(){
+    return this.http.get("api/semester")
+  }
+
+
+
 
 }

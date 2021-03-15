@@ -9,6 +9,7 @@ import {
   MAT_DIALOG_DATA,
   MatDialogRef,
 } from '@angular/material/dialog';
+import { NotificationService } from '../services/notification.service';
 
 
 @Component({
@@ -29,15 +30,35 @@ export class TaskComponent implements OnInit {
     private taskApi : TaskService,
     private documentApi : DocumentService, 
     public dialog: MatDialog,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private notifService : NotificationService
   ) {}
   task: any;
   pdfSrc: any;
   attachments: any = [];
+  related_id = []
+  notifBody : any
+  selectedProject : number
 
   ngOnInit(): void {
     let taskID = parseInt(this.route.snapshot.queryParamMap.get('id'));
     console.log(taskID);
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    this.selectedProject = JSON.parse(localStorage.getItem('selectedProject'))
+    //on any change of current project, it will update selectedproject accordingly
+    this.api.currentProject.subscribe(projectID => {
+      console.log('task component still alive');
+      this.selectedProject = projectID
+    })
+
+    this.notifBody = {
+      title : "Task Submitted",
+      description : "",
+      source_user_id : userInfo.user.id,
+      is_read : false,
+      event_id : taskID,
+      event_type : "task"
+    }
 
     // gets the task object
     this.taskApi.getTaskById(taskID).subscribe((res) => {
@@ -187,6 +208,16 @@ export class TaskComponent implements OnInit {
       this.task = res.task;
       this.changeDateForm();
     });
+
+    //to post notification 
+    this.notifService.postNotifByProjectID(this.selectedProject,this.notifBody).subscribe((res) => {
+      console.log(res);
+      
+    })
+
+
+
+
   }
 
   getTask(id: number) {

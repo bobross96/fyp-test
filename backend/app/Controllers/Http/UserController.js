@@ -9,56 +9,47 @@ const Project = use("App/Models/Project");
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
-/**
- * Resourceful controller for interacting with users
- */
 class UserController {
   async login({ auth, request, response }) {
     console.log("poop");
     const { email, password } = request.post();
 
+    //if auth fails default error message will be sent by adonis
     if (await auth.attempt(email, password)) {
       //will query and return user object based on email
       let user = await User.findBy("email", email);
       // generate jwt token based on user
       let token = await auth.generate(user, true);
 
-      if (await user.student().fetch()) {
+      if (user.userType == 'student') {
         const student = await user.student().fetch();
-        let project = await student.project().fetch()
-        student.type = 'student'
-        student.project = project
+        const project = await student.project().fetch();
+        const students = await project.students().fetch();
+        const staff = await project.staff().fetch();
+
         return response.json({
-          message: "loggin in",
           token: token,
-          loginSuccess: true,
           user: user,
-          userType: student,
+          subTypeInfo : student,
+          projectInfo : project,
+          groupMates : students,
+          staff : staff
         });
-      } else if (await user.staff().fetch()) {
+
+      } else if (user.userType == 'staff') {
         const staff = await user.staff().fetch();
-        let projects = await staff.project().fetch()
+        const projects = await staff.project().fetch()
         
         staff.projects = projects.rows
-        console.log(staff.projects);
         staff.type = 'staff'
         return response.json({
-          message: "loggin in",
           token: token,
-          loginSuccess: true,
           user: user,
-          userType: staff,
+          subTypeInfo : staff,
+          projectInfo : staff.projects
         });
-      } else {
-        return response.json({
-          message: "neither student nor staff wtf?",
-        });
-      }
-    } else {
-      return response.json({
-        message: "error bro",
-      });
-    }
+      } 
+    } 
   }
 
   async register({ auth, request, response }) {
@@ -82,6 +73,7 @@ class UserController {
     if (userType == "student") {
       const student = new Student();
       //for now just using one project only
+      user.is_admin = false;
       await user.save();
       // save student type to user model
       await user.student().save(student);
@@ -96,6 +88,7 @@ class UserController {
       });
     } else if (userType == "staff") {
       const staff = new Staff();
+      user.is_admin = true;
       await user.save();
       await user.staff().save(staff);
       let token = await auth.generate(user, true);
@@ -132,9 +125,7 @@ class UserController {
   async storeMany({ request, response, view }) {
     const userBody = request.post().users;
     userBody.forEach((user) => {
-      console.log(user);
       const { username, email, password, is_active } = user;
-      console.log(username);
       let newUser = new User();
       newUser.username = username;
       newUser.password = password;
@@ -172,7 +163,6 @@ class UserController {
     user.first_name = first_name;
     user.last_name = last_name;
     user.is_active = is_active;
-    console.log(user);
     await user.save();
 
     response.json({
@@ -189,7 +179,33 @@ class UserController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show({ params, request, response, view }) {}
+
+  //this is sad for staff!! cannot see! better route at 
+  //project get all users tied to project
+  async showByProject({ params, request, response }) {
+    const projectID = params.projectID
+    const project = await Project.find(projectID)
+    const students = await project.students().fetch()
+    const staff = await project.staff().fetch()
+
+
+    const userInfo = []
+
+    //need to get first name , so extract user info
+    for (let student of students.rows){
+      const studentData = await student.user().fetch()
+      userInfo.push(studentData)
+    }
+
+    for (let staf of staff.rows){
+      const staffData = await staf.user().fetch()
+      userInfo.push(staffData)
+    }
+    response.json({
+      message: userInfo,
+    });
+
+  }
 
   /**
    * Render a form to update an existing user.
@@ -269,31 +285,30 @@ class UserController {
       let user = await User.findBy("email", email);
       // generate jwt token based on user
       let token = await auth.generate(user, true);
-        
-     
-      if (await user.staff().fetch()){
-        const staff = await user.staff().fetch();
+      if (user.is_admin){
         return response.json({
           message: "loggin in",
           token: token,
           loginSuccess: true,
           user: user,
-          userType: staff,
         });
 
       }
-
       else {
-        return response.json({
-          message: "not admin/staff",
-        });
+        return response.status(401).send('User not admin')
       }
     }
-      else {
-        return response.json({
-          message: "not reigsterd at all",
-        });
-      }
+      
+  }
+
+  async checkToken({auth,request,response}){
+    try {
+      await auth.check()
+      return response.json(true)      
+    } catch (error) {
+      return response.json(false)
+    }
+
   }
 }
 

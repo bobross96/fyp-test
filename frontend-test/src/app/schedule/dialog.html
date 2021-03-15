@@ -9,16 +9,15 @@
       <mat-option value="Final Report">Final Report</mat-option>
     </mat-select>
   </mat-form-field><br>
-  <div style="display: flex; ">
+  <div style="display: flex; align-items: center; ">
   <mat-form-field class="example-full-width" appearance="fill">
     <mat-label>Task Date</mat-label>
     <input matInput [matDatepicker]="picker" [(ngModel)]="data.date" required>
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
-  <input type="checkbox" id="showDate" name="showDate" [(ngModel)]="data.showDate">
-  <label for="showDate">Toggle Time</label>
   </div>
+  <mat-checkbox [(ngModel)]="data.showDate">Toggle Time</mat-checkbox>
   <div style="display:flex" *ngIf="data.showDate">
   <ngb-timepicker [(ngModel)]="data.startTime" [spinners]="data.spinners" style="font-size: smaller;">
   </ngb-timepicker><span style="padding: 10px;">-</span>

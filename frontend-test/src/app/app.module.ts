@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import {AdminAppModule} from './admin-app/admin-app.module'
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { httpInterceptorProviders } from './http-interceptors/index';
 import { AppRoutingModule } from './app-routing.module';
@@ -65,6 +66,9 @@ import { TeamboardComponent, DialogJob } from './teamboard/teamboard.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatBadgeModule} from '@angular/material/badge'; 
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -105,6 +109,7 @@ FullCalendarModule.registerPlugins([
   ],
   imports: [
     BrowserModule,
+    AdminAppModule,
     AppRoutingModule,
     HttpClientModule,
     MatInputModule,
@@ -141,7 +146,10 @@ FullCalendarModule.registerPlugins([
     MatPaginatorModule,
     DragDropModule,
     MatSnackBarModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    MatCheckboxModule,
+    MatChipsModule,
+    MatBadgeModule
     
   ],
   providers: [httpInterceptorProviders, MatDatepickerModule],

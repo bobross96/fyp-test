@@ -10,19 +10,19 @@
 </header>
 <body>
     <h2>Login </h2>
-    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" >
         <div class="form-group">
             <mat-form-field>
                 <mat-label>Email</mat-label>
-                <input matInput type="text" [(ngModel)]="model.email" id="email" name="email" #email='ngModel'>
+                <input matInput type="text" formControlName="email" id="email" name="email" required >
             </mat-form-field>
         </div>
         <div class="form-group">
             <mat-form-field>
                 <mat-label>Password</mat-label>
-                <input matInput type="password" [(ngModel)]="model.password" id="password" name="password" #password='ngModel'>
+                <input matInput type="password"formControlName="password" id="password" name="password" required >
             </mat-form-field>
         </div>
-        <button mat-raised-button color="primary">Login</button>
+        <button mat-raised-button color="primary" [disabled]="loginForm.invalid">Login</button>
     </form>
 </body>

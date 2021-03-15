@@ -22,6 +22,14 @@ export class TaskService {
     return this.http.get("/api/tasks/" + taskID)
   }
 
+  getTasksByProjectId(projectID:number):Observable<any>{
+    return this.http.get("/api/tasks/project/" + projectID)
+  }
+
+  fetchTasksByProjectId(projectID:number):Promise<any>{
+    return this.http.get("/api/tasks/project/" + projectID).toPromise()
+  }
+
   postTask(task:any):Observable<any>{
     console.log('in post task');
     return this.http.post("/api/tasks",task)

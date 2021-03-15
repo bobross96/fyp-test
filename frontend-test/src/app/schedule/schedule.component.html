@@ -2,14 +2,8 @@
 
 
 
-<mat-form-field style="padding-left: 1em;" appearance="fill" *ngIf="projects">
-  <mat-label>Select a project</mat-label>
-  <mat-select [(value)]="selectedProject" (selectionChange)="changeProject()">
-    <mat-option>None</mat-option>
-    <mat-option *ngFor="let project of projects" value="{{project.id}}">{{project.project_name}}</mat-option>
-    
-  </mat-select>
-</mat-form-field>
+
+
 <div style="padding-left: 1em; font-weight: bold;"*ngIf="studentProject">
   <h2>{{studentProject}}</h2>
 </div>

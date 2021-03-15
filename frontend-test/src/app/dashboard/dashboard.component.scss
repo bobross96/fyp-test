@@ -1,10 +1,10 @@
 #flexToolbar{
-    height: 2em;
+    height: 3em;
 }
 
 mat-sidenav-container {
     position: absolute;
-    top: 2em;
+    top: 4em;
     left: 0;
     right: 0;
     bottom: 0;
@@ -16,6 +16,7 @@ mat-sidenav-container {
   header {
       text-align: center;
       display: flex;
+      
   }
 
   mat-sidenav-content {
@@ -31,3 +32,15 @@ mat-sidenav-container {
   }
 
 
+  mat-select, mat-label {
+      font-size: small;
+  }
+
+
+
+
+  .mat-form-field-wrapper {
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+  }

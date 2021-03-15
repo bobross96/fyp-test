@@ -7,7 +7,7 @@ const Student = use('App/Models/Student')
 
 class ProjectController {
     async index({request,response}){
-        console.log('poop');
+
         // eager loading example 
         // add logic to check if student or staff?
         
@@ -46,7 +46,7 @@ class ProjectController {
     }
 
     async linkUserToProject({ params,request,response}){
-        console.log('poop');
+        console.log('inside linkusertoproject');
         const data = request.post()
         const user = await User.findBy('email',data.email)
         const project = await Project.find(data.project_id)
@@ -54,7 +54,7 @@ class ProjectController {
         if (data.userType === 'student'){
             //execute attach for type student
             const student = await user.student().fetch()
-            console.log(student);
+            console.log(`inside student, ${user}`);
             //disociate existing project , then add new project relation
             await student.project().dissociate()
             await student.project().associate(project)
