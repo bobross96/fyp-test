@@ -12,7 +12,7 @@
       </div>
     </div> -->
     <!-- drop list group will link all div inside with cdkDropList -->
-    <div style="display:flex; margin: auto; justify-content: center;" cdkDropListGroup >
+    <div style="display:flex; margin: auto; justify-content: center; margin-bottom: 3em;" cdkDropListGroup >
     <div class="example-container" style="margin-right: 1em;">
       <h2><span class="highlight" style="background-color: #ffccd1;">To Do</span>&nbsp;&nbsp;<span>{{todo['controls'].length}}</span></h2>
       <div
@@ -28,7 +28,7 @@
         >
           <div [formGroup]="item" style="text-align: center;">
             <mat-form-field class="example-form-field" appearance="none">
-              <input matInput formControlName="jobDetails">
+              <input class="input-box" matInput formControlName="jobDetails">
             </mat-form-field>
           </div>
         </div>
@@ -50,7 +50,7 @@
         style="margin-bottom: 1em;">
           <div [formGroup]="item" style="text-align: center;">
             <mat-form-field class="example-form-field" appearance="none">
-              <input matInput formControlName="jobDetails">
+              <input class="input-box" matInput formControlName="jobDetails">
             </mat-form-field>
           </div>
         </div>
@@ -74,7 +74,7 @@
           style="margin-bottom: 1em;" >
             <div [formGroup]="item" style="text-align: center;">
               <mat-form-field class="example-form-field" appearance="none">
-                <input matInput formControlName="jobDetails">
+                <input class="input-box" matInput formControlName="jobDetails">
               </mat-form-field>
             </div>
           </div>

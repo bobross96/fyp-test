@@ -20,18 +20,19 @@
           </div>
           <ng-template #elseBlock><button mat-menu-item>No unread notifications</button></ng-template>
         </mat-menu>
-        <mat-form-field class="toolbar-form" style="padding-left: 1em;" appearance="legacy" *ngIf="projects">
+        <mat-form-field class="toolbar-form" style="padding-left: 1em;" appearance="legacy" *ngIf="projects;else singleProject">
           <!-- <mat-label>Select a project</mat-label> -->
           <mat-select [(value)]="selectedProject" (selectionChange)="changeProject()">
-            <mat-option *ngFor="let project of projects" [value]="project.id">{{project.project_name}}</mat-option>
+            <mat-option *ngFor="let project of projects" [value]="project.id">{{project.project_description}}</mat-option>
 
           </mat-select>
         </mat-form-field>
+        <ng-template #singleProject><button mat-button disabled style="color: black;">{{userInfo.projectInfo.project_description}}</button></ng-template>
     </div>
     <button mat-button color="warn" id="logout" (click)="logout()">Logout</button>
   </mat-toolbar>
 </header>
-  <mat-sidenav-container>
+  <mat-sidenav-container autosize>
     <mat-sidenav #sidenav mode="side" opened>
       <mat-nav-list>
         <a mat-list-item routerLink="./schedule" routerLinkActive="active">Calendar</a>

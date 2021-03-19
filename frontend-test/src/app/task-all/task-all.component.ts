@@ -115,6 +115,12 @@ export class TaskAllComponent implements OnInit {
       }
     });
 
+    this.tasks.sort((a,b) => (a.id > b.id) ? 1 : -1)
+    
+
+    //sort by Task ID
+
+
     this.tasks.forEach((task) => {
       if (task.task_due_date) {
         task.weekNumber = helper.getWeekForTasks(

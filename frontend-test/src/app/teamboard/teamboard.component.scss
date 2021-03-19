@@ -23,9 +23,10 @@
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
-  cursor: grab;
+  cursor: pointer;
   background: white;
   font-size: 14px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 10px;
 }
 
 
@@ -48,6 +49,7 @@
   font-size: 14px;
 }
 
+//add some shadow when being dragged yall
 .cdk-drag-preview {
   box-sizing: border-box;
   border-radius: 4px;
@@ -91,4 +93,6 @@
 }
 
 
-
+.input-box {
+  cursor: pointer;
+}

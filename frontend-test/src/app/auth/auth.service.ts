@@ -60,6 +60,8 @@ export class AuthService {
 
     //if student
     if (authResult.groupMates) {
+      console.log(authResult);
+      
       const userInfo = JSON.stringify({
         user: authResult.user,
         subTypeInfo: authResult.subTypeInfo,
