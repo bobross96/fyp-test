@@ -1,28 +1,30 @@
 
 <header>
-    <mat-toolbar fxLayout="row" fxLayoutAlign="space-between baseline" id="flexToolbar">
+    <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center" id="flexToolbar">
       
-      <span id="projectTitle">Project Management</span>
+      <span id="projectTitle"><img src="../../assets/ntu-logo.svg" alt="ntu-logo" srcset="" width="100" height="100"> Project Management Portal</span>
     
       <button mat-button color="warn" id="logout" routerLink="/register" routerLinkActive="active">Register</button>
      
     </mat-toolbar>
 </header>
 <body>
-    <h2>Login </h2>
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" >
+    <form class="form-box" [formGroup]="loginForm" (ngSubmit)="onSubmit()" >
+        <h2>Login to enter site </h2>
         <div class="form-group">
-            <mat-form-field>
+            <mat-form-field class="form-input" appearance="outline">
                 <mat-label>Email</mat-label>
                 <input matInput type="text" formControlName="email" id="email" name="email" required >
             </mat-form-field>
         </div>
         <div class="form-group">
-            <mat-form-field>
+            <mat-form-field class="form-input" appearance="outline">
                 <mat-label>Password</mat-label>
-                <input matInput type="password"formControlName="password" id="password" name="password" required >
+                <input  matInput type="password"formControlName="password" id="password" name="password" required >
             </mat-form-field>
         </div>
-        <button mat-raised-button color="primary" [disabled]="loginForm.invalid">Login</button>
+        <div class="continue-button">
+        <button class="form-input" mat-raised-button color="primary" [disabled]="loginForm.invalid">Login</button>
+        </div>
     </form>
 </body>
