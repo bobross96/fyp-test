@@ -295,25 +295,31 @@ export class TeamboardComponent implements OnInit {
       event.stopPropagation();
     }
 
-    if (item.value['jobID']) {
-      this.jobApi.deleteJob(item.value['jobID']).subscribe((result) => {
-        console.log(result);
-      });
+    var conf = confirm('Confirm Delete?')
+    if (conf){
+      alert('successfully deleted')
+      if (item.value['jobID']) {
+        this.jobApi.deleteJob(item.value['jobID']).subscribe((result) => {
+          console.log(result);
+        });
+      }
+  
+      switch (boardType) {
+        case 'todo':
+          this.todo.removeAt(index);
+          break;
+        case 'doing':
+          this.doing.removeAt(index);
+          break;
+        case 'done':
+          this.done.removeAt(index);
+          break;
+        default:
+          break;
+      }
     }
 
-    switch (boardType) {
-      case 'todo':
-        this.todo.removeAt(index);
-        break;
-      case 'doing':
-        this.doing.removeAt(index);
-        break;
-      case 'done':
-        this.done.removeAt(index);
-        break;
-      default:
-        break;
-    }
+    
   }
 
   addJob(jobType) {
@@ -451,7 +457,6 @@ export class DialogJob {
   }
 
   delete() {
-    alert('job deleted');
     this.dialogRef.close('delete');
   }
 
