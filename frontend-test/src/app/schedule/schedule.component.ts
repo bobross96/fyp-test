@@ -52,7 +52,7 @@ export class ScheduleComponent implements OnInit {
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
     },
-
+    height : "auto",
     initialView: 'dayGridMonth',
     weekends: false,
     editable: true,

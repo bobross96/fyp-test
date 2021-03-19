@@ -31,28 +31,29 @@
     <button mat-button color="warn" id="logout" (click)="logout()">Logout</button>
   </mat-toolbar>
 </header>
+  <mat-sidenav-container>
+    <mat-sidenav #sidenav mode="side" opened>
+      <mat-nav-list>
+        <a mat-list-item routerLink="./schedule" routerLinkActive="active">Calendar</a>
+        <a mat-list-item routerLink="./books" routerLinkActive="active">Users</a>
+        <a mat-list-item [routerLink]="['./allTasks']" [queryParams]="{taskType : 'meetingNotes'}">Meeting Notes</a>
+        <a mat-list-item [routerLink]="['./allTasks']" [queryParams]="{taskType : 'weeklyReports'}">Weekly Reports</a>
+        <a mat-list-item [routerLink]="['./allTasks']" [queryParams]="{taskType : 'otherReports'}">Other Reports</a>
+        <a mat-list-item [routerLink]="['./teamboard']">Team Board</a>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <p><button mat-button (click)="sidenav.toggle()">
+          <div *ngIf=!sidenav.opened>
+            <i class="fas fa-bars"></i>
+          </div>
+          <div *ngIf=sidenav.opened>
+            <i class="fas fa-chevron-left"></i>
+          </div>
+        </button></p>
+      <router-outlet></router-outlet>
+  
+    </mat-sidenav-content>
+  </mat-sidenav-container>  
 
-<mat-sidenav-container>
-  <mat-sidenav #sidenav mode="side" opened>
-    <mat-nav-list>
-      <a mat-list-item routerLink="./schedule" routerLinkActive="active">Calendar</a>
-      <a mat-list-item routerLink="./books" routerLinkActive="active">Users</a>
-      <a mat-list-item [routerLink]="['./allTasks']" [queryParams]="{taskType : 'meetingNotes'}">Meeting Notes</a>
-      <a mat-list-item [routerLink]="['./allTasks']" [queryParams]="{taskType : 'weeklyReports'}">Weekly Reports</a>
-      <a mat-list-item [routerLink]="['./allTasks']" [queryParams]="{taskType : 'otherReports'}">Other Reports</a>
-      <a mat-list-item [routerLink]="['./teamboard']">Team Board</a>
-    </mat-nav-list>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <p><button mat-button (click)="sidenav.toggle()">
-        <div *ngIf=!sidenav.opened>
-          <i class="fas fa-bars"></i>
-        </div>
-        <div *ngIf=sidenav.opened>
-          <i class="fas fa-chevron-left"></i>
-        </div>
-      </button></p>
-    <router-outlet></router-outlet>
 
-  </mat-sidenav-content>
-</mat-sidenav-container>

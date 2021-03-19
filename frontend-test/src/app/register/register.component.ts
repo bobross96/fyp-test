@@ -14,11 +14,10 @@ export class RegisterComponent implements OnInit {
 
   registerForm = this.fb.group({
     username : ['', Validators.required],
-    email : ['', Validators.required],
+    email : ['', [Validators.required,Validators.email]],
     first_name : ['',Validators.required],
     last_name : ['',Validators.required],
     password : ['',Validators.required],
-    userType : ['',Validators.required]
   });
 
   constructor(private loginApi : LoginService, 
@@ -32,16 +31,22 @@ export class RegisterComponent implements OnInit {
   
 
   onSubmit(){
-    console.log(this.registerForm.value);
-    this.registerForm.value.is_active = true 
-    this.authApi.register(this.registerForm.value).subscribe((res) => {
-      if (res.registerSuccess){
-        this._router.navigateByUrl('/dashboard/schedule')
-      }
-      else {
-        alert('error encountered in creating new user')
-      }
-    })
+    if (this.registerForm.status == 'VALID'){
+      this.registerForm.value.is_active = true 
+      //make it only that students can make an account thru here, staff account is
+      //given by admin
+      //can modify if required
+      this.registerForm.value.userType = 'Student'
+      this.authApi.register(this.registerForm.value).subscribe((res) => {
+        if (res.registerSuccess){
+          this._router.navigateByUrl('/dashboard/schedule')
+        }
+        else {
+          alert('error encountered in creating new user')
+        }
+      })  
+    }
+    
 
     
     

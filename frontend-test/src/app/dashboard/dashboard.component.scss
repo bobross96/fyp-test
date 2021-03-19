@@ -2,14 +2,19 @@
     height: 3em;
 }
 
+body {
+    background-color: #eeeeee;
+}
+
+
 mat-sidenav-container {
     position: absolute;
-    top: 4em;
+    top: 3.5em;
     left: 0;
     right: 0;
     bottom: 0;
-    
-    background: #eee;
+    height: auto;
+    background: #eeeeee;
 }
 
 
@@ -20,8 +25,9 @@ mat-sidenav-container {
   }
 
   mat-sidenav-content {
-      margin-right:1em ;
+     
       margin-top: 1em;
+      background-color: #eeeeee;
   }
 
 

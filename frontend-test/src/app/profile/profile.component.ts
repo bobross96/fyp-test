@@ -4,11 +4,11 @@ import {ApiService} from '../services/api.service';
 import {User} from '../User'
 
 @Component({
-  selector: 'app-books',
-  templateUrl: './books.component.html',
-  styleUrls: ['./books.component.scss']
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.scss']
 })
-export class BooksComponent implements OnInit {
+export class ProfileComponent implements OnInit {
 
   users : User[]
   projectID : number

@@ -5,7 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { httpInterceptorProviders } from './http-interceptors/index';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BooksComponent } from './books/books.component';
+import { ProfileComponent } from './profile/profile.component';
 import {
   ScheduleComponent,
   DialogOverviewExampleDialog,
@@ -80,7 +80,7 @@ FullCalendarModule.registerPlugins([
 @NgModule({
   declarations: [
     AppComponent,
-    BooksComponent,
+    ProfileComponent,
     ScheduleComponent,
     TestComponent,
     DialogOverviewExampleDialog,
