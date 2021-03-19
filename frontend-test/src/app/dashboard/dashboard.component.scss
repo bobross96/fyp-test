@@ -1,31 +1,52 @@
 #flexToolbar{
-    height: 40px;
+    height: 3em;
+}
+
+body {
+    background-color: #eeeeee;
 }
 
 
-.container {
-   
-    background: #eee;
-    padding-left: 0px;
-    padding-right: 0px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    min-height: 500px;
-    border : 5px groove;
-    border-style: groove grey;
-    
-  }
+mat-sidenav-container {
+    position: absolute;
+    top: 3.5em;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: auto;
+    background: #eeeeee;
+}
+
 
   header {
       text-align: center;
       display: flex;
+      
   }
 
-/*   mat-sidenav {
-     position: absolute;
-  } */
+  mat-sidenav-content {
+     
+      margin-top: 1em;
+      background-color: #eeeeee;
+  }
+
+
 
   .active-link{
       font-weight: bold;
       border-bottom: 2px solid red; 
+  }
+
+
+  mat-select, mat-label {
+      font-size: small;
+  }
+
+
+
+
+  .mat-form-field-wrapper {
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    margin-top: 0px;
   }

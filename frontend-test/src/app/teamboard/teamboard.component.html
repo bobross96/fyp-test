@@ -1,0 +1,92 @@
+<form [formGroup]="boardForm" (ngSubmit)="onSubmit()">
+  
+  <div>    
+    <div style="text-align: center; margin-bottom: 2em;">
+      <h1>Scrum Board <span *ngIf="userType">({{userType.project.project_name}})</span></h1>
+    <button mat-raised-button color="primary" type="submit" >Update Board</button>  
+    </div>
+    <!-- <div>
+      Team Members:
+      <div *ngFor="let member of userDict | keyvalue">
+        {{member.value}}
+      </div>
+    </div> -->
+    <!-- drop list group will link all div inside with cdkDropList -->
+    <div style="display:flex; margin: auto; justify-content: center;" cdkDropListGroup >
+    <div class="example-container" style="margin-right: 1em;">
+      <h2><span class="highlight" style="background-color: #ffccd1;">To Do</span>&nbsp;&nbsp;<span>{{todo['controls'].length}}</span></h2>
+      <div
+        cdkDropList
+        id="todo"
+        [cdkDropListData]="todo['controls']"
+        (cdkDropListDropped)="drop($event)">
+        <div class="example-box" *ngFor="let item of todo['controls']; index as index" 
+        cdkDrag
+        (click)="handleClick($event,item,index,'todo')"
+        (cdkDragStarted)="handleDragStart($event)"
+        style="margin-bottom: 1em;"
+        >
+          <div [formGroup]="item" style="text-align: center;">
+            <mat-form-field class="example-form-field" appearance="none">
+              <input matInput formControlName="jobDetails">
+            </mat-form-field>
+          </div>
+        </div>
+        <div><button mat-button color="primary" type="button" (click)="addJob('todo')">+ Add Job</button></div>
+      </div>
+    </div>
+  
+    <div class="example-container">
+      <h2><span class="highlight" style="background-color: #fbeecc;">Doing</span>&nbsp;&nbsp;<span>{{doing['controls'].length}}</span></h2>
+      <div
+        cdkDropList
+        id="doing"
+        [cdkDropListData]="doing['controls']"
+        (cdkDropListDropped)="drop($event)">
+        <div class="example-box" *ngFor="let item of doing['controls']; index as index" 
+        cdkDrag
+        (click)="handleClick($event,item,index,'doing')"
+        (cdkDragStarted)="handleDragStart($event)"
+        style="margin-bottom: 1em;">
+          <div [formGroup]="item" style="text-align: center;">
+            <mat-form-field class="example-form-field" appearance="none">
+              <input matInput formControlName="jobDetails">
+            </mat-form-field>
+          </div>
+        </div>
+        <div ><button  mat-button color="primary" type="button" (click)="addJob('doing')">+ Add Job</button></div>
+      </div>
+    </div>
+
+
+    <div class="example-container" style="margin-left:1em">
+        <h2><span class="highlight" style="background-color: #cce7e1;">Done</span>&nbsp;&nbsp;<span>{{done['controls'].length}}</span></h2>
+        <!-- used to have class example-list -->
+        <div
+          cdkDropList
+          id="done"
+          [cdkDropListData]="done['controls']"
+          (cdkDropListDropped)="drop($event)">
+          <div class="example-box" *ngFor="let item of done['controls']; index as index" 
+          cdkDrag
+          (click)="handleClick($event,item,index,'done')"
+          (cdkDragStarted)="handleDragStart($event)"
+          style="margin-bottom: 1em;" >
+            <div [formGroup]="item" style="text-align: center;">
+              <mat-form-field class="example-form-field" appearance="none">
+                <input matInput formControlName="jobDetails">
+              </mat-form-field>
+            </div>
+          </div>
+          <div><button  mat-button color="primary" type="button" (click)="addJob('done')">+ Add Job</button></div>
+        </div>
+      </div>
+  </div>
+</div>
+</form>
+
+<!-- <div style="margin : auto; text-align: center;margin-top:2em;">
+
+  {{this.boardString}}
+</div> -->
+

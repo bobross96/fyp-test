@@ -16,9 +16,10 @@ class TasksSchema extends Schema {
       table.datetime('submission_date')
       table.integer('hours_spent')
       table.integer('user_id').unsigned().references('id').inTable('users')
+      table.integer('project_id').unsigned().references('id').inTable('projects')
       //table.integer('student_id').unsigned().references('id').inTable('students')
       //table.integer('staff_id').unsigned().references('id').inTable('staff')
-      //table.integer('project_id').unsigned().references('id').inTable('projects')
+      //
 
 
       

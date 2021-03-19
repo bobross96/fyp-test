@@ -9,7 +9,7 @@ class Student extends Model {
     }
 
     project(){
-        return this.hasOne('App/Model/Project')
+        return this.belongsTo('App/Models/Project')
     }
 }
 

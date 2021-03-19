@@ -1,0 +1,57 @@
+
+
+    <div class="container">
+        <mat-expansion-panel hideToggle disabled>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                <mat-grid-list cols="4">
+                    <mat-grid-tile style="color: black;" colspan="1">Task ID</mat-grid-tile>
+                    <mat-grid-tile style="color: black;" colspan="1">Week No.</mat-grid-tile>
+                    <mat-grid-tile style="color: black;" colspan="1"> Type</mat-grid-tile>
+                    <mat-grid-tile style="color: black;" colspan="1">Status</mat-grid-tile>
+                </mat-grid-list>    
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+        </mat-expansion-panel>
+        <!-- <mat-toolbar>
+            <mat-grid-list cols="4">
+                <mat-grid-tile>Task ID</mat-grid-tile>
+                <mat-grid-tile>Week No.</mat-grid-tile>
+                <mat-grid-tile>Task Type</mat-grid-tile>
+                <mat-grid-tile>Task Status</mat-grid-tile>
+            </mat-grid-list>
+            
+        </mat-toolbar> -->
+    </div>
+
+
+    <div class="container" *ngFor="let task of tasks">
+        <mat-expansion-panel (opened)="panelOpenState = true"
+                        (closed)="panelOpenState = false">
+                        
+        <mat-expansion-panel-header>
+            <mat-grid-list cols="4">
+            <mat-panel-title>
+            <mat-grid-tile colspan="1" class="test">{{task.id}}</mat-grid-tile>
+            </mat-panel-title>
+            <mat-panel-description>
+                
+                    <mat-grid-tile colspan="1">{{task.weekNumber}}</mat-grid-tile>
+                    <mat-grid-tile colspan="1">{{task.task_type}}</mat-grid-tile>
+                    <mat-grid-tile class="test" [style.color]="getTaskColour(task.status)" colspan="1">{{task.status}}</mat-grid-tile>
+                
+                <!-- <span class="test"></span>
+                <span class="test"></span>
+                <span class="test" [style.color]="getTaskColour(task.status)"></span>
+            <span class="test">{{task.submission_date}}</span> -->
+            </mat-panel-description>
+        </mat-grid-list>
+        </mat-expansion-panel-header>
+        
+        
+        <span class="category">Due on: </span><span *ngIf="task.task_due_date">{{task.task_due_date}}</span><br>
+            <span class="category">Title: </span><span *ngIf="task.title">{{task.title}}</span><br><br>
+        <button mat-stroked-button (click)="taskView(task.id)">Details</button>
+        </mat-expansion-panel>
+    </div>
+

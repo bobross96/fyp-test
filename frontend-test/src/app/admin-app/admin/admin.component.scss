@@ -1,0 +1,30 @@
+#flexToolbar{
+    height: 40px;
+}
+
+
+.container {
+   
+    background: #eee;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    min-height: 500px;
+    
+    
+  }
+
+  header {
+      text-align: center;
+      display: flex;
+  }
+
+/*   mat-sidenav {
+     position: absolute;
+  } */
+
+  .active-link{
+      font-weight: bold;
+      border-bottom: 2px solid red; 
+  }

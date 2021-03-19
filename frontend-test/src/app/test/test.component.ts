@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../api.service';
+import { ApiService } from '../services/api.service';
+import { TaskService } from '../services/task.service';
 import {Task} from '../Task'
 import { User } from '../User';
 
@@ -18,12 +19,14 @@ export class TestComponent implements OnInit {
   statuses = ['Weekly','Late','Punctual','Anyhow']
   
 
-  constructor(private api : ApiService) { }
+  constructor(
+    private api : ApiService,
+    private taskApi : TaskService) { }
 
   onSubmit(){
     this.submitted = true
     console.log(this.model)
-    this.api.postTask(this.model).subscribe((res) => {
+    this.taskApi.postTask(this.model).subscribe((res) => {
       console.log(res);
       
     })
@@ -33,7 +36,7 @@ export class TestComponent implements OnInit {
 
 
   getTasks():void{
-    this.api.getTasks().subscribe((res:any) => {
+    this.taskApi.getTasks().subscribe((res:any) => {
       this.tasks = res.data
       console.log(this.tasks);
       

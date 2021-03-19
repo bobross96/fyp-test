@@ -1,0 +1,80 @@
+<div *ngIf="project && students && staff" class="container">
+
+<h2>{{project.project_name}}</h2>
+
+
+        <p>Description: {{project.project_description}}</p>
+        <p>Students:</p>
+        <table mat-table matSort [dataSource]="students" class="mat-elevation-z8">
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="user.id">ID No. </th>
+                <td mat-cell *matCellDef="let student">{{student.user.id}}</td>
+            </ng-container>
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let student">{{student.user.first_name}}</td>
+            </ng-container>
+            <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef>Email</th>
+                <td mat-cell *matCellDef="let student">{{student.user.email}}</td>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let student"><button mat-stroked-button (click)="delinkUser(student.user.id,'student')"><span class="material-icons">
+                    person_remove
+                    </span></button></td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+
+        </table><br><br><br>
+
+        
+        <p>Staff:</p>
+        <table mat-table matSort [dataSource]="staff" class="mat-elevation-z8">
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>ID No. </th>
+                <td mat-cell *matCellDef="let student">{{student.user.id}}</td>
+            </ng-container>
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let student">{{student.user.first_name}}</td>
+            </ng-container>
+            <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef>Email</th>
+                <td mat-cell *matCellDef="let student">{{student.user.email}}</td>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let student"><button mat-stroked-button (click)="delinkUser(student.user.id,'staff')"><span class="material-icons">
+                    person_remove
+                    </span></button></td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+
+        </table><br><br>
+        
+        <p>Add User To Project</p>
+        <div>
+            <form (ngSubmit)="onSubmit()" [formGroup]="addUserForm">
+               
+                    <input type="text" placeholder="User Email" id="email" formControlName="email">
+                    <select name="" id="" formControlName="userType">
+                        <option value="" disabled>Choose user type to add</option>
+                        <option value="student">Student</option>
+                        <option value="staff">Staff</option>
+                    </select>
+               
+
+                <button mat-button [disabled]="!addUserForm.valid" type="submit">Add</button>
+            </form>
+
+        </div>
+        
+
+
+  
+</div>

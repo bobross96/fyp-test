@@ -42,6 +42,10 @@ class User extends Model {
   staff(){
     return this.hasOne('App/Models/Staff')
   }
+
+  task(){
+    return this.hasMany('App/Models/Task')
+  }
 }
 
 module.exports = User

@@ -4,13 +4,16 @@
 const Model = use('Model')
 
 class Task extends Model {
-    student(){
+    user(){
+        return this.belongsTo('App/Models/User')
+    }
+    /* student(){
         return this.belongsTo('App/Models/Student')
     }
 
     staff(){
         return this.belongsTo('App/Models/Staff')
-    }
+    } */
 
     project(){
         return this.belongsTo('App/Models/Project')
@@ -18,6 +21,10 @@ class Task extends Model {
 
     comment(){
         return this.hasMany('App/Models/Comment')
+    }
+
+    files(){
+        return this.hasMany('App/Models/File')
     }
 }
 

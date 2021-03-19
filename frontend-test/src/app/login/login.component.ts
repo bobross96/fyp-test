@@ -1,39 +1,41 @@
 import { Component, OnInit } from '@angular/core';
-import {LoginService} from '../login.service'
+import { LoginService } from '../services/login.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
+  constructor(private _router: Router, private authApi: AuthService) {}
 
-  constructor( private _router : Router, private authApi : AuthService) { }
+  ngOnInit(): void {}
 
-  ngOnInit(): void {
-  }
+  loginForm = new FormGroup({
+    email: new FormControl('', Validators.required),
+    password: new FormControl('', Validators.required),
+  });
 
-  model = {
-    email : "",
-    password : ""
-  }
-  onSubmit(){
-    console.log('poop');
-    console.log(this.model);
-    this.authApi.login(this.model).subscribe((res) => {
-
-      if (res.loginSuccess){
-     
-        console.log(localStorage.getItem('token_id'));
-      
-        this._router.navigateByUrl('/dashboard')
-      }
-      else {
-        alert('username/password incorrect!')
-      }
-    })
+  onSubmit() {
+    console.log(this.loginForm.status);
     
+    if (this.loginForm.status == 'VALID') {
+      this.authApi.login(this.loginForm.value).subscribe(
+        (res) => {
+          console.log(localStorage.getItem('token_id'));
+          this._router.navigateByUrl('/dashboard/schedule');
+        },
+        (err) => {
+          console.log(err);
+          alert(err.error[0].message);
+        }
+      );
+    }
+    else {
+      alert('Please fill up the empty fields!')
+    }
   }
 }

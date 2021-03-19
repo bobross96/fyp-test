@@ -1,0 +1,27 @@
+<h1 mat-dialog-title>Job</h1>
+<div mat-dialog-content [formGroup]="dialogForm" style="display : flex; justify-content : space-between">
+    <div>
+    <mat-form-field style="width: 300px;">
+        <mat-label>Details</mat-label>
+        <textarea matInput type="text" formControlName="jobDetails" required></textarea>
+    </mat-form-field>
+    </div>
+    <div>
+    <mat-form-field>
+        <mat-label>Owner</mat-label>
+        <mat-chip-list><mat-chip color="primary">{{data.jobOwner}}</mat-chip></mat-chip-list>
+    </mat-form-field><br>
+    <mat-form-field>
+        <mat-label>Status</mat-label>
+        <mat-chip-list><mat-chip color="primary">{{data.jobBoard}}</mat-chip></mat-chip-list>
+    </mat-form-field>
+    </div><br>
+    
+
+</div>
+
+<div mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)=save()>Save</button>
+    <button mat-raised-button color="warning" (click)=delete()>Delete</button>
+    <!-- <button mat-button [mat-dialog-close]="data">Save</button> -->
+</div>

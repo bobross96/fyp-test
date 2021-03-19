@@ -1,0 +1,30 @@
+mat-card {
+    margin-bottom: 10px;
+}
+
+mat-expansion-panel {
+    margin-bottom: 10px;
+}
+
+mat-panel-description {
+    float: right;
+}
+
+/* .mat-expansion-panel-header{
+    display: flex;
+    justify-content: space-between;
+}
+ */
+
+ .test {
+     grid-column: 1/5;
+ }
+
+ mat-grid-list {
+     width: 100%;
+ }
+
+
+ .category {
+    font-weight: bold;
+}
