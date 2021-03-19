@@ -20,6 +20,11 @@ import {
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { ApiService } from '../services/api.service';
 import { NotificationService } from '../services/notification.service';
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
 @Component({
   selector: 'app-teamboard',
   templateUrl: './teamboard.component.html',
@@ -55,7 +60,8 @@ export class TeamboardComponent implements OnInit {
     private jobApi: JobService,
     private api: ApiService,
     private userApi: ApiService,
-    private notifService: NotificationService
+    private notifService: NotificationService,
+    private snackBar : MatSnackBar
   ) {
     this.boardForm = this.fb.group({
       todo: this.fb.array([]),
@@ -64,6 +70,14 @@ export class TeamboardComponent implements OnInit {
 
       done: this.fb.array([]),
     });
+  }
+
+  openSnackBar(){
+    this.snackBar.open('Board Updated','Close',{
+      duration : 1000,
+      horizontalPosition : 'center',
+      verticalPosition : 'top'
+    })
   }
 
   //to be replaced with load from api data
@@ -183,8 +197,6 @@ export class TeamboardComponent implements OnInit {
         });
       });
     }
-
-    
   }
 
   onSubmit() {
