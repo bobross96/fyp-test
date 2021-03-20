@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from '../services/api.service';
+import { JobService } from '../services/job.service';
 
 import {User} from '../User'
 
@@ -11,26 +12,66 @@ import {User} from '../User'
 export class ProfileComponent implements OnInit {
 
   users : User[]
+  userInfo : any
   projectID : number
+  jobs : any[]
+  todo : any[] = []
+  doing : any[] = []
+  done : any[] = []
+  isStudent : boolean = true
+  staffProjects : any
 
 
-  constructor(private api : ApiService) {
-    this.projectID = JSON.parse(localStorage.getItem('userInfo')).projectInfo.id
-   }
 
-  
-  getUsers(projectID):void{
-    this.api.showByProject(projectID).subscribe((res:any) => {
+  constructor(
+    private api : ApiService,
+    private jobApi : JobService) {
+    this.projectID = JSON.parse(localStorage.getItem('selectedProject'));
+    console.log(this.projectID);
+   
+  }
+
+
+  ngOnInit(): void {
+
+    //display own user data
+    this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    if (this.userInfo.user.userType == 'staff'){
+      console.log(this.userInfo);
+      
+      this.isStudent = false
+      this.staffProjects = this.userInfo.projectInfo
+      console.log(this.staffProjects);
+      
+    }
+
+
+    this.jobApi.getJobsByUserID(this.userInfo.user.id).subscribe((res:any) => {
+      console.log(res);
+      this.jobs = res.jobs
+      this.jobs.forEach(job => {
+        switch (job.status) {
+          case 'todo':
+            this.todo.push(job)
+            break;
+          case 'doing':
+            this.doing.push(job)
+            break;
+          case 'done':
+            this.done.push(job)
+            break;
+          default:
+            break;
+        }
+      });
+    })
+    //gets all users tagged to the project
+    this.api.showByProject(this.projectID).subscribe((res:any) => {
       console.log(res);
       this.users = res.message
     })
-  }
 
-  
 
-  
-  ngOnInit(): void {
-    this.getUsers(this.projectID)
     
     
 

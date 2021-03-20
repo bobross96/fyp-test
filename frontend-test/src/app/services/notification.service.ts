@@ -21,7 +21,7 @@ export class NotificationService {
   //fired when task has been submitted, comment added
 
   setToRead(notifID : number,body):Observable<any>{
-    return this.http.patch("api/notification/" + notifID,body)
+    return this.http.delete("api/notification/delete/" + notifID)
   }
 
   postManyNotif(body : any):Observable<any>{

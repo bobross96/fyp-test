@@ -1,14 +1,68 @@
 
-<div style="padding-left:1em" *ngIf="users">
-    <h1>Group Members</h1>
+<div style="padding-left:1em" *ngIf="userInfo">
+    <h1>Profile for {{userInfo.user.first_name}}</h1>
+    <mat-card class="example-card">
+        <mat-card-header>
+          <mat-card-title>{{userInfo.user.first_name}}</mat-card-title>
+          <mat-card-subtitle>{{userInfo.user.userType}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="isStudent; else staffBlock">
+            <h3>Project : {{userInfo.projectInfo.project_description}}</h3>
+          </div>
+          <ng-template #staffBlock>
+            Projects: 
+            <mat-list>
+                <mat-list-item *ngFor="let project of staffProjects">
+                    {{project.project_description}}
+                </mat-list-item>
+            </mat-list>
+          </ng-template>
+          <div *ngIf="isStudent">
+            <h3>Jobs Assigned:</h3>
+          <div *ngIf="todo.length">
+          <h4 class="highlight todo-color">Todo</h4>
+          <mat-chip-list>
+              <mat-chip class="mat-chip-box" *ngFor="let job of todo">{{job.detail}}</mat-chip>
+          </mat-chip-list>
+          <br>
+          </div>
+          <div *ngIf="doing.length">
+          <h4 class="highlight doing-color">Doing</h4>
+          <mat-chip-list>
+            <mat-chip class="mat-chip-box" *ngFor="let job of doing">{{job.detail}}</mat-chip>
+          </mat-chip-list>
+          <br>
+          </div>
+          <div *ngIf="done.length">
+          <h4 class="highlight done-color">Done</h4>
+          <mat-chip-list *ngIf="done">
+              <mat-chip class="mat-chip-box" *ngFor="let job of done">{{job.detail}}</mat-chip>
+          </mat-chip-list>
+          <br>
+          </div>
+          <h4 *ngIf="completed">Completed</h4>
+          </div>
+          
+
+
+        </mat-card-content>
+      </mat-card>    
+
+    <!-- <div *ngIf="!isStudent && users">
+        <h1>Students in Project</h1>
     <div *ngFor="let user of users">
+        <div *ngIf="user.studentData">
         <ul>
-            <p>{{user.username}}</p>
-            <li>{{user.first_name}} {{user.last_name}}</li>
-            <li>{{user.email}}</li>
+            <p>{{user.studentData.username}}</p>
+            <li>{{user.studentData.first_name}} {{user.studentData.last_name}}</li>
+            <li>{{user.studentData.email}}</li>
         </ul>
+        </div>
         <hr>
 
     </div>
+    </div>
+     -->
 
 </div>

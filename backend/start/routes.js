@@ -76,8 +76,14 @@ Route.get('api/documents/:taskID','DocumentController.show')
 
 // submit job under board
 Route.get('api/jobs/:projectID','JobController.index')
+
+//get jobs related to user
+Route.get('api/jobs/user/:userID','JobController.jobByUserID')
+
 Route.post('api/jobs','JobController.storeAll')
+//delete jobs
 Route.delete('api/jobs/:jobID','JobController.destroy')
+
 
 
 
@@ -91,6 +97,8 @@ Route.get('api/notification/:userID','NotificationController.show')
 Route.post('api/notification/create/one','NotificationController.createOne')
 //update notification
 Route.patch('api/notification/:notifID','NotificationController.edit')
+//delete notificaiton after it has been clicked 
+
 
 
 //create notif for array

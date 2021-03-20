@@ -1,0 +1,36 @@
+.example-card {
+    max-width: 80%;
+  }
+  
+  .example-header-image {
+    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+    background-size: cover;
+  }
+
+  .map-chip-list-wrapper {
+      margin-bottom: 1em;
+  }
+
+
+  .map-chip-box {
+      margin-bottom: 1em;
+  }
+
+
+  .highlight {
+    padding: 0.3em;
+    border-radius: 0.3em;
+    width: 10%;
+  }
+
+  .todo-color {
+    background-color: #ffccd1
+  }
+
+  .doing-color {
+    background-color: #fbeecc;
+  }
+
+  .done-color {
+    background-color: #cce7e1
+  }

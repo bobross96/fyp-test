@@ -86,13 +86,6 @@ export class TeamboardComponent implements OnInit {
     //add for staff
     this.projectID = JSON.parse(localStorage.getItem('selectedProject'));
     console.log(this.projectID);
-    
-    //only run if staff
-    let userFetch = await this.userApi.fetchByProject(this.projectID)     
-        this.userDict = userFetch.message.reduce((obj, item) => {
-          obj[item['id']] = item['first_name'];
-          return obj;
-        }, {});
 
     if (this.userInfo.user.userType == 'staff') {
       this.api.currentProject.subscribe(async (projectID) => {
@@ -103,6 +96,8 @@ export class TeamboardComponent implements OnInit {
           obj[item['id']] = item['first_name'];
           return obj;
         }, {});
+        
+        
 
         let jobsFetch = await this.jobApi.fetchJobs(this.projectID)
         let jobs = jobsFetch.jobs
@@ -153,6 +148,13 @@ export class TeamboardComponent implements OnInit {
     }
 
     else if (this.userInfo.user.userType == 'student'){
+      let userFetch = await this.userApi.fetchByProject(this.projectID)     
+        this.userDict = userFetch.message.reduce((obj, item) => {
+          obj[item['id']] = item['first_name'];
+          return obj;
+        }, {});
+    
+      console.log(this.userDict);
       //console.log(this.userDict);
       this.jobApi.getJobs(this.projectID).subscribe((result) => {
         let jobs = result.jobs;
@@ -305,6 +307,11 @@ export class TeamboardComponent implements OnInit {
   deleteControl(event: Event, boardType, index, item) {
     if (event) {
       event.stopPropagation();
+    }
+
+    if (!this.userInfo.user.is_admin){
+      alert('Non-admin not allowed to delete!')
+      return
     }
 
     var conf = confirm('Confirm Delete?')

@@ -19,6 +19,11 @@ export class JobService {
       return this.http.get("/api/jobs/" + projectID)
     }
 
+    getJobsByUserID(userID:number){
+      return this.http.get("/api/jobs/user/" + userID)
+    
+    }
+
     storeJobs(board : object):Observable<any>{
       return this.http.post("/api/jobs",board)
     }
@@ -26,6 +31,8 @@ export class JobService {
     deleteJob(jobID : number):Observable<any>{
       return this.http.delete("/api/jobs/" + jobID)
     }
+
+
 
 
 

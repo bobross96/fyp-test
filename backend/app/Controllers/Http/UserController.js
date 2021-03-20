@@ -190,15 +190,27 @@ class UserController {
 
 
     const userInfo = []
+    
 
     //need to get first name , so extract user info
     for (let student of students.rows){
+      /* var studentInfo = {
+        userData : {},
+        jobsData : {}
+      } */
       const studentData = await student.user().fetch()
+      //studentInfo.userData = studentData
+      //const jobsData = await studentData.jobs().fetch()
+      //studentInfo.jobsData = jobsData
       userInfo.push(studentData)
     }
 
     for (let staf of staff.rows){
+      /* var staffInfo = {
+        userData : {}
+      } */
       const staffData = await staf.user().fetch()
+      //staffInfo.userData = staffData
       userInfo.push(staffData)
     }
     response.json({
@@ -206,6 +218,9 @@ class UserController {
     });
 
   }
+
+  //gets all jobs by student for each project
+
 
   /**
    * Render a form to update an existing user.

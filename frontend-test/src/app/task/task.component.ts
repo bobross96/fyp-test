@@ -39,10 +39,10 @@ export class TaskComponent implements OnInit {
   related_id = []
   notifBody : any
   selectedProject : number
+  taskID : any
 
   ngOnInit(): void {
-    let taskID = parseInt(this.route.snapshot.queryParamMap.get('id'));
-    console.log(taskID);
+    
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     this.selectedProject = JSON.parse(localStorage.getItem('selectedProject'))
     //on any change of current project, it will update selectedproject accordingly
@@ -51,29 +51,38 @@ export class TaskComponent implements OnInit {
       this.selectedProject = projectID
     })
 
-    this.notifBody = {
-      title : "Task Submitted",
-      description : "",
-      source_user_id : userInfo.user.id,
-      is_read : false,
-      event_id : taskID,
-      event_type : "task"
-    }
-
-    // gets the task object
-    this.taskApi.getTaskById(taskID).subscribe((res) => {
-      this.task = res.task;
-      console.log(res);
-      if (this.task.submission_date) {
-        this.task.submission_date = this.task.submission_date.substring(0, 10);
+    //just detects changes
+    this.route.queryParams.subscribe(params => {
+      this.taskID = this.route.snapshot.queryParamMap.get('id')
+      this.notifBody = {
+        title : "Task Submitted",
+        description : "",
+        source_user_id : userInfo.user.id,
+        is_read : false,
+        event_id : this.taskID,
+        event_type : "task"
       }
-      this.task.task_due_date = this.task.task_due_date.substring(0, 10);
-    });
-    // gets the document realted to the task and inputting into an array
+  
+  
+  
+      // gets the task object
+      this.taskApi.getTaskById(this.taskID).subscribe((res) => {
+        this.task = res.task;
+        console.log(res);
+        if (this.task.submission_date) {
+          this.task.submission_date = this.task.submission_date.substring(0, 10);
+        }
+        this.task.task_due_date = this.task.task_due_date.substring(0, 10);
+      });
+      // gets the document realted to the task and inputting into an array
+  
+      this.documentApi.getDocument(this.taskID).subscribe((res) => {
+        this.attachments = res;
+      });
+      
+    })
 
-    this.documentApi.getDocument(taskID).subscribe((res) => {
-      this.attachments = res;
-    });
+   
   }
 
   nextPage() {

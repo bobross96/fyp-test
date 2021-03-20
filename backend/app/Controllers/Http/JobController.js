@@ -39,6 +39,20 @@ class JobController {
 
   }
 
+  async jobByUserID({params,response}){
+    const userID = params.userID
+    const user = await User.find(userID)
+    console.log(user.toJSON());
+    const jobs = await user.jobs().fetch()
+    console.log(jobs);
+
+    response.json({
+      jobs : jobs
+    })
+
+
+  }
+
  
 
   /**
