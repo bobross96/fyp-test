@@ -9,7 +9,11 @@
     <div>
     <mat-form-field>
         <mat-label>Owner</mat-label>
-        <mat-chip-list><mat-chip color="primary">{{data.jobOwner}}</mat-chip></mat-chip-list>
+        <mat-select [(value)]="jobOwner" formControlName="jobOwner" required> 
+            <mat-option *ngFor="let user of userArray" [value]="user.first_name">
+                {{user.first_name}}
+            </mat-option>
+        </mat-select>
     </mat-form-field><br>
     <mat-form-field>
         <mat-label>Status</mat-label>
