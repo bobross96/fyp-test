@@ -32,11 +32,7 @@ const routes: Routes = [
           { path: 'test', component: TestComponent },
           { path: 'task', component: TaskComponent },
           { path: 'allTasks', component: TaskAllComponent },
-          {
-            path: 'teamboard',
-            component: TeamboardComponent,
-            canDeactivate: ['canDeactivateGuard'],
-          },
+          { path: 'teamboard',component: TeamboardComponent }
         ],
       },
     ],

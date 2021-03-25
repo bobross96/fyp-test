@@ -1,15 +1,12 @@
-'use strict'
+"use strict";
 
 const Project = use("App/Models/Project");
 const User = use("App/Models/User");
-const Job = use('App/Models/Job');
-
+const Job = use("App/Models/Job");
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
-
-
 
 /**
  * Resourceful controller for interacting with jobs
@@ -24,36 +21,29 @@ class JobController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index ({ params, request, response, view }) {
+  async index({ params, request, response, view }) {
     //return array of jobs depending on project
-    const projectID = params.projectID
-    const project = await Project.find(projectID)
-    const jobs = await project.jobs().fetch()
+    const projectID = params.projectID;
+    const project = await Project.find(projectID);
+    const jobs = await project.jobs().fetch();
 
     response.json({
-      message : 'jobs query success',
-      jobs : jobs,
-
-    })
-
-
+      message: "jobs query success",
+      jobs: jobs,
+    });
   }
 
-  async jobByUserID({params,response}){
-    const userID = params.userID
-    const user = await User.find(userID)
+  async jobByUserID({ params, response }) {
+    const userID = params.userID;
+    const user = await User.find(userID);
     console.log(user.toJSON());
-    const jobs = await user.jobs().fetch()
+    const jobs = await user.jobs().fetch();
     console.log(jobs);
 
     response.json({
-      jobs : jobs
-    })
-
-
+      jobs: jobs,
+    });
   }
-
- 
 
   /**
    * Create/save a new job.
@@ -63,49 +53,40 @@ class JobController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async storeAll ({ request, response }) {
+  async storeAll({ request, response }) {
     //take in array of jobs
     //check if job exist in db
     //if exist, update
     //if no exist, create
 
-    const objectArray = request.all()
-    const jobArray = objectArray['jobs']
+    const objectArray = request.all();
+    const jobArray = objectArray["jobs"];
     console.log(jobArray);
-    
-   
-      jobArray.forEach( async job => {
 
-        console.log(job);
-        if (job['id']){
-          //update job
-          const jobEdit = await Job.find(job.id)
-          jobEdit.detail = job.detail
-          jobEdit.user_id = job.user_id
-          jobEdit.status = job.status
+    jobArray.forEach(async (job) => {
+      //if job exists in db, it will have an id
+      if (job["id"]) {
+        //update job
+        const jobEdit = await Job.find(job.id);
+        jobEdit.detail = job.detail;
+        jobEdit.user_id = job.user_id;
+        jobEdit.status = job.status;
 
-          await jobEdit.save()
-        }
+        await jobEdit.save();
+      } else {
+        const newJob = new Job();
+        newJob.detail = job.detail;
+        newJob.user_id = job.user_id;
+        newJob.project_id = job.project_id;
+        newJob.status = job.status;
 
-        else {
-          const newJob = new Job();
-          newJob.detail = job.detail
-          newJob.user_id = job.user_id
-          newJob.project_id = job.project_id
-          newJob.status = job.status
+        await newJob.save();
+      }
+    });
 
-          await newJob.save()
-        }
-      
-      
-      });
-    
-   
-    
     return response.json({
-      message : "board updated"
-    })
-
+      message: "board updated",
+    });
   }
 
   /**
@@ -117,8 +98,7 @@ class JobController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show ({ params, request, response, view }) {
-  }
+  async show({ params, request, response, view }) {}
 
   /**
    * Render a form to update an existing job.
@@ -129,8 +109,7 @@ class JobController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async edit ({ params, request, response, view }) {
-  }
+  async edit({ params, request, response, view }) {}
 
   /**
    * Update job details.
@@ -140,8 +119,7 @@ class JobController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request, response }) {
-  }
+  async update({ params, request, response }) {}
 
   /**
    * Delete a job with id.
@@ -151,15 +129,15 @@ class JobController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy ({ params, request, response }) {
-    const jobID = params.jobID
-    const job = await Job.find(jobID)
+  async destroy({ params, request, response }) {
+    const jobID = params.jobID;
+    const job = await Job.find(jobID);
     await job.delete();
 
     response.json({
-      message : "job deleted"
-    })
+      message: "job deleted",
+    });
   }
 }
 
-module.exports = JobController
+module.exports = JobController;

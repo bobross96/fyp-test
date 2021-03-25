@@ -2,27 +2,27 @@
 <div style="text-align: center;">
 <h1 mat-dialog-title>Add User</h1>
 <div mat-dialog-content style>
-    <mat-form-field>
+    <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
         <input matInput [(ngModel)]="data.email" appearance="fill" formControlName="email" required>
     </mat-form-field><br>
-    <mat-form-field>
+    <mat-form-field appearance="outline">
         <mat-label>Username</mat-label>
         <input matInput [(ngModel)]="data.username" appearance="fill" formControlName="username" required>
     </mat-form-field><br>
-    <mat-form-field>
+    <mat-form-field appearance="outline">
         <mat-label>First Name</mat-label>
         <input matInput [(ngModel)]="data.first_name" appearance="fill" formControlName="first_name" required>
     </mat-form-field><br>
-    <mat-form-field>
+    <mat-form-field appearance="outline">
         <mat-label>Last Name</mat-label>
         <input  matInput [(ngModel)]="data.last_name" appearance="fill" formControlName="last_name" required >
     </mat-form-field><br>
-    <mat-form-field>
+    <mat-form-field appearance="outline">
         <mat-label>Password</mat-label>
         <input matInput type="password" [(ngModel)]="data.password" appearance="fill" formControlName="password" required >
     </mat-form-field><br>
-    <mat-form-field>
+    <mat-form-field appearance="outline">
         <mat-label>User Type</mat-label>
         <mat-select [(ngModel)]="data.userType" appearance="fill" formControlName="userType" required>
             <mat-option value="staff">Staff</mat-option>

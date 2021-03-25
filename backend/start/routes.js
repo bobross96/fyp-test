@@ -26,16 +26,6 @@ Route.get('api/projects/:id','ProjectController.projectDetails')
 Route.post('api/projects/linkUserToProject','ProjectController.linkUserToProject')
 Route.post('api/projects/delinkUserToProject','ProjectController.delinkUserToProject')
 
-//crud for user 
-//create user
-//get user
-//update user
-//delete user
-
-
-
-
-
 
 //UserController
 
@@ -56,6 +46,8 @@ Route.post('api/usersMany','UserController.storeMany')
 Route.put('api/tasks/submit/:id','TaskController.submitTask')
 Route.resource('api/tasks','TaskController').middleware('auth')
 Route.post('api/tasks','TaskController.create')
+
+//Route to get all tasks belonging to a singular project
 Route.get('api/tasks/project/:projectID','TaskController.getByProject')
 
 

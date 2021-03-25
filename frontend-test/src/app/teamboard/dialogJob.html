@@ -26,6 +26,8 @@
 
 <div mat-dialog-actions>
     <button mat-raised-button color="primary" (click)=save()>Save</button>
-    <button mat-raised-button color="warning" (click)=delete()>Delete</button>
+    <button mat-raised-button color="warn" (click)=delete()>Delete</button>
+    <button *ngIf=isDone mat-raised-button color="accent" (click)=archive()>Archive</button>
+    
     <!-- <button mat-button [mat-dialog-close]="data">Save</button> -->
 </div>

@@ -300,7 +300,35 @@ export class TeamboardComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result == 'delete') {
         this.deleteControl(null, boardType, index, item);
-      } else if (result) {
+      } 
+      else if (result) {
+        if (result.value.jobBoard == 'archived'){
+          if (!this.userInfo.user.is_admin){
+            alert('Non-admin not allowed to archive!')
+            return
+          }
+
+          var conf = confirm('Confirm Archive?')
+          if (conf){
+
+          var job = [{
+            id: jobID,
+            detail: result.value.jobDetails,
+            user_id: this.reverseUserDict[result.value.jobOwner],
+            project_id: this.projectID,
+            status: 'archived',
+          }]
+
+
+          this.jobApi.storeJobs({jobs : job}).subscribe(result => {
+            console.log(result);
+          })
+
+          this.done.removeAt(index)
+          }
+
+        }
+        else {
         item.setValue({
           jobDetails: result.value.jobDetails,
           jobOwner: result.value.jobOwner,
@@ -308,6 +336,7 @@ export class TeamboardComponent implements OnInit {
           jobID: jobID,
           user_id: this.reverseUserDict[result.value.jobOwner],
         });
+        }
       }
     });
   }
@@ -321,6 +350,39 @@ export class TeamboardComponent implements OnInit {
   }
   get done() {
     return this.boardForm.get('done') as FormArray;
+  }
+
+  //to do for readability
+  archiveControl(event: Event, boardType, index, item){
+    if (!this.userInfo.user.is_admin){
+      alert('Non-admin not allowed to archive!')
+      return
+    }
+
+    var conf = confirm('Confirm Archive?')
+    if (conf){
+
+      if (item.value['jobID']) {
+        this.jobApi.deleteJob(item.value['jobID']).subscribe((result) => {
+          console.log(result);
+          alert('successfully archived')
+        });
+      }
+  
+      switch (boardType) {
+        case 'todo':
+          this.todo.removeAt(index);
+          break;
+        case 'doing':
+          this.doing.removeAt(index);
+          break;
+        case 'done':
+          this.done.removeAt(index);
+          break;
+        default:
+          break;
+      }
+    } 
   }
 
   deleteControl(event: Event, boardType, index, item) {
@@ -484,6 +546,7 @@ export class DialogJob {
   dialogForm: FormGroup;
   userArray : any[]
   jobOwner: any;
+  isDone : boolean = false
   constructor(
     public dialogRef: MatDialogRef<DialogJob>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -491,12 +554,15 @@ export class DialogJob {
   ) {
     this.dialogForm = this.fb.group({
       jobDetails: [data.jobDetails, Validators.required],
-      jobBoard: [{ value: data.jobBoard, disabled: true }, Validators.required],
+      jobBoard: [data.jobBoard, Validators.required],
       jobOwner: [data.jobOwner, Validators.required],
     });
 
     this.userArray = data.userArray
     this.jobOwner = data.jobOwner
+    if (data.jobBoard == 'done'){
+      this.isDone = true
+    }
     
   }
 
@@ -508,6 +574,17 @@ export class DialogJob {
     if (this.dialogForm.valid) {
       console.log(this.dialogForm);
       this.dialogRef.close(this.dialogForm);
+    } else {
+      alert(this.dialogForm.valid);
+    }
+  }
+
+  archive(){
+    //will update status of job board to archive, patch to backend
+    //delete the job from the list 
+    if (this.dialogForm.valid) {
+      this.dialogForm.patchValue({jobBoard : 'archived'})
+      this.dialogRef.close(this.dialogForm)
     } else {
       alert(this.dialogForm.valid);
     }
