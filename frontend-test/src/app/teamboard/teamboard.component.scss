@@ -95,4 +95,14 @@
 
 .input-box {
   cursor: pointer;
+  overflow: hidden;
+  padding-bottom: 3em;
+}
+
+.mat-form-field .mat-form-field-label-wrapper label {
+  line-height: 17px;
+}
+
+.mat-form-field .mat-form-field-infix input {
+  line-height: 17px;
 }

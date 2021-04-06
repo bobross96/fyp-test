@@ -3,12 +3,14 @@
     <h1>Profile for {{userInfo.user.first_name}}</h1>
     <mat-card class="example-card">
         <mat-card-header>
+          <img mat-card-avatar style="background-size: cover;" src="https://image.flaticon.com/icons/png/512/67/67902.png">
           <mat-card-title>{{userInfo.user.first_name}}</mat-card-title>
           <mat-card-subtitle>{{userInfo.user.userType}}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
           <div *ngIf="isStudent; else staffBlock">
             <h3>Project : {{userInfo.projectInfo.project_description}}</h3>
+            <h3>Total Hours Spent: {{totalHours}} hours</h3>
           </div>
           <ng-template #staffBlock>
             Projects: 
@@ -41,7 +43,10 @@
           </mat-chip-list>
           <br>
           </div>
-          <h4 *ngIf="completed">Completed</h4>
+          <div *ngIf="archived.length">
+          <h4>Archived</h4>
+          </div>
+          
           </div>
           
 

@@ -3,7 +3,13 @@
     <div>
     <mat-form-field style="width: 300px;">
         <mat-label>Details</mat-label>
-        <textarea matInput type="text" formControlName="jobDetails" required></textarea>
+        <textarea style="overflow:hidden"
+        matInput
+        cdkTextareaAutosize
+        #autosize="cdkTextareaAutosize"
+        cdkAutosizeMinRows="1"
+        cdkAutosizeMaxRows="15"
+        formControlName="jobDetails" required></textarea>
     </mat-form-field>
     </div>
     <div>
@@ -18,6 +24,10 @@
     <mat-form-field>
         <mat-label>Status</mat-label>
         <mat-chip-list><mat-chip color="primary">{{data.jobBoard}}</mat-chip></mat-chip-list>
+    </mat-form-field><br>
+    <mat-form-field>
+        <mat-label>Hours Spent</mat-label>
+        <input matInput type="text" formControlName="jobHours" required>
     </mat-form-field>
     </div><br>
     

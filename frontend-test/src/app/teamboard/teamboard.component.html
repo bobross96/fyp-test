@@ -28,7 +28,14 @@
         >
           <div [formGroup]="item" style="text-align: center;">
             <mat-form-field class="example-form-field" appearance="none">
-              <input class="input-box" matInput formControlName="jobDetails">
+              <textarea 
+              class="input-box" 
+              matInput 
+              cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize"
+              cdkAutosizeMinRows="1"
+              cdkAutosizeMaxRows="15"
+              formControlName="jobDetails"></textarea>
             </mat-form-field>
           </div>
         </div>
@@ -50,7 +57,14 @@
         style="margin-bottom: 1em;">
           <div [formGroup]="item" style="text-align: center;">
             <mat-form-field class="example-form-field" appearance="none">
-              <input class="input-box" matInput formControlName="jobDetails">
+              <textarea 
+              class="input-box" 
+              matInput 
+              cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize"
+              cdkAutosizeMinRows="1"
+              cdkAutosizeMaxRows="15"
+              formControlName="jobDetails"></textarea>
             </mat-form-field>
           </div>
         </div>
@@ -74,7 +88,14 @@
           style="margin-bottom: 1em;" >
             <div [formGroup]="item" style="text-align: center;">
               <mat-form-field class="example-form-field" appearance="none">
-                <input class="input-box" matInput formControlName="jobDetails">
+                <textarea 
+                class="input-box" 
+                matInput 
+                cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="1"
+                cdkAutosizeMaxRows="15"
+                formControlName="jobDetails"></textarea>
               </mat-form-field>
             </div>
           </div>

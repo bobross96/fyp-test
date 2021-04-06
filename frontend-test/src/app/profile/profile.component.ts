@@ -18,8 +18,10 @@ export class ProfileComponent implements OnInit {
   todo : any[] = []
   doing : any[] = []
   done : any[] = []
+  archived : any[] = []
   isStudent : boolean = true
   staffProjects : any
+  totalHours : number
 
 
 
@@ -60,10 +62,21 @@ export class ProfileComponent implements OnInit {
           case 'done':
             this.done.push(job)
             break;
+          case 'archived':
+            this.archived.push(job)
           default:
             break;
         }
       });
+
+      //get total hours 
+      this.totalHours = this.jobs.reduce((acc,curr) => {
+        return acc + curr.hours_spent
+      },0)
+
+      console.log(this.totalHours);
+      
+      
     })
     //gets all users tagged to the project
     this.api.showByProject(this.projectID).subscribe((res:any) => {

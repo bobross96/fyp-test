@@ -1,4 +1,6 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, NgZone, ViewChild } from '@angular/core';
+import {CdkTextareaAutosize} from '@angular/cdk/text-field';
+import {take} from 'rxjs/operators';
 import {
   CdkDragDrop,
   CdkDragStart,
@@ -66,7 +68,7 @@ export class TeamboardComponent implements OnInit {
     private api: ApiService,
     private userApi: ApiService,
     private notifService: NotificationService,
-    private snackBar : MatSnackBar
+    private snackBar : MatSnackBar,
   ) {
     this.boardForm = this.fb.group({
       todo: this.fb.array([]),
@@ -76,6 +78,8 @@ export class TeamboardComponent implements OnInit {
       done: this.fb.array([]),
     });
   }
+
+  @ViewChild('autosize') autosize: CdkTextareaAutosize;
 
 
   openSnackBar(){
@@ -126,6 +130,7 @@ export class TeamboardComponent implements OnInit {
                   jobBoard: this.fb.control(job.status),
                   jobOwner: this.fb.control(this.userDict[job.user_id]),
                   jobID: this.fb.control(job.id),
+                  jobHours : this.fb.control(job.hours_spent),
                   user_id: this.fb.control(job.user_id),
                 })
               );
@@ -137,6 +142,7 @@ export class TeamboardComponent implements OnInit {
                   jobBoard: this.fb.control(job.status),
                   jobOwner: this.fb.control(this.userDict[job.user_id]),
                   jobID: this.fb.control(job.id),
+                  jobHours : this.fb.control(job.hours_spent),
                   user_id: this.fb.control(job.user_id),
                 })
               );
@@ -148,6 +154,7 @@ export class TeamboardComponent implements OnInit {
                   jobBoard: this.fb.control(job.status),
                   jobOwner: this.fb.control(this.userDict[job.user_id]),
                   jobID: this.fb.control(job.id),
+                  jobHours : this.fb.control(job.hours_spent),
                   user_id: this.fb.control(job.user_id),
                 })
               );
@@ -172,7 +179,7 @@ export class TeamboardComponent implements OnInit {
         this.userArray = userFetch.message  
     
       console.log(this.userDict);
-      //console.log(this.userDict);
+      
       this.jobApi.getJobs(this.projectID).subscribe((result) => {
         let jobs = result.jobs;
         jobs.forEach((job) => {
@@ -184,6 +191,7 @@ export class TeamboardComponent implements OnInit {
                   jobBoard: this.fb.control(job.status),
                   jobOwner: this.fb.control(this.userDict[job.user_id]),
                   jobID: this.fb.control(job.id),
+                  jobHours : this.fb.control(job.hours_spent),
                   user_id: this.fb.control(job.user_id),
                 })
               );
@@ -195,6 +203,7 @@ export class TeamboardComponent implements OnInit {
                   jobBoard: this.fb.control(job.status),
                   jobOwner: this.fb.control(this.userDict[job.user_id]),
                   jobID: this.fb.control(job.id),
+                  jobHours : this.fb.control(job.hours_spent),
                   user_id: this.fb.control(job.user_id),
                 })
               );
@@ -206,6 +215,7 @@ export class TeamboardComponent implements OnInit {
                   jobBoard: this.fb.control(job.status),
                   jobOwner: this.fb.control(this.userDict[job.user_id]),
                   jobID: this.fb.control(job.id),
+                  jobHours : this.fb.control(job.hours_spent),
                   user_id: this.fb.control(job.user_id),
                 })
               );
@@ -232,6 +242,7 @@ export class TeamboardComponent implements OnInit {
           user_id: job.user_id,
           project_id: this.projectID,
           status: board,
+          hours_spent : job.jobHours
         });
       });
     }
@@ -283,6 +294,7 @@ export class TeamboardComponent implements OnInit {
     let jobDetails = item.value.jobDetails;
     let jobBoard = boardType;
     let jobID = item.value.jobID;
+    let jobHours = item.value.jobHours
     let user_id = item.value.user_id;
     let userArray = this.userArray
     const dialogRef = this.dialog.open(DialogJob, {
@@ -292,6 +304,7 @@ export class TeamboardComponent implements OnInit {
         jobBoard: jobBoard,
         jobOwner: jobOwner,
         jobID: jobID,
+        jobHours : jobHours,
         user_id : user_id,
         userArray : userArray,
       },
@@ -316,6 +329,7 @@ export class TeamboardComponent implements OnInit {
             detail: result.value.jobDetails,
             user_id: this.reverseUserDict[result.value.jobOwner],
             project_id: this.projectID,
+            hours_spent : result.value.jobHours,
             status: 'archived',
           }]
 
@@ -334,6 +348,7 @@ export class TeamboardComponent implements OnInit {
           jobOwner: result.value.jobOwner,
           jobBoard: boardType,
           jobID: jobID,
+          jobHours : result.value.jobHours,
           user_id: this.reverseUserDict[result.value.jobOwner],
         });
         }
@@ -422,6 +437,7 @@ export class TeamboardComponent implements OnInit {
     
   }
 
+  //control what happens when user click on addjob
   addJob(jobType) {
     let owner = this.userInfo.user['first_name'];
     let ownerID = this.userInfo.user['id'];
@@ -433,9 +449,15 @@ export class TeamboardComponent implements OnInit {
             jobBoard: this.fb.control(jobType),
             jobOwner: this.fb.control(owner),
             jobID: this.fb.control(''),
+            jobHours : this.fb.control(0),
             user_id: ownerID,
           })
         );
+        console.log(this.todo.length);
+        
+        console.log();
+        
+        this.openDialog(this.todo.at(this.todo.length-1),this.todo.length-1,jobType)
         break;
       case 'doing':
         this.doing.push(
@@ -444,9 +466,11 @@ export class TeamboardComponent implements OnInit {
             jobBoard: this.fb.control(jobType),
             jobOwner: this.fb.control(owner),
             jobID: this.fb.control(''),
+            jobHours : this.fb.control(0),
             user_id: ownerID,
           })
         );
+        this.openDialog(this.doing.at(this.doing.length-1),this.doing.length-1,jobType)
         break;
       case 'done':
         this.done.push(
@@ -455,13 +479,17 @@ export class TeamboardComponent implements OnInit {
             jobBoard: this.fb.control(jobType),
             jobOwner: this.fb.control(owner),
             jobID: this.fb.control(''),
+            jobHours : this.fb.control(0),
             user_id: ownerID,
           })
         );
+        this.openDialog(this.done.at(this.done.length-1),this.done.length-1,jobType)
         break;
       default:
         break;
     }
+
+    
   }
 
   drop(event: CdkDragDrop<string[]>) {
@@ -550,12 +578,14 @@ export class DialogJob {
   constructor(
     public dialogRef: MatDialogRef<DialogJob>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private _ngZone : NgZone
   ) {
     this.dialogForm = this.fb.group({
       jobDetails: [data.jobDetails, Validators.required],
       jobBoard: [data.jobBoard, Validators.required],
       jobOwner: [data.jobOwner, Validators.required],
+      jobHours : [data.jobHours, Validators.required]
     });
 
     this.userArray = data.userArray
@@ -565,6 +595,10 @@ export class DialogJob {
     }
     
   }
+
+  @ViewChild('autosize') autosize: CdkTextareaAutosize;
+
+  
 
   delete() {
     this.dialogRef.close('delete');
