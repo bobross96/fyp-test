@@ -28,6 +28,8 @@ export class JobService {
       return this.http.post("/api/jobs",board)
     }
 
+    
+
     deleteJob(jobID : number):Observable<any>{
       return this.http.delete("/api/jobs/" + jobID)
     }

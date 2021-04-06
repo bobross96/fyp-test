@@ -27,16 +27,12 @@ const routes: Routes = [
         path: '',
         canActivateChild: [AuthGuard],
         children: [
-          { path: 'books', component: ProfileComponent },
+          { path: 'profile', component: ProfileComponent },
           { path: 'schedule', component: ScheduleComponent },
           { path: 'test', component: TestComponent },
           { path: 'task', component: TaskComponent },
           { path: 'allTasks', component: TaskAllComponent },
-          {
-            path: 'teamboard',
-            component: TeamboardComponent,
-            canDeactivate: ['canDeactivateGuard'],
-          },
+          { path: 'teamboard',component: TeamboardComponent }
         ],
       },
     ],

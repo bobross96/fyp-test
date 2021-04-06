@@ -25,6 +25,7 @@ import {
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
+import { CanDeactivate } from '@angular/router';
 @Component({
   selector: 'app-teamboard',
   templateUrl: './teamboard.component.html',
@@ -53,6 +54,10 @@ export class TeamboardComponent implements OnInit {
   projectID: number;
   related_id = [];
   notifBody: any;
+  //the people assigned to a specific project
+  groupMates : any[];
+  userArray: any;
+  reverseUserDict: any;
 
   constructor(
     private fb: FormBuilder,
@@ -72,6 +77,7 @@ export class TeamboardComponent implements OnInit {
     });
   }
 
+
   openSnackBar(){
     this.snackBar.open('Board Updated','Close',{
       duration : 1000,
@@ -79,6 +85,7 @@ export class TeamboardComponent implements OnInit {
       verticalPosition : 'top'
     })
   }
+
 
   //to be replaced with load from api data
   async ngOnInit(): Promise<void> {
@@ -91,12 +98,17 @@ export class TeamboardComponent implements OnInit {
       this.api.currentProject.subscribe(async (projectID) => {
         this.projectID = projectID;
         //need to refetch data as projectID has changed
-        let userFetch = await this.userApi.fetchByProject(this.projectID)     
+        let userFetch = await this.userApi.fetchByProject(this.projectID)
+        this.userArray = userFetch.message     
         this.userDict = userFetch.message.reduce((obj, item) => {
           obj[item['id']] = item['first_name'];
           return obj;
         }, {});
-        
+
+        this.reverseUserDict = userFetch.message.reduce((obj, item) => {
+          obj[item['first_name']] = item['id'];
+          return obj;
+        }, {});
         
 
         let jobsFetch = await this.jobApi.fetchJobs(this.projectID)
@@ -153,6 +165,11 @@ export class TeamboardComponent implements OnInit {
           obj[item['id']] = item['first_name'];
           return obj;
         }, {});
+        this.reverseUserDict = userFetch.message.reduce((obj, item) => {
+          obj[item['first_name']] = item['id'];
+          return obj;
+        }, {});
+        this.userArray = userFetch.message  
     
       console.log(this.userDict);
       //console.log(this.userDict);
@@ -259,6 +276,7 @@ export class TeamboardComponent implements OnInit {
     console.log(this.selectedOption);
   }
 
+  //fired when box is clicked
   openDialog(item, index, boardType) {
     console.log(item);
     let jobOwner = item.value.jobOwner;
@@ -266,6 +284,7 @@ export class TeamboardComponent implements OnInit {
     let jobBoard = boardType;
     let jobID = item.value.jobID;
     let user_id = item.value.user_id;
+    let userArray = this.userArray
     const dialogRef = this.dialog.open(DialogJob, {
       width: '800px',
       data: {
@@ -273,22 +292,51 @@ export class TeamboardComponent implements OnInit {
         jobBoard: jobBoard,
         jobOwner: jobOwner,
         jobID: jobID,
+        user_id : user_id,
+        userArray : userArray,
       },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result == 'delete') {
         this.deleteControl(null, boardType, index, item);
-      } else if (result) {
+      } 
+      else if (result) {
+        if (result.value.jobBoard == 'archived'){
+          if (!this.userInfo.user.is_admin){
+            alert('Non-admin not allowed to archive!')
+            return
+          }
+
+          var conf = confirm('Confirm Archive?')
+          if (conf){
+
+          var job = [{
+            id: jobID,
+            detail: result.value.jobDetails,
+            user_id: this.reverseUserDict[result.value.jobOwner],
+            project_id: this.projectID,
+            status: 'archived',
+          }]
+
+
+          this.jobApi.storeJobs({jobs : job}).subscribe(result => {
+            console.log(result);
+          })
+
+          this.done.removeAt(index)
+          }
+
+        }
+        else {
         item.setValue({
           jobDetails: result.value.jobDetails,
           jobOwner: result.value.jobOwner,
           jobBoard: boardType,
           jobID: jobID,
-          user_id: user_id,
+          user_id: this.reverseUserDict[result.value.jobOwner],
         });
-
-        //array.push({owner : result.jobOwner})
+        }
       }
     });
   }
@@ -302,6 +350,39 @@ export class TeamboardComponent implements OnInit {
   }
   get done() {
     return this.boardForm.get('done') as FormArray;
+  }
+
+  //to do for readability
+  archiveControl(event: Event, boardType, index, item){
+    if (!this.userInfo.user.is_admin){
+      alert('Non-admin not allowed to archive!')
+      return
+    }
+
+    var conf = confirm('Confirm Archive?')
+    if (conf){
+
+      if (item.value['jobID']) {
+        this.jobApi.deleteJob(item.value['jobID']).subscribe((result) => {
+          console.log(result);
+          alert('successfully archived')
+        });
+      }
+  
+      switch (boardType) {
+        case 'todo':
+          this.todo.removeAt(index);
+          break;
+        case 'doing':
+          this.doing.removeAt(index);
+          break;
+        case 'done':
+          this.done.removeAt(index);
+          break;
+        default:
+          break;
+      }
+    } 
   }
 
   deleteControl(event: Event, boardType, index, item) {
@@ -463,6 +544,9 @@ export class TeamboardComponent implements OnInit {
 })
 export class DialogJob {
   dialogForm: FormGroup;
+  userArray : any[]
+  jobOwner: any;
+  isDone : boolean = false
   constructor(
     public dialogRef: MatDialogRef<DialogJob>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -470,9 +554,16 @@ export class DialogJob {
   ) {
     this.dialogForm = this.fb.group({
       jobDetails: [data.jobDetails, Validators.required],
-      jobBoard: [{ value: data.jobBoard, disabled: true }, Validators.required],
+      jobBoard: [data.jobBoard, Validators.required],
       jobOwner: [data.jobOwner, Validators.required],
     });
+
+    this.userArray = data.userArray
+    this.jobOwner = data.jobOwner
+    if (data.jobBoard == 'done'){
+      this.isDone = true
+    }
+    
   }
 
   delete() {
@@ -483,6 +574,17 @@ export class DialogJob {
     if (this.dialogForm.valid) {
       console.log(this.dialogForm);
       this.dialogRef.close(this.dialogForm);
+    } else {
+      alert(this.dialogForm.valid);
+    }
+  }
+
+  archive(){
+    //will update status of job board to archive, patch to backend
+    //delete the job from the list 
+    if (this.dialogForm.valid) {
+      this.dialogForm.patchValue({jobBoard : 'archived'})
+      this.dialogRef.close(this.dialogForm)
     } else {
       alert(this.dialogForm.valid);
     }
