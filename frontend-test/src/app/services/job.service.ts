@@ -25,7 +25,11 @@ export class JobService {
     }
 
     storeJobs(board : object):Observable<any>{
-      return this.http.post("/api/jobs",board)
+      return this.http.post("/api/jobs/many",board)
+    }
+
+    storeOneJob(job : object):Promise<any>{
+      return this.http.post("/api/jobs/one",job).toPromise()
     }
 
     

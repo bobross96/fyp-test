@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, NgZone, ViewChild } from '@angular/core';
-import {CdkTextareaAutosize} from '@angular/cdk/text-field';
-import {take} from 'rxjs/operators';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { take } from 'rxjs/operators';
 import {
   CdkDragDrop,
   CdkDragStart,
@@ -57,7 +57,7 @@ export class TeamboardComponent implements OnInit {
   related_id = [];
   notifBody: any;
   //the people assigned to a specific project
-  groupMates : any[];
+  groupMates: any[];
   userArray: any;
   reverseUserDict: any;
 
@@ -68,8 +68,8 @@ export class TeamboardComponent implements OnInit {
     private api: ApiService,
     private userApi: ApiService,
     private notifService: NotificationService,
-    private snackBar : MatSnackBar,
-    private moveBar : MatSnackBar
+    private snackBar: MatSnackBar,
+    private moveBar: MatSnackBar
   ) {
     this.boardForm = this.fb.group({
       todo: this.fb.array([]),
@@ -82,23 +82,21 @@ export class TeamboardComponent implements OnInit {
 
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
 
-
-  openSnackBar(){
-    this.snackBar.open('Board Updated','Close',{
-      duration : 1000,
-      horizontalPosition : 'center',
-      verticalPosition : 'top'
-    })
+  openSnackBar() {
+    this.snackBar.open('Board Updated', 'Close', {
+      duration: 1000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+    });
   }
 
-  moveJobBar(){
-    this.moveBar.open('Job Moved','Close', {
-      duration : 1000,
-      horizontalPosition : 'right',
-      verticalPosition : 'bottom'
-    })
+  moveJobBar() {
+    this.moveBar.open('Job Moved', 'Close', {
+      duration: 1000,
+      horizontalPosition: 'right',
+      verticalPosition: 'bottom',
+    });
   }
-
 
   //to be replaced with load from api data
   async ngOnInit(): Promise<void> {
@@ -111,8 +109,8 @@ export class TeamboardComponent implements OnInit {
       this.api.currentProject.subscribe(async (projectID) => {
         this.projectID = projectID;
         //need to refetch data as projectID has changed
-        let userFetch = await this.userApi.fetchByProject(this.projectID)
-        this.userArray = userFetch.message     
+        let userFetch = await this.userApi.fetchByProject(this.projectID);
+        this.userArray = userFetch.message;
         this.userDict = userFetch.message.reduce((obj, item) => {
           obj[item['id']] = item['first_name'];
           return obj;
@@ -122,14 +120,13 @@ export class TeamboardComponent implements OnInit {
           obj[item['first_name']] = item['id'];
           return obj;
         }, {});
-        
 
-        let jobsFetch = await this.jobApi.fetchJobs(this.projectID)
-        let jobs = jobsFetch.jobs
-        this.todo.clear()
-        this.doing.clear()
-        this.done.clear()
-        
+        let jobsFetch = await this.jobApi.fetchJobs(this.projectID);
+        let jobs = jobsFetch.jobs;
+        this.todo.clear();
+        this.doing.clear();
+        this.done.clear();
+
         jobs.forEach((job) => {
           switch (job.status) {
             case 'todo':
@@ -139,7 +136,7 @@ export class TeamboardComponent implements OnInit {
                   jobBoard: this.fb.control(job.status),
                   jobOwner: this.fb.control(this.userDict[job.user_id]),
                   jobID: this.fb.control(job.id),
-                  jobHours : this.fb.control(job.hours_spent),
+                  jobHours: this.fb.control(job.hours_spent),
                   user_id: this.fb.control(job.user_id),
                 })
               );
@@ -151,7 +148,7 @@ export class TeamboardComponent implements OnInit {
                   jobBoard: this.fb.control(job.status),
                   jobOwner: this.fb.control(this.userDict[job.user_id]),
                   jobID: this.fb.control(job.id),
-                  jobHours : this.fb.control(job.hours_spent),
+                  jobHours: this.fb.control(job.hours_spent),
                   user_id: this.fb.control(job.user_id),
                 })
               );
@@ -163,7 +160,7 @@ export class TeamboardComponent implements OnInit {
                   jobBoard: this.fb.control(job.status),
                   jobOwner: this.fb.control(this.userDict[job.user_id]),
                   jobID: this.fb.control(job.id),
-                  jobHours : this.fb.control(job.hours_spent),
+                  jobHours: this.fb.control(job.hours_spent),
                   user_id: this.fb.control(job.user_id),
                 })
               );
@@ -173,22 +170,20 @@ export class TeamboardComponent implements OnInit {
           }
         });
       });
-    }
+    } else if (this.userInfo.user.userType == 'student') {
+      let userFetch = await this.userApi.fetchByProject(this.projectID);
+      this.userDict = userFetch.message.reduce((obj, item) => {
+        obj[item['id']] = item['first_name'];
+        return obj;
+      }, {});
+      this.reverseUserDict = userFetch.message.reduce((obj, item) => {
+        obj[item['first_name']] = item['id'];
+        return obj;
+      }, {});
+      this.userArray = userFetch.message;
 
-    else if (this.userInfo.user.userType == 'student'){
-      let userFetch = await this.userApi.fetchByProject(this.projectID)     
-        this.userDict = userFetch.message.reduce((obj, item) => {
-          obj[item['id']] = item['first_name'];
-          return obj;
-        }, {});
-        this.reverseUserDict = userFetch.message.reduce((obj, item) => {
-          obj[item['first_name']] = item['id'];
-          return obj;
-        }, {});
-        this.userArray = userFetch.message  
-    
       console.log(this.userDict);
-      
+
       this.jobApi.getJobs(this.projectID).subscribe((result) => {
         let jobs = result.jobs;
         jobs.forEach((job) => {
@@ -200,7 +195,7 @@ export class TeamboardComponent implements OnInit {
                   jobBoard: this.fb.control(job.status),
                   jobOwner: this.fb.control(this.userDict[job.user_id]),
                   jobID: this.fb.control(job.id),
-                  jobHours : this.fb.control(job.hours_spent),
+                  jobHours: this.fb.control(job.hours_spent),
                   user_id: this.fb.control(job.user_id),
                 })
               );
@@ -212,7 +207,7 @@ export class TeamboardComponent implements OnInit {
                   jobBoard: this.fb.control(job.status),
                   jobOwner: this.fb.control(this.userDict[job.user_id]),
                   jobID: this.fb.control(job.id),
-                  jobHours : this.fb.control(job.hours_spent),
+                  jobHours: this.fb.control(job.hours_spent),
                   user_id: this.fb.control(job.user_id),
                 })
               );
@@ -224,7 +219,7 @@ export class TeamboardComponent implements OnInit {
                   jobBoard: this.fb.control(job.status),
                   jobOwner: this.fb.control(this.userDict[job.user_id]),
                   jobID: this.fb.control(job.id),
-                  jobHours : this.fb.control(job.hours_spent),
+                  jobHours: this.fb.control(job.hours_spent),
                   user_id: this.fb.control(job.user_id),
                 })
               );
@@ -251,7 +246,7 @@ export class TeamboardComponent implements OnInit {
           user_id: job.user_id,
           project_id: this.projectID,
           status: board,
-          hours_spent : job.jobHours
+          hours_spent: job.jobHours,
         });
       });
     }
@@ -303,9 +298,9 @@ export class TeamboardComponent implements OnInit {
     let jobDetails = item.value.jobDetails;
     let jobBoard = boardType;
     let jobID = item.value.jobID;
-    let jobHours = item.value.jobHours
+    let jobHours = item.value.jobHours;
     let user_id = item.value.user_id;
-    let userArray = this.userArray
+    let userArray = this.userArray;
     const dialogRef = this.dialog.open(DialogJob, {
       width: '800px',
       data: {
@@ -313,53 +308,88 @@ export class TeamboardComponent implements OnInit {
         jobBoard: jobBoard,
         jobOwner: jobOwner,
         jobID: jobID,
-        jobHours : jobHours,
-        user_id : user_id,
-        userArray : userArray,
+        jobHours: jobHours,
+        user_id: user_id,
+        userArray: userArray,
       },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe(async (result) => {
       if (result == 'delete') {
         this.deleteControl(null, boardType, index, item);
-      } 
-      else if (result) {
-        if (result.value.jobBoard == 'archived'){
-          if (!this.userInfo.user.is_admin){
-            alert('Non-admin not allowed to archive!')
-            return
+      } else if (result) {
+        if (result.value.jobBoard == 'archived') {
+          if (!this.userInfo.user.is_admin) {
+            alert('Non-admin not allowed to archive!');
+            return;
           }
 
-          var conf = confirm('Confirm Archive?')
-          if (conf){
+          var conf = confirm('Confirm Archive?');
+          if (conf) {
+            var job = [
+              {
+                id: jobID,
+                detail: result.value.jobDetails,
+                user_id: this.reverseUserDict[result.value.jobOwner],
+                project_id: this.projectID,
+                hours_spent: result.value.jobHours,
+                status: 'archived',
+              },
+            ];
 
-          var job = [{
-            id: jobID,
-            detail: result.value.jobDetails,
+            this.jobApi.storeJobs({ jobs: job }).subscribe((result) => {
+              console.log(result);
+            });
+
+            this.done.removeAt(index);
+          }
+          //this is normal updating
+        } else {
+          item.setValue({
+            jobDetails: result.value.jobDetails,
+            jobOwner: result.value.jobOwner,
+            jobBoard: boardType,
+            jobID: jobID,
+            jobHours: result.value.jobHours,
             user_id: this.reverseUserDict[result.value.jobOwner],
-            project_id: this.projectID,
-            hours_spent : result.value.jobHours,
-            status: 'archived',
-          }]
+          });
 
+          //add code to update API for this job here
 
-          this.jobApi.storeJobs({jobs : job}).subscribe(result => {
-            console.log(result);
-          })
-
-          this.done.removeAt(index)
+          if (jobID) {
+            const jobBody = {
+              detail: result.value.jobDetails,
+              user_id: this.reverseUserDict[result.value.jobOwner],
+              status: boardType,
+              project_id: this.projectID,
+              hours_spent: result.value.jobHours,
+              id: jobID,
+            };
+            const response = await this.jobApi.storeOneJob(jobBody);
+            if (response) {
+              alert('job updated!');
+            }
+          } else {
+            const jobBody = {
+              detail: result.value.jobDetails,
+              user_id: this.reverseUserDict[result.value.jobOwner],
+              status: boardType,
+              project_id: this.projectID,
+              hours_spent: result.value.jobHours,
+            };
+            const response = await this.jobApi.storeOneJob(jobBody);
+            if (response.id) {
+              item.setValue({
+                jobDetails: result.value.jobDetails,
+                jobOwner: result.value.jobOwner,
+                jobBoard: boardType,
+                jobID: response.id,
+                jobHours: result.value.jobHours,
+                user_id: this.reverseUserDict[result.value.jobOwner],
+              });
+              alert('job created!');
+            }
           }
-
-        }
-        else {
-        item.setValue({
-          jobDetails: result.value.jobDetails,
-          jobOwner: result.value.jobOwner,
-          jobBoard: boardType,
-          jobID: jobID,
-          jobHours : result.value.jobHours,
-          user_id: this.reverseUserDict[result.value.jobOwner],
-        });
         }
       }
     });
@@ -377,22 +407,21 @@ export class TeamboardComponent implements OnInit {
   }
 
   //to do for readability
-  archiveControl(event: Event, boardType, index, item){
-    if (!this.userInfo.user.is_admin){
-      alert('Non-admin not allowed to archive!')
-      return
+  archiveControl(event: Event, boardType, index, item) {
+    if (!this.userInfo.user.is_admin) {
+      alert('Non-admin not allowed to archive!');
+      return;
     }
 
-    var conf = confirm('Confirm Archive?')
-    if (conf){
-
+    var conf = confirm('Confirm Archive?');
+    if (conf) {
       if (item.value['jobID']) {
         this.jobApi.deleteJob(item.value['jobID']).subscribe((result) => {
           console.log(result);
-          alert('successfully archived')
+          alert('successfully archived');
         });
       }
-  
+
       switch (boardType) {
         case 'todo':
           this.todo.removeAt(index);
@@ -406,7 +435,7 @@ export class TeamboardComponent implements OnInit {
         default:
           break;
       }
-    } 
+    }
   }
 
   deleteControl(event: Event, boardType, index, item) {
@@ -414,20 +443,20 @@ export class TeamboardComponent implements OnInit {
       event.stopPropagation();
     }
 
-    if (!this.userInfo.user.is_admin){
-      alert('Non-admin not allowed to delete!')
-      return
+    if (!this.userInfo.user.is_admin) {
+      alert('Non-admin not allowed to delete!');
+      return;
     }
 
-    var conf = confirm('Confirm Delete?')
-    if (conf){
-      alert('successfully deleted')
+    var conf = confirm('Confirm Delete?');
+    if (conf) {
+      alert('successfully deleted');
       if (item.value['jobID']) {
         this.jobApi.deleteJob(item.value['jobID']).subscribe((result) => {
           console.log(result);
         });
       }
-  
+
       switch (boardType) {
         case 'todo':
           this.todo.removeAt(index);
@@ -442,8 +471,6 @@ export class TeamboardComponent implements OnInit {
           break;
       }
     }
-
-    
   }
 
   //control what happens when user click on addjob
@@ -458,15 +485,19 @@ export class TeamboardComponent implements OnInit {
             jobBoard: this.fb.control(jobType),
             jobOwner: this.fb.control(owner),
             jobID: this.fb.control(''),
-            jobHours : this.fb.control(0),
+            jobHours: this.fb.control(0),
             user_id: ownerID,
           })
         );
         console.log(this.todo.length);
-        
+
         console.log();
-        
-        this.openDialog(this.todo.at(this.todo.length-1),this.todo.length-1,jobType)
+
+        this.openDialog(
+          this.todo.at(this.todo.length - 1),
+          this.todo.length - 1,
+          jobType
+        );
         break;
       case 'doing':
         this.doing.push(
@@ -475,11 +506,15 @@ export class TeamboardComponent implements OnInit {
             jobBoard: this.fb.control(jobType),
             jobOwner: this.fb.control(owner),
             jobID: this.fb.control(''),
-            jobHours : this.fb.control(0),
+            jobHours: this.fb.control(0),
             user_id: ownerID,
           })
         );
-        this.openDialog(this.doing.at(this.doing.length-1),this.doing.length-1,jobType)
+        this.openDialog(
+          this.doing.at(this.doing.length - 1),
+          this.doing.length - 1,
+          jobType
+        );
         break;
       case 'done':
         this.done.push(
@@ -488,28 +523,31 @@ export class TeamboardComponent implements OnInit {
             jobBoard: this.fb.control(jobType),
             jobOwner: this.fb.control(owner),
             jobID: this.fb.control(''),
-            jobHours : this.fb.control(0),
+            jobHours: this.fb.control(0),
             user_id: ownerID,
           })
         );
-        this.openDialog(this.done.at(this.done.length-1),this.done.length-1,jobType)
+        this.openDialog(
+          this.done.at(this.done.length - 1),
+          this.done.length - 1,
+          jobType
+        );
         break;
       default:
         break;
     }
-
-    
   }
 
   drop(event: CdkDragDrop<string[]>) {
-
-    this.moveJobBar()
+    this.moveJobBar();
 
     //find the current event container array
     let currentBoard = event.container.id;
     switch (currentBoard) {
       case 'todo':
         this.currentFormArray = this.todo;
+        //add code to update status here
+        
         break;
       case 'doing':
         this.currentFormArray = this.doing;
@@ -581,33 +619,30 @@ export class TeamboardComponent implements OnInit {
 })
 export class DialogJob {
   dialogForm: FormGroup;
-  userArray : any[]
+  userArray: any[];
   jobOwner: any;
-  isDone : boolean = false
+  isDone: boolean = false;
   constructor(
     public dialogRef: MatDialogRef<DialogJob>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
-    private _ngZone : NgZone
+    private _ngZone: NgZone
   ) {
     this.dialogForm = this.fb.group({
       jobDetails: [data.jobDetails, Validators.required],
       jobBoard: [data.jobBoard, Validators.required],
       jobOwner: [data.jobOwner, Validators.required],
-      jobHours : [data.jobHours, Validators.required]
+      jobHours: [data.jobHours, Validators.required],
     });
 
-    this.userArray = data.userArray
-    this.jobOwner = data.jobOwner
-    if (data.jobBoard == 'done'){
-      this.isDone = true
+    this.userArray = data.userArray;
+    this.jobOwner = data.jobOwner;
+    if (data.jobBoard == 'done') {
+      this.isDone = true;
     }
-    
   }
 
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
-
-  
 
   delete() {
     this.dialogRef.close('delete');
@@ -622,12 +657,12 @@ export class DialogJob {
     }
   }
 
-  archive(){
+  archive() {
     //will update status of job board to archive, patch to backend
-    //delete the job from the list 
+    //delete the job from the list
     if (this.dialogForm.valid) {
-      this.dialogForm.patchValue({jobBoard : 'archived'})
-      this.dialogRef.close(this.dialogForm)
+      this.dialogForm.patchValue({ jobBoard: 'archived' });
+      this.dialogRef.close(this.dialogForm);
     } else {
       alert(this.dialogForm.valid);
     }
