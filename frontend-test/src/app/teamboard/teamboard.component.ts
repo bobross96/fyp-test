@@ -491,7 +491,7 @@ export class TeamboardComponent implements OnInit {
         );
         console.log(this.todo.length);
 
-        console.log();
+
 
         this.openDialog(
           this.todo.at(this.todo.length - 1),
@@ -609,7 +609,7 @@ export class TeamboardComponent implements OnInit {
 
       console.log(this.previousFormArray.value[event.previousIndex]);
       let id = this.previousFormArray.value[event.previousIndex].jobID
-      
+
       transferItemInFormArray(
         this.previousFormArray,
         this.currentFormArray,

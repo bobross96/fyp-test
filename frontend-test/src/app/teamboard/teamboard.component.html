@@ -14,7 +14,7 @@
           <span>{{todo['controls'].length}}</span>
         </div>
         
-        <span style="float : right; font-size: large;"><button mat-button>+</button></span>
+        <span style="float : right; font-size: large;"><button mat-button (click)="addJob('todo')">+</button></span>
       </div>
       <div
         cdkDropList
@@ -50,7 +50,7 @@
           <span class="highlight" style="background-color: #fbeecc;">Doing</span>&nbsp;&nbsp;
           <span>{{doing['controls'].length}}</span>
         </div>  
-        <span style="float : right; font-size: large;"><button mat-button>+</button></span>
+        <span style="float : right; font-size: large;"><button mat-button (click)="addJob('doing')">+</button></span>
       </div>
       
       <div
@@ -87,7 +87,7 @@
           <span class="highlight" style="background-color: #cce7e1;">Done</span>&nbsp;&nbsp;
           <span>{{done['controls'].length}}</span>
         </div>  
-        <span style="float : right; font-size: large;"><button mat-button>+</button></span>
+        <span style="float : right; font-size: large;"><button mat-button  (click)="addJob('done')">+</button></span>
       </div>
         
         <!-- used to have class example-list -->
