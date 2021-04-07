@@ -1,3 +1,5 @@
+
+//each list container
 .example-container {
   width: 20em;
   max-width: 100%;
@@ -15,18 +17,21 @@
 }
 
 .example-box {
-  padding: 20px 10px;
   border-bottom: solid 1px #ccc;
   color: rgba(0, 0, 0, 0.87);
   /* display: flex; */
   /* flex-direction: row; */
   align-items: center;
   justify-content: space-between;
-  box-sizing: border-box;
+  /* box-sizing: border-box; */
   cursor: pointer;
   background: white;
   font-size: 14px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 10px;
+}
+
+.example-box:hover {
+  background : #ebecf0 
 }
 
 
@@ -82,12 +87,6 @@
 }
 
 
-.list-group{
-  
-
-}
-
-
 .mat-form-field-appearance-outline .mat-form-field-outline {
   color: white;
 }
@@ -99,10 +98,3 @@
   padding-bottom: 3em;
 }
 
-.mat-form-field .mat-form-field-label-wrapper label {
-  line-height: 17px;
-}
-
-.mat-form-field .mat-form-field-infix input {
-  line-height: 17px;
-}

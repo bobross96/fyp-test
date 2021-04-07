@@ -69,6 +69,7 @@ export class TeamboardComponent implements OnInit {
     private userApi: ApiService,
     private notifService: NotificationService,
     private snackBar : MatSnackBar,
+    private moveBar : MatSnackBar
   ) {
     this.boardForm = this.fb.group({
       todo: this.fb.array([]),
@@ -87,6 +88,14 @@ export class TeamboardComponent implements OnInit {
       duration : 1000,
       horizontalPosition : 'center',
       verticalPosition : 'top'
+    })
+  }
+
+  moveJobBar(){
+    this.moveBar.open('Job Moved','Close', {
+      duration : 1000,
+      horizontalPosition : 'right',
+      verticalPosition : 'bottom'
     })
   }
 
@@ -493,8 +502,8 @@ export class TeamboardComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    console.log(event.container.data);
-    //update index of formgroup?
+
+    this.moveJobBar()
 
     //find the current event container array
     let currentBoard = event.container.id;
@@ -625,8 +634,6 @@ export class DialogJob {
   }
 
   onNoClick(): void {
-    console.log(this.dialogRef);
-
     this.dialogRef.close();
   }
 }

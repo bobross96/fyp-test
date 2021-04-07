@@ -5,16 +5,17 @@
       <h1>Team Board <span *ngIf="userType">({{userType.project.project_name}})</span></h1>
     <button mat-raised-button color="primary" (click)="openSnackBar()" type="submit" >Update Board</button>  
     </div>
-    <!-- <div>
-      Team Members:
-      <div *ngFor="let member of userDict | keyvalue">
-        {{member.value}}
-      </div>
-    </div> -->
+    
     <!-- drop list group will link all div inside with cdkDropList -->
     <div style="display:flex; margin: auto; justify-content: center; margin-bottom: 3em;" cdkDropListGroup >
     <div class="example-container" style="margin-right: 1em;">
-      <h2><span class="highlight" style="background-color: #ffccd1;">To Do</span>&nbsp;&nbsp;<span>{{todo['controls'].length}}</span></h2>
+      <h3>
+      <span>
+        <span class="highlight" style="background-color: #ffccd1;">To Do</span>&nbsp;&nbsp;
+        <span>{{todo['controls'].length}}</span>
+        <span style="float : right; font-size: large;"><button mat-button>+</button></span>
+      </span>
+      </h3>
       <div
         cdkDropList
         id="todo"
