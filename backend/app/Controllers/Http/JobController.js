@@ -142,7 +142,9 @@ class JobController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async edit({ params, request, response, view }) {}
+  async edit({ params, request, response, view }) {
+
+  }
 
   /**
    * Update job details.
@@ -152,7 +154,20 @@ class JobController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update({ params, request, response }) {}
+  async update({ params, request, response }) {
+    const jobID = params.jobID
+    const body = request.post()
+    console.log(body);
+    const job = await Job.find(jobID)
+
+    job.status = body.status
+    await job.save()
+
+    response.json({
+      message : 'success'
+    })
+
+  }
 
   /**
    * Delete a job with id.

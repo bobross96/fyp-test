@@ -538,8 +538,8 @@ export class TeamboardComponent implements OnInit {
     }
   }
 
-  drop(event: CdkDragDrop<string[]>) {
-    this.moveJobBar();
+  async drop(event: CdkDragDrop<string[]>) {
+    
 
     //find the current event container array
     let currentBoard = event.container.id;
@@ -547,7 +547,7 @@ export class TeamboardComponent implements OnInit {
       case 'todo':
         this.currentFormArray = this.todo;
         //add code to update status here
-        
+
         break;
       case 'doing':
         this.currentFormArray = this.doing;
@@ -567,6 +567,7 @@ export class TeamboardComponent implements OnInit {
       );
       console.log(this.boardForm);
     } else {
+      //transfer between boards, update db.
       let previousBoard = event.previousContainer.id;
       switch (previousBoard) {
         case 'todo':
@@ -582,26 +583,49 @@ export class TeamboardComponent implements OnInit {
           break;
       }
 
+      let body = {}
       switch (currentBoard) {
         case 'todo':
           this.currentFormArray = this.todo;
+          body = {
+            status : 'todo'
+          }
           break;
         case 'doing':
           this.currentFormArray = this.doing;
+          body = {
+            status : 'doing'
+          }
           break;
         case 'done':
           this.currentFormArray = this.done;
+          body = {
+            status : 'done'
+          }
           break;
         default:
           break;
       }
 
+      console.log(this.previousFormArray.value[event.previousIndex]);
+      let id = this.previousFormArray.value[event.previousIndex].jobID
+      
       transferItemInFormArray(
         this.previousFormArray,
         this.currentFormArray,
         event.previousIndex,
         event.currentIndex
       );
+
+    
+      
+      //code to transfer that data over , params is in terms of board!
+      let response = await this.jobApi.moveJob(id,body)
+      if (response){
+        this.moveJobBar();
+      }
+
+      
 
       console.log(this.boardForm);
 

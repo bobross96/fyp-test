@@ -68,6 +68,7 @@ Route.get("api/documents/:taskID", "DocumentController.show");
 // submit job under board
 Route.post("api/jobs/one", "JobController.storeOne");
 Route.get("api/jobs/:projectID", "JobController.index");
+Route.patch("api/jobs/:jobID", "JobController.update");
 
 //get jobs related to user
 Route.get("api/jobs/user/:userID", "JobController.jobByUserID");

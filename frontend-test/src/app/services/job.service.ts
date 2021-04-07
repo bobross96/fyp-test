@@ -39,6 +39,9 @@ export class JobService {
     }
 
 
+    moveJob(jobID : number, job : object):Promise<any>{
+      return this.http.patch("api/jobs/" + jobID, job).toPromise()
+    }
 
 
 
