@@ -1,16 +1,26 @@
 <h1 mat-dialog-title>Edit Task</h1>
-<div mat-dialog-content style>
-    <mat-form-field>
+<div mat-dialog-content style="display : flex; justify-content : space-between">
+  <div> 
+    <mat-form-field style="width: 200px;">
         <mat-label>Task Title</mat-label>
         <input matInput [(ngModel)]="data.title" appearance="fill" required>
       </mat-form-field><br>
-      <mat-form-field>
+      <mat-form-field style="width: 200px;">
         <mat-label>Content</mat-label>
-        <textarea matInput [(ngModel)]="data.content" appearance="fill" required></textarea>
+        <textarea matInput
+        style="overflow:hidden"
+        matInput
+        cdkTextareaAutosize
+        #autosize="cdkTextareaAutosize"
+        cdkAutosizeMinRows="1"
+        cdkAutosizeMaxRows="15"
+        [(ngModel)]="data.content" appearance="fill" required></textarea>
       </mat-form-field><br>
-  <mat-form-field appearance="fill">
+  </div>
+  <div style="padding-right: 30px;">
+    <mat-form-field appearance="legacy">
     <mat-label>Task Type</mat-label>
-    <mat-select [(ngModel)]="data.task_type" appearance="fill" required>
+    <mat-select [(ngModel)]="data.task_type" appearance="legacy" required>
       <mat-option value="Weekly Report">Weekly Report</mat-option>
       <mat-option value="Meeting Notes">Meeting Notes</mat-option>
       <mat-option value="Interim Report">Interim Report</mat-option>
@@ -26,9 +36,18 @@
   <mat-form-field>
     <mat-label>Hours Spent</mat-label>
     <input type="number" matInput [(ngModel)]="data.hours_spent" min="0" required>
+  </mat-form-field><br>
+  <mat-form-field *ngIf="data.isStaff">
+    <mat-label>Due Date</mat-label>
+    <input matInput [(ngModel)]="data.task_due_date" [matDatepicker]="picker">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+
   </mat-form-field>
 </div>
+</div>
+<br>
 <div mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="data" type="submit">Update</button>
-  <button mat-button [mat-dialog-close]>Cancel</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="data" type="submit">Update</button>
+  <button mat-raised-button color="warn" [mat-dialog-close]>Cancel</button>
 </div>

@@ -28,6 +28,7 @@ import {
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { CanDeactivate } from '@angular/router';
+import * as helper from '../functions/helper'
 @Component({
   selector: 'app-teamboard',
   templateUrl: './teamboard.component.html',
@@ -104,6 +105,8 @@ export class TeamboardComponent implements OnInit {
     //add for staff
     this.projectID = JSON.parse(localStorage.getItem('selectedProject'));
     console.log(this.projectID);
+    console.log(helper.getIconColour('bob'));
+     
 
     if (this.userInfo.user.userType == 'staff') {
       this.api.currentProject.subscribe(async (projectID) => {
@@ -111,6 +114,12 @@ export class TeamboardComponent implements OnInit {
         //need to refetch data as projectID has changed
         let userFetch = await this.userApi.fetchByProject(this.projectID);
         this.userArray = userFetch.message;
+        this.userArray.forEach(user => {
+          user['colour'] = helper.getIconColour(user.first_name)
+          
+        });
+        console.log(this.userArray);
+        
         this.userDict = userFetch.message.reduce((obj, item) => {
           obj[item['id']] = item['first_name'];
           return obj;
@@ -181,6 +190,10 @@ export class TeamboardComponent implements OnInit {
         return obj;
       }, {});
       this.userArray = userFetch.message;
+      this.userArray.forEach(user => {
+        user['colour'] = helper.getIconColour(user.first_name)
+        
+      });
 
       console.log(this.userDict);
 
@@ -289,6 +302,12 @@ export class TeamboardComponent implements OnInit {
   selectOption(event: Event) {
     this.selectedOption = (event.target as HTMLSelectElement).value;
     console.log(this.selectedOption);
+  }
+
+  changeBackground(name){
+    return {
+      'background' : helper.getIconColour(name) 
+    }
   }
 
   //fired when box is clicked

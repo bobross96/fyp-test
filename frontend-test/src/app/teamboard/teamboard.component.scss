@@ -38,6 +38,7 @@
 .example-form-field {
   width: 20em;
 
+
 }
 
 .top-box {
@@ -84,7 +85,7 @@
   padding: 0.3em;
   border-radius: 0.3em;
   text-align: center;
-  font-weight: bold;
+  font-weight:700
 }
 
 
@@ -99,3 +100,20 @@
   padding-bottom: 3em;
 }
 
+
+.user-icon {
+  font-size:1em;
+  width:2em;
+  height:2em;
+  line-height:2em;
+  text-align:center;
+  border-radius:50%;
+  vertical-align:middle;
+  color:white;
+  display: inline-block;
+}
+
+
+.job-box {
+  float : right
+}

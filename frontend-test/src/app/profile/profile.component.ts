@@ -79,7 +79,8 @@ export class ProfileComponent implements OnInit {
         const jobs = await this.jobApi.fetchJobs(this.projectID);
         //get array of students per project
         const body = await this.api.fetchByProject(this.projectID);
-
+        console.log(body);
+        
         this.api.getProjectByID(this.projectID).subscribe((res) => {
           console.log(res);
           this.projectDetails = res
@@ -89,7 +90,9 @@ export class ProfileComponent implements OnInit {
         this.userDict = body.message.reduce((obj, item) => {
           obj[item['id']] = item['first_name'];
           return obj;
-        });
+        },{});
+        console.log(this.userDict);
+        
 
         this.userHours = jobs.jobs.reduce((obj, item) => {
           if (obj[item['user_id']]) {
@@ -109,6 +112,10 @@ export class ProfileComponent implements OnInit {
           series.push(this.userHours[user])
           labels.push(this.userDict[user])
         }
+        console.log(series);
+        console.log(labels);
+        
+        
 
         //populate the chart
         this.chartOptions.series = series

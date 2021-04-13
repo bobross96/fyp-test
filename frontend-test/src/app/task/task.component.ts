@@ -40,10 +40,18 @@ export class TaskComponent implements OnInit {
   notifBody : any
   selectedProject : number
   taskID : any
+  isStaff : boolean
 
   ngOnInit(): void {
     
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    if (userInfo.user.userType == 'staff'){
+      this.isStaff = true
+    }
+    else {
+      this.isStaff = false
+    }
+    
     this.selectedProject = JSON.parse(localStorage.getItem('selectedProject'))
     //on any change of current project, it will update selectedproject accordingly
     this.api.currentProject.subscribe(projectID => {
@@ -191,6 +199,8 @@ export class TaskComponent implements OnInit {
         title: this.task.title,
         content: this.task.content,
         hours_spent: this.task.hours_spent,
+        task_due_date : this.task.task_due_date,
+        isStaff : this.isStaff
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -198,8 +208,10 @@ export class TaskComponent implements OnInit {
       if (!result) {
         return;
       } else if (result.title && result.content && result.hours_spent) {
-        console.log('poop');
-
+        result.task_due_date = new Date(result.task_due_date)
+        result.task_due_date.setHours(result.task_due_date.getHours() + 8)
+        console.log(result.task_due_date);
+        
         this.taskApi.editTask(this.task.id, result).subscribe((res) => {
           this.task = res.task;
           this.changeDateForm();
@@ -313,7 +325,8 @@ export class DialogEdit {
     public dialogRef: MatDialogRef<DialogEdit>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    console.log('constructor');
+    console.log(data.isStaff);
+    
   }
 }
 

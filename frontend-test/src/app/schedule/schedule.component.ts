@@ -185,6 +185,8 @@ export class ScheduleComponent implements OnInit {
           this.endDate = null;
         }
         if (result.startTime) {
+          console.log(result.date);
+          
           this.startDate = helper.dateConverter(
             result.date,
             result.startTime.hour,
