@@ -17,6 +17,7 @@ export type ChartOptions = {
 };
 
 import { User } from '../User';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-profile',
@@ -37,9 +38,10 @@ export class ProfileComponent implements OnInit {
   totalHours: number;
   userDict: any;
   userHours: any;
-  projectDetails : any;
+  projectDetails: any;
   @ViewChild('chart') chart: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
+  dataSource: any;
 
   constructor(private api: ApiService, private jobApi: JobService) {
     this.projectID = JSON.parse(localStorage.getItem('selectedProject'));
@@ -68,9 +70,12 @@ export class ProfileComponent implements OnInit {
     };
   }
 
+  displayedColumns: string[] = ['details', 'status', 'hours_spent'];
+
   async ngOnInit(): Promise<void> {
     //display own user data
     this.userInfo = JSON.parse(localStorage.getItem('userInfo'));
+
     if (this.userInfo.user.userType == 'staff') {
       console.log(this.userInfo);
       this.api.currentProject.subscribe(async (projectID) => {
@@ -80,21 +85,20 @@ export class ProfileComponent implements OnInit {
         //get array of students per project
         const body = await this.api.fetchByProject(this.projectID);
         console.log(body);
-        
+
         this.api.getProjectByID(this.projectID).subscribe((res) => {
           console.log(res);
-          this.projectDetails = res
-        })
-
+          this.projectDetails = res;
+        });
 
         this.userDict = body.message.reduce((obj, item) => {
           obj[item['id']] = item['first_name'];
           return obj;
-        },{});
+        }, {});
         console.log(this.userDict);
-        
 
         this.userHours = jobs.jobs.reduce((obj, item) => {
+          //if user already exist, just add on
           if (obj[item['user_id']]) {
             obj[item['user_id']] += item.hours_spent;
           } else {
@@ -104,22 +108,20 @@ export class ProfileComponent implements OnInit {
           return obj;
         }, {});
 
-        let series = []
-        let labels = []
+        let series = [];
+        let labels = [];
         console.log(this.userHours);
-        
-        for (let user in this.userHours){
-          series.push(this.userHours[user])
-          labels.push(this.userDict[user])
+
+        for (let user in this.userHours) {
+          series.push(this.userHours[user]);
+          labels.push(this.userDict[user]);
         }
         console.log(series);
         console.log(labels);
-        
-        
 
         //populate the chart
-        this.chartOptions.series = series
-        this.chartOptions.labels = labels
+        this.chartOptions.series = series;
+        this.chartOptions.labels = labels;
       });
       //fetch the project and get the hours of the students and put in pie chart
       //refetch whenever the data change
@@ -149,6 +151,8 @@ export class ProfileComponent implements OnInit {
             break;
         }
       });
+
+      this.dataSource = new MatTableDataSource<any>(this.todo);
 
       //get total hours
       this.totalHours = this.jobs.reduce((acc, curr) => {

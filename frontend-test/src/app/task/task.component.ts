@@ -106,12 +106,32 @@ export class TaskComponent implements OnInit {
   }
 
   //should this be abstracted?
+
+  async downloadFile(fileName,document){
+    //works for pdf only
+    let fileType = fileName.slice(-3)
+    let typeString 
+    if (fileType == "pdf"){
+      typeString = "application/pdf"
+    }
+    else if (fileType == "ocx"){
+      typeString =  "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    }
+    let arrayBuff = Uint8Array.from(document.data);
+    var blob = new Blob([arrayBuff], {type: typeString});;
+    var url = window.URL.createObjectURL(blob);
+    window.open(url,fileName)
+
+  }
+
   async showFile(docIndex) {
     this.pageVariable = 1;
     // receive the data, then convert to this fucking type to show..
     let fileType = this.attachments[docIndex].title.slice(-3);
 
     let arrayBuff = Uint8Array.from(this.attachments[docIndex].document.data);
+
+    //convert pdf 
     if (fileType == 'pdf') {
       this.fileFromDB = new Blob([arrayBuff], { type: 'application/pdf' });
       this.uploadedFile = this.fileFromDB;

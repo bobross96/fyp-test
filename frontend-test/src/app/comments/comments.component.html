@@ -11,7 +11,7 @@
 
 <div class="commentsContainer" *ngIf="parentComments">
     <div *ngFor="let comment of parentComments; let i = index" >
-        <span><span style="font-weight: 700;">{{comment.username}} </span><span>{{comment.created_at}}</span></span>
+        <span><span style="font-weight: 700;">{{comment.username}} </span><span>{{comment.created_at | date:'short' }}</span></span>
         <div>{{comment.content}}</div>
         <button mat-button (click)="showReply(i)" type="submit">Reply</button>
         <div *ngIf="showInput[i]" class="container">
@@ -26,7 +26,7 @@
         </div>
         <div *ngIf="comment.replies" class="container">
             <div *ngFor="let reply of comment.replies" style="padding-left: 20px;">
-                <span><span style="font-weight: 700;">{{reply.username}} </span><span>{{reply.created_at}}</span></span>
+                <span><span style="font-weight: 700;">{{reply.username}} </span><span>{{reply.created_at | date:'short'}}</span></span>
                 <div>{{reply.content}}</div>
             </div> 
         </div>

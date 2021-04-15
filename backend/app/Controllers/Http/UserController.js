@@ -70,6 +70,7 @@ class UserController {
     user.last_name = last_name;
     user.password = password;
     user.is_active = is_active;
+    user.userType = userType
     if (userType == "student") {
       const student = new Student();
       //for now just using one project only
