@@ -30,6 +30,8 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
     this.selectedProject = this.userInfo.selectedProject
+    console.log(this.selectedProject);
+    
     if (this.userInfo.user.userType == 'staff'){
       this.projects = this.userInfo.projectInfo
     }

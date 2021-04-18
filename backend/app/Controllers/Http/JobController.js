@@ -71,6 +71,7 @@ class JobController {
         jobEdit.detail = job.detail;
         jobEdit.user_id = job.user_id;
         jobEdit.status = job.status;
+        //jobEdit.hours_spent = job.hours_spent
 
         await jobEdit.save();
       } else {
@@ -79,14 +80,46 @@ class JobController {
         newJob.user_id = job.user_id;
         newJob.project_id = job.project_id;
         newJob.status = job.status;
-
+        //newJob.hours_spent = job.hours_spent
         await newJob.save();
+        
       }
     });
 
     return response.json({
       message: "board updated",
     });
+  }
+
+  async storeOne({ request, response }) {
+    const job = request.post();
+    //if job exists in db, update, else create
+    if (job["id"]) {
+      const jobEdit = await Job.find(job.id);
+      jobEdit.detail = job.detail;
+      jobEdit.user_id = job.user_id;
+      jobEdit.status = job.status;
+      jobEdit.hours_spent = job.hours_spent;
+      await jobEdit.save();
+    
+      return response.json({
+        id : jobEdit.id
+      });
+
+    } else {
+      const newJob = new Job();
+      newJob.detail = job.detail;
+      newJob.user_id = job.user_id;
+      newJob.project_id = job.project_id;
+      newJob.status = job.status;
+      newJob.hours_spent = job.hours_spent;
+      await newJob.save();
+      return response.json({
+      id : newJob.id
+    });
+    }
+
+    
   }
 
   /**
@@ -109,7 +142,9 @@ class JobController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async edit({ params, request, response, view }) {}
+  async edit({ params, request, response, view }) {
+
+  }
 
   /**
    * Update job details.
@@ -119,7 +154,20 @@ class JobController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update({ params, request, response }) {}
+  async update({ params, request, response }) {
+    const jobID = params.jobID
+    const body = request.post()
+    console.log(body);
+    const job = await Job.find(jobID)
+
+    job.status = body.status
+    await job.save()
+
+    response.json({
+      message : 'success'
+    })
+
+  }
 
   /**
    * Delete a job with id.

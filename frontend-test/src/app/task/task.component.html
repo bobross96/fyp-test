@@ -26,7 +26,8 @@
                     picture_as_pdf
                     </span><span>{{attachment.title}}</span>
                     <span class="material-icons" style="cursor: pointer;" (click)="deleteFile(attachment.id,i)">delete</span>
-            </div>
+                    <button mat-button color="primary" (click)="downloadFile(attachment.title,attachment.document)">Download</button>
+                </div>
         </div>
         
         <div *ngIf="pdfSrc">

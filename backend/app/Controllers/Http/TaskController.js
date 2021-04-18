@@ -154,6 +154,10 @@ class TaskController {
     if (task.task_type) {
       taskFromDB.task_type = task.task_type;
     }
+
+    if (task.task_due_date){
+      taskFromDB.task_due_date = task.task_due_date
+    }
     taskFromDB.title = task.title;
     taskFromDB.content = task.content;
     taskFromDB.hours_spent = task.hours_spent;

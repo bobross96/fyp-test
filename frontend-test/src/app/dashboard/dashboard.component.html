@@ -36,7 +36,7 @@
     <mat-sidenav #sidenav mode="side" opened>
       <mat-nav-list>
         <a mat-list-item routerLink="./schedule" routerLinkActive="active">Calendar</a>
-        <a mat-list-item routerLink="./books" routerLinkActive="active">Profile</a>
+        <a mat-list-item routerLink="./profile" routerLinkActive="active">Profile</a>
         <a mat-list-item [routerLink]="['./allTasks']" [queryParams]="{taskType : 'meetingNotes'}">Meeting Notes</a>
         <a mat-list-item [routerLink]="['./allTasks']" [queryParams]="{taskType : 'weeklyReports'}">Weekly Reports</a>
         <a mat-list-item [routerLink]="['./allTasks']" [queryParams]="{taskType : 'otherReports'}">Other Reports</a>

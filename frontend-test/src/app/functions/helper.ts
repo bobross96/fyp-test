@@ -1,3 +1,24 @@
+
+
+export function getIconColour(name){
+
+  let colourArray = ['#FA8072','#FF6347','#FFFF00',
+                     '#9932CC','#7B68EE','#32CD32',
+                     '#6B8E23','#008B8B','#00CED1',
+                     '#D2B48C', '#7B68EE' ]
+  let nameNumber = (name[0].toLowerCase().charCodeAt(0) - 97 + 1).toString()
+  if (nameNumber[1]){
+    return colourArray[parseInt(nameNumber[0]) + parseInt(nameNumber[1])]
+  }
+  else {
+    return colourArray[parseInt(nameNumber[0])]
+  }
+  
+}
+
+
+
+
 export function Week(arg) {
     if (!arg.num || arg.num < 0 || arg.num > 14) {
       arg.text = '';
@@ -131,6 +152,18 @@ export function singleTaskToEvent(task,calendarApi,createEventId){
 
 
 }
+
+
+export function saveByteArray(reportName, byte) {
+  var blob = new Blob([byte], {type: "application/pdf"});
+  var link = document.createElement('a');
+  link.href = window.URL.createObjectURL(blob);
+  var fileName = reportName;
+  link.download = fileName;
+  link.click();
+};
+
+
 
 
 

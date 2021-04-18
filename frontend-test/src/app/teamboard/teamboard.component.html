@@ -1,20 +1,24 @@
 <form [formGroup]="boardForm" (ngSubmit)="onSubmit()">
   
   <div>    
-    <div style="text-align: center; margin-bottom: 2em;">
-      <h1>Team Board <span *ngIf="userType">({{userType.project.project_name}})</span></h1>
-    <button mat-raised-button color="primary" (click)="openSnackBar()" type="submit" >Update Board</button>  
-    </div>
-    <!-- <div>
-      Team Members:
-      <div *ngFor="let member of userDict | keyvalue">
-        {{member.value}}
+    <div style="margin-bottom: 2em; display: flex; align-items: baseline; margin-left: 7.8em;">
+      <h1>Team Board</h1>&nbsp;&nbsp;
+      <div *ngIf="userArray" style="display: flex; align-items: center;">
+        <span class="user-icon" [style.background]="user.colour" *ngFor="let user of userArray">{{user.first_name[0].toUpperCase()}}</span>
       </div>
-    </div> -->
+    </div>
+    
     <!-- drop list group will link all div inside with cdkDropList -->
     <div style="display:flex; margin: auto; justify-content: center; margin-bottom: 3em;" cdkDropListGroup >
     <div class="example-container" style="margin-right: 1em;">
-      <h2><span class="highlight" style="background-color: #ffccd1;">To Do</span>&nbsp;&nbsp;<span>{{todo['controls'].length}}</span></h2>
+      <div  style="display:flex;  justify-content: space-between; align-items: center; margin-bottom: 1em;">
+        <div>
+          <span class="highlight" style="background-color: #ffccd1;">To Do</span>&nbsp;&nbsp;
+          <span>{{todo['controls'].length}}</span>
+        </div>
+        
+        <span style="float : right; font-size: large;"><button mat-button (click)="addJob('todo')">+</button></span>
+      </div>
       <div
         cdkDropList
         id="todo"
@@ -28,7 +32,15 @@
         >
           <div [formGroup]="item" style="text-align: center;">
             <mat-form-field class="example-form-field" appearance="none">
-              <input class="input-box" matInput formControlName="jobDetails">
+              <textarea 
+              class="input-box" 
+              matInput 
+              cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize"
+              cdkAutosizeMinRows="1"
+              cdkAutosizeMaxRows="15"
+              formControlName="jobDetails"></textarea>
+              <span class="user-icon job-box"  [ngStyle]="changeBackground(item.value.jobOwner)">{{item.value.jobOwner[0].toUpperCase()}}</span>
             </mat-form-field>
           </div>
         </div>
@@ -37,7 +49,14 @@
     </div>
   
     <div class="example-container">
-      <h2><span class="highlight" style="background-color: #fbeecc;">Doing</span>&nbsp;&nbsp;<span>{{doing['controls'].length}}</span></h2>
+      <div  style="display:flex;  justify-content: space-between; align-items: center; margin-bottom: 1em;">
+        <div>
+          <span class="highlight" style="background-color: #fbeecc;">Doing</span>&nbsp;&nbsp;
+          <span>{{doing['controls'].length}}</span>
+        </div>  
+        <span style="float : right; font-size: large;"><button mat-button (click)="addJob('doing')">+</button></span>
+      </div>
+      
       <div
         cdkDropList
         id="doing"
@@ -50,7 +69,15 @@
         style="margin-bottom: 1em;">
           <div [formGroup]="item" style="text-align: center;">
             <mat-form-field class="example-form-field" appearance="none">
-              <input class="input-box" matInput formControlName="jobDetails">
+              <textarea 
+              class="input-box" 
+              matInput 
+              cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize"
+              cdkAutosizeMinRows="1"
+              cdkAutosizeMaxRows="15"
+              formControlName="jobDetails"></textarea>
+              <span class="user-icon job-box" [ngStyle]="changeBackground(item.value.jobOwner)">{{item.value.jobOwner[0].toUpperCase()}}</span>
             </mat-form-field>
           </div>
         </div>
@@ -60,7 +87,14 @@
 
 
     <div class="example-container" style="margin-left:1em">
-        <h2><span class="highlight" style="background-color: #cce7e1;">Done</span>&nbsp;&nbsp;<span>{{done['controls'].length}}</span></h2>
+      <div  style="display:flex;  justify-content: space-between; align-items: center; margin-bottom: 1em;">
+        <div>
+          <span class="highlight" style="background-color: #cce7e1;">Done</span>&nbsp;&nbsp;
+          <span>{{done['controls'].length}}</span>
+        </div>  
+        <span style="float : right; font-size: large;"><button mat-button  (click)="addJob('done')">+</button></span>
+      </div>
+        
         <!-- used to have class example-list -->
         <div
           cdkDropList
@@ -74,7 +108,15 @@
           style="margin-bottom: 1em;" >
             <div [formGroup]="item" style="text-align: center;">
               <mat-form-field class="example-form-field" appearance="none">
-                <input class="input-box" matInput formControlName="jobDetails">
+                <textarea 
+                class="input-box" 
+                matInput 
+                cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="1"
+                cdkAutosizeMaxRows="15"
+                formControlName="jobDetails"></textarea>
+                <span class="user-icon job-box" [ngStyle]="changeBackground(item.value.jobOwner)">{{item.value.jobOwner[0].toUpperCase()}}</span>
               </mat-form-field>
             </div>
           </div>

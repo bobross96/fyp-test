@@ -69,6 +69,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatBadgeModule} from '@angular/material/badge'; 
+import {NgApexchartsModule} from 'ng-apexcharts'
+
+
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -149,7 +152,8 @@ FullCalendarModule.registerPlugins([
     FontAwesomeModule,
     MatCheckboxModule,
     MatChipsModule,
-    MatBadgeModule
+    MatBadgeModule,
+    NgApexchartsModule
     
   ],
   providers: [httpInterceptorProviders, MatDatepickerModule],
