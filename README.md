@@ -2,6 +2,21 @@
 
 # Using adonisjs for backend and angular for frontend
 
+SETUP INSTRUCTIONS
+
+- Git clone the repo onto your computer
+- open the frontend-test folder using code editor of your choice
+- run npm install in terminal to install dependencies (Make sure nodejs is installed first on computer)
+- start application in terminal using the command "ng serve"
+- user accounts pre-created for testing:
+- Student Account (email: shaik@shaik, password: shaik)
+- Staff Account (email: staff@staff, password: staff)
+
+DISCLAIMER
+Will lag as the backend is hosted on free tier of heroku and application is not optimised for data served via actual cloud API
+(development was done on localhost where everything was smooth)
+
+
 Doing a fullstack project management web application for NTU students taking DIP
 
 What is done so far:
