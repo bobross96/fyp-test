@@ -13,7 +13,8 @@ SETUP INSTRUCTIONS
 - Staff Account (email: staff@staff, password: staff)
 
 DISCLAIMER
-Will lag as the backend is hosted on free tier of heroku and application is not optimised for data served via actual cloud API
+1) Initial login will take about 10-20 seconds, as the cloud functions are set to sleep mode and will take time to work
+2) Application will lag as the backend is hosted on free tier of heroku and application is not optimised for data served via actual cloud API
 (development was done on localhost where everything was smooth)
 
 
