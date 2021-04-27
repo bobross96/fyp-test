@@ -121,7 +121,6 @@ export class TaskComponent implements OnInit {
     var blob = new Blob([arrayBuff], {type: typeString});;
     var url = window.URL.createObjectURL(blob);
     window.open(url,fileName)
-
   }
 
   async showFile(docIndex) {
